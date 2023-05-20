@@ -54,12 +54,16 @@ export default function App() {
       <Text>Open up App.js to start working on your app!</Text>
       <StatusBar style="auto" />
     </View>*/
-    <NavigationContainer>
+    <NavigationContainer >
+    
       <GalioProvider /*theme={nowTheme}*/>
+<View style={styles.container} onLayout={onLayoutRootView}>
         <Block flex>
           <Screens />
         </Block>
+</View>
       </GalioProvider>
+      
     </NavigationContainer>
   );
 

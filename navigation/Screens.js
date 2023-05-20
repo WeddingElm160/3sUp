@@ -1,10 +1,12 @@
 import React from 'react'
+import { Block } from 'galio-framework';
+import { Text } from 'react-native';
 
 function screens() {
   return (
-    <div>
-      <text>screens</text>
-    </div>
+    <Block center>
+      <Text>screens</Text>
+    </Block>
   )
 }
 
