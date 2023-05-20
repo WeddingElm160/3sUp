@@ -21,13 +21,13 @@ export default class Onboarding extends React.Component {
           <Block space="between" style={styles.padded}>
             <Block>
               <Block middle>
-                <Image source={Images.NowLogo} style={{ width: 115, height: 124, bottom: 200, position: 'absolute' }} />
+                <Image source={Images.Logo} style={{ width: 115, height: 124, bottom: 200, position: 'absolute' }} />
               </Block>
               <Block>
                 <Block middle>
                   <Text
                     style={{
-                      fontFamily: 'montserrat-regular', bottom: 50, position: 'absolute', letterSpacing: 2, paddingHorizontal: 20, textAlign: 'center'
+                      fontFamily: 'inter-medium', bottom: 50, position: 'absolute', letterSpacing: 2, paddingHorizontal: 20, textAlign: 'center'
                     }}
                     color="white"
                     size={44}
@@ -39,9 +39,9 @@ export default class Onboarding extends React.Component {
               </Block>
               <Block middle row>
                 <Text
-                  color="white"
+                  color="black"
                   size={16}
-                  style={{ fontFamily: 'montserrat-regular' }}
+                  style={{ fontFamily: 'inter-medium' }}
                 >
                   Designed by
                 </Text>
@@ -58,7 +58,7 @@ export default class Onboarding extends React.Component {
                 <Text
                   color="white"
                   size={16}
-                  style={{ fontFamily: 'montserrat-regular' }}
+                  style={{ fontFamily: 'inter-medium' }}
                 >
                   Coded by
                 </Text>
@@ -86,7 +86,7 @@ export default class Onboarding extends React.Component {
                   onPress={() => navigation.navigate('App')}
                 >
                   <Text
-                    style={{ fontFamily: 'montserrat-bold', fontSize: 14 }}
+                    style={{ fontFamily: 'lato-bold', fontSize: 14 }}
                     color={theme.COLORS.WHITE}
                   >
                     GET STARTED
