@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Block, GalioProvider } from 'galio-framework';
 import { nowTheme } from './constants';
 import Screens from './navigation/Screens';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -54,15 +55,17 @@ export default function App() {
       <Text>Open up App.js to start working on your app!</Text>
       <StatusBar style="auto" />
     </View>*/
-    <NavigationContainer onNavigationStateChange={onLayoutRootView}>
-      <GalioProvider theme={nowTheme}>
-      <View style={styles.container} onLayout={onLayoutRootView}>
-        <Block flex>
-          <Screens  />
-        </Block>
-      </View>
-      </GalioProvider>
-    </NavigationContainer>
+    <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
+      <SafeAreaProvider>
+        <NavigationContainer onNavigationStateChange={onLayoutRootView}>
+          <GalioProvider theme={nowTheme}>
+            <Block flex>
+              <Screens  />
+            </Block>
+          </GalioProvider>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </SafeAreaView>
   );
 
 }

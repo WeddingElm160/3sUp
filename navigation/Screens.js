@@ -1,4 +1,5 @@
 import React from 'react'
+import { Dimensions } from 'react-native';
 import { Block } from 'galio-framework';
 import { Text } from 'react-native';
 import { Header } from '../components';
@@ -17,6 +18,7 @@ const Drawer = createDrawerNavigator();
 function screens() {
   return (
     <Block center>
+      <CustomDrawerContent/>
       <Text>screens</Text>
     </Block>
   )
