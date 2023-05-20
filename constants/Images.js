@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { Image, Svg } from "react-native";
 
-class Logo extends Component {
+class Logo extends Component {//clase images
   render() {
     return (
       <Image
