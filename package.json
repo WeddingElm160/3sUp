@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@react-navigation/native": "^6.1.6",
-    "expo": "~48.0.15",
+    "expo": "~48.0.17",
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
     "galio-framework": "^0.8.0",
@@ -18,7 +18,7 @@
     "react-native": "0.71.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.21.8"
   },
   "private": true
 }

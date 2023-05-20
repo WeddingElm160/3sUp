@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import * as Font from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
 import { Block, GalioProvider } from 'galio-framework';
-import { nowTheme } from './constants';
+//import { nowTheme } from './constants';
 import Screens from './navigation/Screens';
 
 SplashScreen.preventAutoHideAsync();
@@ -55,7 +55,7 @@ export default function App() {
       <StatusBar style="auto" />
     </View>*/
     <NavigationContainer>
-      <GalioProvider theme={nowTheme}>
+      <GalioProvider /*theme={nowTheme}*/>
         <Block flex>
           <Screens />
         </Block>
