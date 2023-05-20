@@ -56,9 +56,11 @@ export default function App() {
     </View>*/
     <NavigationContainer onNavigationStateChange={onLayoutRootView}>
       <GalioProvider theme={nowTheme}>
+      <View style={styles.container} onLayout={onLayoutRootView}>
         <Block flex>
-          <Screens />
+          <Screens  />
         </Block>
+      </View>
       </GalioProvider>
     </NavigationContainer>
   );
