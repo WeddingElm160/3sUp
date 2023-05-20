@@ -4,6 +4,7 @@ import { Text } from 'react-native';
 import { Header } from '../components';
 import { nowTheme } from '../constants';
 // drawer
+import CustomDrawerContent from './Menu';
 //import CustomDrawerContent from './Menu';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
