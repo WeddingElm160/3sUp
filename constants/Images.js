@@ -6,7 +6,7 @@ class Logo extends Component {
   render() {
     return (
       <Image
-        source={require("../assets/imgs/logo-app.svg")}
+        source={require("../assets/imgs/Logo-App.svg")}
         width={100}
         height={100}
       />
