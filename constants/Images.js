@@ -1,4 +1,4 @@
-// local imgs
+// local imgs 
 import React, { Component } from "react";
 import { Image, Svg } from "react-native";
 
