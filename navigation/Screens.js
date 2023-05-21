@@ -1,4 +1,3 @@
-import React from 'react'
 import { Dimensions } from 'react-native';
 import { Block } from 'galio-framework';
 import { Text } from 'react-native';
