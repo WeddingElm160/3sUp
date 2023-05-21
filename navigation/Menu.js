@@ -4,10 +4,12 @@ import { Dimensions, Image, ScrollView, StyleSheet } from 'react-native';
 import Images from '../constants/Images';
 import React from 'react';
 import nowTheme from '../constants/Theme';
+import { DrawerItem as DrawerCustomItem } from '../components';
 
 const { width } = Dimensions.get("window");
 
 function CustomDrawerContent({ drawerPosition, navigation, profile, focused, state, ...rest }) {
+  const screens = ['Inicio', 'Carrito', 'Guardado', 'Historial'];
   return (
     <Block style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
       <Block style={styles.header}>
@@ -18,7 +20,16 @@ function CustomDrawerContent({ drawerPosition, navigation, profile, focused, sta
       </Block>
       <Block flex style={{ paddingLeft: 8, paddingRight: 14 }}>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-          
+          {screens.map((item, index) => {
+            return (
+              <DrawerCustomItem
+                title={item}
+                key={index}
+                navigation={navigation}
+                focused={state.index === index ? true : false}
+              />
+            );
+          })}
           <Block flex style={{ marginTop: 24, marginVertical: 8, paddingHorizontal: 8 }}>
             <Block
               style={{
@@ -34,7 +45,7 @@ function CustomDrawerContent({ drawerPosition, navigation, profile, focused, sta
                 marginTop: 30,
                 marginLeft: 20,
                 marginBottom: 10,
-                fontFamily: 'montserrat-regular',
+                fontFamily: 'lato-bold',
                 fontWeight: '300',
                 fontSize: 12,
               }}
@@ -42,6 +53,7 @@ function CustomDrawerContent({ drawerPosition, navigation, profile, focused, sta
               DOCUMENTATION
             </Text>
           </Block>
+          <DrawerCustomItem title="Acerca de" navigation={navigation} />
         </ScrollView>
       </Block>
     </Block>
