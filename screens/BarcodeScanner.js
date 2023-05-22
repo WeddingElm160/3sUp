@@ -59,7 +59,6 @@ export default function BarcodeScanner(props) {
 
   const handleBarCodeScanned = ({ data, boundingBox }) => {
     setScanned(true);
-    console.log('QR');
     Animated.timing(fadeAnim, {
       toValue: -184,
       duration: 500,
