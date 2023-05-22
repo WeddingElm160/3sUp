@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { KeyboardAvoidingView, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { Animated, KeyboardAvoidingView, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
 import { Block, Button, Text, theme, Item } from 'galio-framework';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import BarcodeMask from 'react-native-barcode-mask';
@@ -10,6 +10,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
+
 export default function BarcodeScanner(props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -19,6 +20,7 @@ export default function BarcodeScanner(props) {
   const [barCode, setBarCode] = useState('');
   const [disabledButton, setDisabledButton] = useState(true);
   const [disabledFlash, setDisabledFlash] = useState(true);
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
   const [barCodeBox, setBarCodeBox] = useState({
     height: 0,
@@ -57,6 +59,12 @@ export default function BarcodeScanner(props) {
 
   const handleBarCodeScanned = ({ data, boundingBox }) => {
     setScanned(true);
+    console.log('QR');
+    Animated.timing(fadeAnim, {
+      toValue: -184,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
     const barCodeBox = {
       height: boundingBox.size.height,
       width: boundingBox.size.width,
@@ -73,6 +81,15 @@ export default function BarcodeScanner(props) {
 
   const onGetItemPress = () => {
     // do something with button press
+  }
+
+  const onCancelPress = () => {
+    setScanned(false);
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
   }
 
   const findComponentHeight = ({ width, height }) => {
@@ -154,7 +171,7 @@ export default function BarcodeScanner(props) {
                     origin: { x: 0, y: 0 },
                     size: { height: 5, width: 5 }
                   }}
-                  onBarCodeScanned={handleBarCodeScanned}
+                  onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 />
                 <BarcodeMask width={viewfinderWidth} height={viewfinderHeight} />
                 <Block row space='between' style={styles.topButttons}>
@@ -196,8 +213,11 @@ export default function BarcodeScanner(props) {
           position: 'absolute'
         }}
       /> */}
+      {
+        scanned?<Block style={styles.curtain}/>:<></>
+      }
 
-      <Block style={styles.lowerSection}>
+      <Animated.View style={{...styles.lowerSection, translateY: fadeAnim}}>
         <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
           <Input
             value={barCode}
@@ -209,7 +229,7 @@ export default function BarcodeScanner(props) {
             onChangeText={(value) => setBarCode(value)}
           />
         </Block>
-        <Block center>
+        <Block center row>
           <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
             style={{ ...styles.button, backgroundColor: disabledButton ? theme.COLORS.DEFAULT : nowTheme.COLORS.PRIMARY }}
             onPress={onGetItemPress}
@@ -217,8 +237,15 @@ export default function BarcodeScanner(props) {
           >
             BUSCAR PRODUCTO
           </Button>
+          <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
+            style={{ ...styles.button, backgroundColor: nowTheme.COLORS.DEFAULT }}
+            onPress={onCancelPress}
+            disabled={disabledButton}
+          >
+            CANCELAR
+          </Button>
         </Block>
-      </Block>
+      </Animated.View>
 
     </KeyboardAvoidingView>
   );
@@ -228,14 +255,29 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
   },
+  curtain: {
+    position: 'absolute',
+    backgroundColor: theme.COLORS.BLACK,
+    height: "100%",
+    width: "100%",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    opacity: .9
+  },
   upperSection: {
     flex: 1,
     backgroundColor: theme.COLORS.BLACK
   },
   lowerSection: {
+    position: 'absolute',
+    width: '100%',
+    bottom: -184,
     paddingVertical: 30,
     paddingHorizontal: 20,
     backgroundColor: 'white',
+    borderTopRightRadius: 25,
+    borderTopLeftRadius: 25
   },
   container: {
     backgroundColor: theme.COLORS.BLACK,
