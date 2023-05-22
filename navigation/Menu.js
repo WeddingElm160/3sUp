@@ -1,12 +1,10 @@
 import { Block, Text, theme } from 'galio-framework';
-import { Dimensions, Image, ScrollView, StyleSheet } from 'react-native';
+import { Image, ScrollView, StyleSheet } from 'react-native';
 
 import Images from '../constants/Images';
 import React from 'react';
 import nowTheme from '../constants/Theme';
 import { DrawerItem as DrawerCustomItem } from '../components';
-
-const { width } = Dimensions.get("window");
 
 function CustomDrawerContent({ drawerPosition, navigation, profile, focused, state, ...rest }) {
   const screens = ['Inicio', 'Carrito', 'Guardado', 'Historial'];
@@ -15,7 +13,7 @@ function CustomDrawerContent({ drawerPosition, navigation, profile, focused, sta
       <Block style={styles.header}>
         <Image style={styles.logo} source={Images.Logo} />
         <Block right style={styles.headerIcon}>
-          <Text>X</Text>
+          <Text>X</Text> 
         </Block>
       </Block>
       <Block flex style={{ paddingLeft: 8, paddingRight: 14 }}>
@@ -30,29 +28,29 @@ function CustomDrawerContent({ drawerPosition, navigation, profile, focused, sta
               />
             );
           })}
-          <Block flex style={{ marginTop: 24, marginVertical: 8, paddingHorizontal: 8 }}>
-            <Block
-              style={{
-                borderColor: 'black',
-                width: '93%',
-                borderWidth: StyleSheet.hairlineWidth,
-                marginHorizontal: 10,
-              }}
-            />
-            <Text
-              color={nowTheme.COLORS.BLACK}
-              style={{
-                marginTop: 30,
-                marginLeft: 20,
-                marginBottom: 10,
-                fontFamily: 'lato-bold',
-                fontWeight: '300',
-                fontSize: 12,
-              }}
-            >
-              DOCUMENTATION
-            </Text>
-          </Block>
+            <Block flex style={{ marginTop: 24, marginVertical: 8, paddingHorizontal: 8 }}>
+              <Block
+                style={{
+                  borderColor: 'black',
+                  width: '93%',
+                  borderWidth: StyleSheet.hairlineWidth,
+                  marginHorizontal: 10,
+                }}
+              />
+              <Text
+                color={nowTheme.COLORS.BLACK}
+                style={{
+                  marginTop: 30,
+                  marginLeft: 20,
+                  marginBottom: 10,
+                  fontFamily: 'lato-bold',
+                  fontWeight: '300',
+                  fontSize: 12,
+                }}
+              >
+                DOCUMENTATION
+              </Text>
+            </Block>
           <DrawerCustomItem title="Acerca de" navigation={navigation} />
         </ScrollView>
       </Block>

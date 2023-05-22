@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import 'react-native-gesture-handler';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { Block, GalioProvider } from 'galio-framework';
 import { nowTheme } from './constants';

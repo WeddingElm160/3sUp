@@ -1,10 +1,16 @@
 import { Dimensions } from 'react-native';
-import { Block } from 'galio-framework';
-import { Text } from 'react-native';
+// header for screens
 import { Header } from '../components';
 import { nowTheme } from '../constants';
 // drawer
-//import CustomDrawerContent from './Menu';
+import CustomDrawerContent from './Menu';
+// screens
+import Home from '../screens/Home';
+import Cart from '../screens/Cart';
+import Saved from '../screens/Saved';
+import History from '../screens/History';
+import Info from '../screens/Info';
+
 import Onboarding from '../screens/Onboarding';
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -15,53 +21,190 @@ const { width } = Dimensions.get("window");
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
+//Home
+function HomeStack(props) {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        presentation: 'card',
+        headerShown: 'screen',
+      }}
+    >
+      <Stack.Screen
+        name="HomeI"
+        component={Home}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="Inicio" navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: '#FFFFFF' },
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+//Cart
+function CartStack() {
+  return (
+    <Stack.Navigator
+      initialRouteName="Cart"
+      screenOptions={{
+        presentation: 'card',
+        headerShown: 'screen',
+      }}
+    >
+      <Stack.Screen
+        name="CartI"
+        component={Cart}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="Carrito" navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: '#FFFFFF' },
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+//Saved
+function SavedStack() {
+  return (
+    <Stack.Navigator
+    initialRouteName="Saved"
+      screenOptions={{
+        presentation: 'card',
+        headerShown: 'screen',
+      }}
+    >
+      <Stack.Screen
+        name="SavedI"
+        component={Saved}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="Guardado" navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: '#FFFFFF' },
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+//History
+function HistoryStack() {
+  return (
+    <Stack.Navigator
+    initialRouteName="History"
+      screenOptions={{
+        presentation: 'card',
+        headerShown: 'screen',
+      }}
+    >
+      <Stack.Screen
+        name="HistoryI"
+        component={History}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="Historial" navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: '#FFFFFF' },
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+//Info
+function InfoStack() {
+  return (
+    <Stack.Navigator
+    initialRouteName="Info"
+      screenOptions={{
+        presentation: 'card',
+        headerShown: 'screen',
+      }}
+    >
+      <Stack.Screen
+        name="InfoI"
+        component={Info}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="Components" navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: '#FFFFFF' },
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
 
-
-function screens() {
-
-  function AppStack(props) {
-    return (
-      <Drawer.Navigator
-        style={{ flex: 1 }}
-        drawerContent={(props) => <CustomDrawerContent {...props} />}
-        drawerStyle={{
-          backgroundColor: nowTheme.COLORS.PRIMARY,
+function AppStack() {
+  return (
+    <Drawer.Navigator initialRouteName="Inicio" useLegacyImplementation
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        drawerStyle:{
+          backgroundColor: nowTheme.COLORS.GRAY,
           width: width * 0.8,
+        },
+        drawerActiveTintColor: nowTheme.COLORS.YOUTUBE,
+        drawerInactiveTintColor: nowTheme.COLORS.WHITE,
+        drawerActiveBackgroundColor: 'transparent',
+        drawerItemStyle: {
+          width: width * 0.75,
+          backgroundColor: 'transparent',
+          paddingVertical: 16,
+          paddingHorizonal: 12,
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignItems: 'center',
+          overflow: 'hidden',
+        },
+        drawerLabelStyle: {
+          fontSize: 18,
+          marginLeft: 12,
+          fontWeight: 'normal',
+        },
+      }}
+    >
+      <Drawer.Screen
+        name="Inicio"
+        component={HomeStack}
+        options={{
+          headerShown: false,
         }}
-        drawerContentOptions={{
-          activeTintcolor: nowTheme.COLORS.WHITE,
-          inactiveTintColor: nowTheme.COLORS.WHITE,
-          activeBackgroundColor: 'transparent',
-          itemStyle: {
-            width: width * 0.75,
-            backgroundColor: 'transparent',
-            paddingVertical: 16,
-            paddingHorizonal: 12,
-            justifyContent: 'center',
-            alignContent: 'center',
-            alignItems: 'center',
-            overflow: 'hidden',
-          },
-          labelStyle: {
-            fontSize: 18,
-            marginLeft: 12,
-            fontWeight: 'normal',
-          },
+      />
+      <Drawer.Screen
+        name="Carrito"
+        component={CartStack}
+        options={{
+          headerShown: false,
         }}
-        initialRouteName="Home"
-      >
-        <Drawer.Screen
-          name="Home"
-          component={HomeStack}
-          options={{
-            headerShown: false,
-          }}
-        />
-        
-      </Drawer.Navigator>
-    );
-  }
+      />
+      <Drawer.Screen
+        name="Guardado"
+        component={SavedStack}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="Historial"
+        component={HistoryStack}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="Acerca de"
+        component={InfoStack}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Drawer.Navigator>
+  );
+}
 
+export default function OnboardingStack(props) {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -78,11 +221,5 @@ function screens() {
       />
       <Stack.Screen name="App" component={AppStack} />
     </Stack.Navigator>
-
-    /*<Block center>
-      <Text>screens</Text>
-    </Block>*/
   )
 }
-
-export default screens

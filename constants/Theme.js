@@ -1,4 +1,5 @@
 const COLORS = {
+  GRAY: '#EEEEEE',
   DEFAULT: '#888888',
   PRIMARY: '#55BCAE',
   LABEL: '#FE2472',

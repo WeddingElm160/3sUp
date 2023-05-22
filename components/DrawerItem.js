@@ -13,7 +13,7 @@ class DrawerItem extends React.Component {
         return (
           <Text
             name="app2x"
-            family="NowExtra"
+            family="lato-semibold"
             size={18}
             color={focused ? nowTheme.COLORS.PRIMARY : 'black'}
             style={{ opacity: 0.5 }}
@@ -23,7 +23,7 @@ class DrawerItem extends React.Component {
         return (
           <Text
             name="atom2x"
-            family="NowExtra"
+            family="lato-semibold"
             size={18}
             color={focused ? nowTheme.COLORS.PRIMARY : 'black'}
             style={{ opacity: 0.5 }}
@@ -33,7 +33,7 @@ class DrawerItem extends React.Component {
         return (
           <Text
             name="paper"
-            family="NowExtra"
+            family="lato-semibold"
             size={18}
             color={focused ? nowTheme.COLORS.PRIMARY : 'black'}
             style={{ opacity: 0.5 }}
@@ -43,7 +43,7 @@ class DrawerItem extends React.Component {
         return (
           <Text
             name="profile-circle"
-            family="NowExtra"
+            family="lato-semibold"
             size={18}
             color={focused ? nowTheme.COLORS.PRIMARY : 'black'}
             style={{ opacity: 0.5 }}
@@ -53,7 +53,7 @@ class DrawerItem extends React.Component {
         return (
           <Text
             name="badge2x"
-            family="NowExtra"
+            family="lato-semibold"
             size={18}
             color={focused ? nowTheme.COLORS.PRIMARY : 'black'}
             style={{ opacity: 0.5 }}
@@ -75,6 +75,9 @@ class DrawerItem extends React.Component {
     return (
       <TouchableOpacity
         style={{ height: 60 }}
+        onPress={() =>
+          navigation.navigate(title)
+        }
       >
         <Block flex row style={containerStyles}>
           <Block middle flex={0.1} style={{ marginRight: 5 }}>
