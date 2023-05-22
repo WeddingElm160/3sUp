@@ -16,6 +16,7 @@ import BarcodeScanner from '../screens/BarcodeScanner';
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
+import { RightButtonContextProvider } from '../context/RightButtonContext';
 
 const { width } = Dimensions.get("window");
 
@@ -139,7 +140,8 @@ function InfoStack() {
 
 function AppStack() {
   return (
-    <Drawer.Navigator initialRouteName="Inicio" useLegacyImplementation
+    <RightButtonContextProvider>
+      <Drawer.Navigator initialRouteName="Inicio" useLegacyImplementation
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         drawerStyle:{
@@ -202,6 +204,8 @@ function AppStack() {
         }}
       />
     </Drawer.Navigator>
+    </RightButtonContextProvider>
+    
   );
 }
 

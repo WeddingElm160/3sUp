@@ -5,6 +5,7 @@ import Images from '../constants/Images';
 import React from 'react';
 import nowTheme from '../constants/Theme';
 import { DrawerItem as DrawerCustomItem } from '../components';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 function CustomDrawerContent({ drawerPosition, navigation, profile, focused, state, ...rest }) {
   const screens = ['Inicio', 'Carrito', 'Guardado', 'Historial'];
@@ -13,7 +14,7 @@ function CustomDrawerContent({ drawerPosition, navigation, profile, focused, sta
       <Block style={styles.header}>
         <Image style={styles.logo} source={Images.Logo} />
         <Block right style={styles.headerIcon}>
-          <Text>X</Text> 
+          <Ionicons name={'close'} size={15} color="black" />
         </Block>
       </Block>
       <Block flex style={{ paddingLeft: 8, paddingRight: 14 }}>
@@ -48,7 +49,7 @@ function CustomDrawerContent({ drawerPosition, navigation, profile, focused, sta
                   fontSize: 12,
                 }}
               >
-                DOCUMENTATION
+                INFORMACIÓN
               </Text>
             </Block>
           <DrawerCustomItem title="Acerca de" navigation={navigation} />

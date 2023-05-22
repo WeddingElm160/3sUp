@@ -6,7 +6,6 @@ import { AppIsReadyContext } from '../context/AppIsReadyContext';
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 import { Images, nowTheme } from '../constants/';
-import { HeaderHeight } from '../constants/utils';
 
 export default function Onboarding(props) {
 

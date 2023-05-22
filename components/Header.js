@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { withNavigation } from '@react-navigation/compat';
 import { TouchableOpacity, StyleSheet, Platform, Dimensions, Keyboard } from 'react-native';
 import { Button, Block, NavBar, Text, theme, Button as GaButton } from 'galio-framework';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { RightButtonContext } from '../context/RightButtonContext';
 
 import nowTheme from '../constants/Theme';
 
+//const {butttonRight} = useContext(RightButtonContext)
 const { height, width } = Dimensions.get('window');
 const iPhoneX = () =>
   Platform.OS === 'ios' && (height === 812 || width === 812 || height === 896 || width === 896);
@@ -38,6 +41,30 @@ const BasketButton = ({ isWhite, style, navigation }) => (
 
 
 class Header extends React.Component {
+  static contextType = RightButtonContext
+
+  state = {
+    isUpdate: true,
+  };
+
+  setUpdateFunction = ()=>{
+    this.setState({ isUpdate: !this.state.isUpdate });
+  }
+
+  componentDidMount() {
+    // Access context variable
+    console.log(this.context.isUpdate);
+    
+    // Listen for changes to context variable
+    console.log(RightButtonContext);
+    /*this.unsubscribe = this.context.addListener(() => {
+      console.log('Context variable changed:', this.context.isUpdate);
+    });
+    this.unsubscribe();
+    */
+  }
+  
+
   handleLeftPress = () => {
     const { back, navigation } = this.props;
     return back ? navigation.goBack() : navigation.openDrawer();
@@ -45,7 +72,8 @@ class Header extends React.Component {
   renderRight = () => {
     const { white, title, navigation } = this.props;
     
-
+    //const {butttonRight} = useContext(this.contextType)
+    
     if (title === 'Title') {
       return [
         <BellButton key="chat-title" navigation={navigation} isWhite={white} />,
@@ -53,7 +81,9 @@ class Header extends React.Component {
       ];
     }
 
-    switch (title) {
+    return [this.context.butttonRight];
+
+    /*switch (title) {
       case 'Home':
         return [
           <BellButton key="chat-home" navigation={navigation} isWhite={white} />,
@@ -101,7 +131,8 @@ class Header extends React.Component {
         ];
       default:
         break;
-    }
+    }*/
+
   };
   renderOptions = () => {
     const { navigation, optionLeft, optionRight } = this.props;
@@ -173,7 +204,7 @@ class Header extends React.Component {
       transparent ? { backgroundColor: 'rgba(0,0,0,0)' } : null
     ];
 
-    const navbarStyles = [styles.navbar, bgColor && { backgroundColor: bgColor }];
+    const navbarStyles = [styles.navbar, bgColor && { backgroundColor: bgColor }, ];
 
     return (
       <Block style={headerStyles}>
@@ -185,19 +216,15 @@ class Header extends React.Component {
           right={this.renderRight()}
           rightStyle={{ alignItems: 'center' }}
           left={
-            <Text
-              name={back ? 'minimal-left2x' : 'align-left-22x'}
-              family="lato-semibold"
-              size={16}
-              onPress={this.handleLeftPress}
-              color={iconColor || (white ? nowTheme.COLORS.WHITE : nowTheme.COLORS.ICON)}
-            >lle</Text>
+            <Button style={{width:45, height: 45, borderRadius: 11, opacity: title ? 1:.5, margin: 0 }} onPress={this.handleLeftPress}>
+              <Ionicons name={back ? 'chevron-back' : 'menu'} size={20} color={nowTheme.COLORS.WHITE} />
+            </Button>
           }
-          leftStyle={{ paddingVertical: 12, flex: 0.2 }}
+          leftStyle={{ marginLeft: 10}}
           titleStyle={[
             styles.title,
             { color: nowTheme.COLORS[white ? 'WHITE' : 'HEADER'] },
-            titleColor && { color: titleColor }
+            titleColor && { color: titleColor }, 
           ]}
           {...props}
         />
@@ -213,16 +240,13 @@ const styles = StyleSheet.create({
     position: 'relative'
   },
   title: {
-    width: '100%',
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: 'bold',
-    fontFamily: 'lato-semibold'
+    fontFamily: 'lato-bold'
   },
   navbar: {
-    paddingVertical: 0,
-    paddingBottom: theme.SIZES.BASE * 1.5,
-    paddingTop: iPhoneX ? theme.SIZES.BASE * 4 : theme.SIZES.BASE,
-    zIndex: 5
+    zIndex: 5,
+    backgroundColor: "rgba(255, 0, 0, .5)"
   },
   shadow: {
     backgroundColor: theme.COLORS.WHITE,

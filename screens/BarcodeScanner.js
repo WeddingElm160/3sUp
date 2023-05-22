@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Animated, KeyboardAvoidingView, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
 import { Block, Button, Text, theme, Item } from 'galio-framework';
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -7,11 +7,13 @@ import { Camera } from 'expo-camera';
 import { Input, Icon } from '../components';
 import { nowTheme } from '../constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { RightButtonContext } from '../context/RightButtonContext';
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
 
 export default function BarcodeScanner(props) {
+  const {setButttonRight, updateComponent} = useContext(RightButtonContext)
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   //const [text, setText] = useState('Not yet scanned');
@@ -48,10 +50,35 @@ export default function BarcodeScanner(props) {
     })()
   }
 
+  const flashPress = () => {
+    setDisabledFlash(!disabledFlash)
+    /*updateComponent();*/
+    console.log('hola mundo');
+    console.log(disabledFlash);
+    
+  }
+
 
   useEffect(() => {
     askForCameraPermission();
+    setButttonRight(
+    <Button
+      key="flash-button"
+      color="info"
+      textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
+      style={{ ...styles.buttonFlash, opacity: disabledFlash ? 0.5 : 1 }}
+      onPress={() =>{flashPress();}}
+    >
+      <Ionicons key="flash-icon" name={disabledFlash ? 'flash-off' : 'flash'} size={18} color="white" />
+    </Button>
+    );
   }, []);
+
+  useEffect(() => {
+    setDisabledButton(!Boolean(barCode));
+  }, [disabledFlash]);
+
+
   useEffect(() => {
     setDisabledButton(!Boolean(barCode));
   }, [barCode]);
@@ -175,17 +202,6 @@ export default function BarcodeScanner(props) {
                   onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 />
                 <BarcodeMask width={viewfinderWidth} height={viewfinderHeight} />
-                <Block row space='between' style={styles.topButttons}>
-
-                  <Button
-                    color="info"
-                    textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
-                    style={{ ...styles.buttonFlash, opacity: disabledFlash ? 0.5 : 1 }}
-                    onPress={() => setDisabledFlash(!disabledFlash)}
-                  >
-                    <Ionicons name={disabledFlash ? 'flash-off' : 'flash'} size={18} color="white" />
-                  </Button>
-                </Block>
               </>
         }
 
