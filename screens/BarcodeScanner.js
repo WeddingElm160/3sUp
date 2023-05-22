@@ -58,22 +58,24 @@ export default function BarcodeScanner(props) {
 
 
   const handleBarCodeScanned = ({ data, boundingBox }) => {
-    setScanned(true);
-    Animated.timing(fadeAnim, {
-      toValue: -184,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
+    
     const barCodeBox = {
-      height: boundingBox.size.height,
-      width: boundingBox.size.width,
+      height: boundingBox.size.width,
+      width: boundingBox.size.height,
       x: boundingBox.origin.y,
       y: boundingBox.origin.x,
     }
 
-    setBarCodeBox(barCodeBox);
+    
 
     if (aabb(viewFinderBounds, barCodeBox)) {
+      setScanned(true);
+      Animated.timing(fadeAnim, {
+        toValue: -184,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+      setBarCodeBox(barCodeBox);
       setBarCode(data)
     }
   };
@@ -239,7 +241,6 @@ export default function BarcodeScanner(props) {
           <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
             style={{ ...styles.button, backgroundColor: nowTheme.COLORS.DEFAULT }}
             onPress={onCancelPress}
-            disabled={disabledButton}
           >
             CANCELAR
           </Button>
