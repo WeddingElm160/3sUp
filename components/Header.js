@@ -53,10 +53,10 @@ class Header extends React.Component {
 
   componentDidMount() {
     // Access context variable
-    console.log(this.context.isUpdate);
+    //console.log(this.context.isUpdate);
     
     // Listen for changes to context variable
-    console.log(RightButtonContext);
+    //console.log(RightButtonContext);
     /*this.unsubscribe = this.context.addListener(() => {
       console.log('Context variable changed:', this.context.isUpdate);
     });
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   },
   navbar: {
     zIndex: 5,
-    backgroundColor: "rgba(255, 0, 0, .5)"
+    backgroundColor: "rgba(255, 0, 0, 1)"
   },
   shadow: {
     backgroundColor: theme.COLORS.WHITE,
