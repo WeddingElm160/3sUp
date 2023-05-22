@@ -1,14 +1,12 @@
 import React, { useContext } from 'react';
 import { ImageBackground, Image, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
 import { Block, Button, Text, theme } from 'galio-framework';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Video, ResizeMode } from 'expo-av';
 import { AppIsReadyContext } from '../context/AppIsReadyContext';
 
-const { height, width } = Dimensions.get("window");
+const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 import { Images, nowTheme } from '../constants/';
 import { HeaderHeight } from '../constants/utils';
-import { log } from 'react-native-reanimated';
 
 export default function Onboarding(props) {
 
@@ -125,7 +123,7 @@ const styles = StyleSheet.create({
   },
 
   backgroundVideo: {
-    height: height + HeaderHeight,
+    height: height,
     top: 0,
     left: 0,
     bottom: 0,
