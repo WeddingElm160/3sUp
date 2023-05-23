@@ -6,9 +6,7 @@ import { nowTheme } from '../constants';
 import CustomDrawerContent from './Menu';
 // screens
 import Home from '../screens/Home';
-import Cart from '../screens/Cart';
-import Saved from '../screens/Saved';
-import History from '../screens/History';
+import Pro from '../screens/Pro';
 import Info from '../screens/Info';
 
 import Onboarding from '../screens/Onboarding';
@@ -80,7 +78,7 @@ function SavedStack() {
     >
       <Stack.Screen
         name="SavedI"
-        component={Saved}
+        component={Pro}
         options={{
           header: ({ navigation, scene }) => (
             <Header title="Guardado" navigation={navigation} scene={scene} />
@@ -103,7 +101,7 @@ function HistoryStack() {
     >
       <Stack.Screen
         name="HistoryI"
-        component={History}
+        component={Pro}
         options={{
           header: ({ navigation, scene }) => (
             <Header title="Historial" navigation={navigation} scene={scene} />

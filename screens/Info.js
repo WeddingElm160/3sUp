@@ -19,7 +19,7 @@ function Info() {
             Benemérita Universidad Autónoma de Puebla
           </Text>
 
-        <Block style={styles.articles}>
+        <Block style={styles.body}>
           <Text size={16} style={[styles.title, { textAlign: "center" }]}>
             Desarrolladores:
           </Text>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
   },
-  articles: {
+  body: {
     width: width - theme.SIZES.BASE * 2,
     paddingVertical: theme.SIZES.BASE,
     paddingHorizontal: 2,
@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
     marginHorizontal: theme.SIZES.BASE * 2,
   },
   image: {
-    width: (width - theme.SIZES.BASE * 6) / 2,
-    height: (width - theme.SIZES.BASE * 6) / 2,
+    width: (width - theme.SIZES.BASE * 6) / 3,
+    height: (width - theme.SIZES.BASE * 6) / 3,
     resizeMode: "contain",
   },
 });
