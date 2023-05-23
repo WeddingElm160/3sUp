@@ -1,15 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { withNavigation } from '@react-navigation/compat';
-import { TouchableOpacity, StyleSheet, Platform, Dimensions, Keyboard } from 'react-native';
-import { Button, Block, NavBar, Text, theme, Button as GaButton } from 'galio-framework';
+import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { Button, Block, NavBar, Text, theme } from 'galio-framework';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { RightButtonContext } from '../context/RightButtonContext';
 
 import nowTheme from '../constants/Theme';
 
-const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
-const iPhoneX = () =>
-  Platform.OS === 'ios' && (height === 812 || width === 812 || height === 896 || width === 896);
+//const {butttonRight} = useContext(RightButtonContext)
+const { width } = Dimensions.get('window');
 
 class Header extends React.Component {
   static contextType = RightButtonContext
