@@ -1,16 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { withNavigation } from '@react-navigation/compat';
-import { TouchableOpacity, StyleSheet, Platform, Dimensions, Keyboard } from 'react-native';
-import { Button, Block, NavBar, Text, theme, Button as GaButton } from 'galio-framework';
+import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { Button, Block, NavBar, Text, theme } from 'galio-framework';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { RightButtonContext } from '../context/RightButtonContext';
 
 import nowTheme from '../constants/Theme';
 
 //const {butttonRight} = useContext(RightButtonContext)
-const { height, width } = Dimensions.get('window');
-const iPhoneX = () =>
-  Platform.OS === 'ios' && (height === 812 || width === 812 || height === 896 || width === 896);
+const { width } = Dimensions.get('window');
 
 const BellButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity
@@ -51,18 +49,18 @@ class Header extends React.Component {
     this.setState({ isUpdate: !this.state.isUpdate });
   }
 
-  componentDidMount() {
+  /*componentDidMount() {
     // Access context variable
     //console.log(this.context.isUpdate);
     
     // Listen for changes to context variable
     //console.log(RightButtonContext);
-    /*this.unsubscribe = this.context.addListener(() => {
+    this.unsubscribe = this.context.addListener(() => {
       console.log('Context variable changed:', this.context.isUpdate);
     });
     this.unsubscribe();
-    */
-  }
+    
+  }*/
   
 
   handleLeftPress = () => {
@@ -80,8 +78,10 @@ class Header extends React.Component {
         <BasketButton key="basket-title" navigation={navigation} isWhite={white} />
       ];
     }
-
-    return [this.context.butttonRight];
+    if (title === '') {
+      return [this.context.butttonRight];
+    }
+    
 
     /*switch (title) {
       case 'Home':

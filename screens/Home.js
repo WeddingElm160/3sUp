@@ -59,8 +59,11 @@ const styles = StyleSheet.create({
     fontFamily: 'lato-semibold',
     paddingBottom: theme.SIZES.BASE,
     paddingHorizontal: theme.SIZES.BASE * 2,
-    marginTop: 44,
+    marginTop: 1,
     color: theme.COLORS.HEADER
+  },
+  body:{
+    
   },
   buttonText: {
     fontFamily: 'lato-bold',
@@ -69,7 +72,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   group: {
-    paddingTop: theme.SIZES.BASE * 2
+    paddingTop: theme.SIZES.BASE
   },
   button: {
     marginBottom: theme.SIZES.BASE,
