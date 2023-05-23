@@ -8,6 +8,7 @@ import { Input, Icon } from '../components';
 import { nowTheme } from '../constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { RightButtonContext } from '../context/RightButtonContext';
+import { useIsFocused } from '@react-navigation/native';
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
@@ -21,8 +22,11 @@ export default function BarcodeScanner(props) {
   const [cameraHeight, setcameraHeight] = useState(0);
   const [barCode, setBarCode] = useState('');
   const [disabledButton, setDisabledButton] = useState(true);
+  const [isFocused, setIsFocusedn] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
-  const disabledFlash = useRef(false);
+  const disabledFlash = useRef(true);
+  const dectectIsFocused = useIsFocused();
+  const cameraRef = useRef();
 
   const [barCodeBox, setBarCodeBox] = useState({
     height: 0,
@@ -50,26 +54,7 @@ export default function BarcodeScanner(props) {
     })()
   }
 
-  const flashPress = () => {
-    disabledFlash.current = !disabledFlash.current;
-    setButttonRight(
-      <Button
-        key="flash-button"
-        color="info"
-        textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
-        style={{ ...styles.buttonFlash, opacity: disabledFlash.current ? 0.4 : 0.6 }}
-        onPress={() =>{flashPress();}}
-      >
-        <Ionicons key="flash-icon" name={disabledFlash.current ? 'flash-off' : 'flash'} size={16} color="white" />
-      </Button>
-      );
-  }
-
-
-  useEffect(() => {
-    askForCameraPermission();
-    setButttonRight(
-    <Button
+  const ButttonRight = () => <Button
       key="flash-button"
       color="info"
       textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
@@ -78,6 +63,26 @@ export default function BarcodeScanner(props) {
     >
       <Ionicons key="flash-icon" name={disabledFlash.current ? 'flash-off' : 'flash'} size={16} color="white" />
     </Button>
+
+  const flashPress = () => {
+    disabledFlash.current = !disabledFlash.current;
+    setButttonRight(
+      ButttonRight()
+      );
+  }
+
+  useEffect(() => {
+    setIsFocusedn(dectectIsFocused);
+    if(!dectectIsFocused)
+      setButttonRight(<></>);
+      else
+      setButttonRight(ButttonRight());
+  }, [dectectIsFocused]);
+
+  useEffect(() => {
+    askForCameraPermission();
+    setButttonRight(
+      ButttonRight()
     );
   }, []);
 
@@ -88,7 +93,6 @@ export default function BarcodeScanner(props) {
 
 
   const handleBarCodeScanned = ({ data, boundingBox }) => {
-    
     const barCodeBox = {
       height: boundingBox.size.width,
       width: boundingBox.size.height,
@@ -191,8 +195,10 @@ export default function BarcodeScanner(props) {
                   Allow Camera
                 </Button>
               </Block>
-              : <>
+              : isFocused?
+              <>
                 <Camera
+                  ref={cameraRef}
                   style={styles.backgroundBarCodeScanner}
                   flashMode={disabledFlash.current ? Camera.Constants.FlashMode.off : Camera.Constants.FlashMode.torch}
                   barCodeScannerSettings={{
@@ -203,9 +209,12 @@ export default function BarcodeScanner(props) {
                     size: { height: 5, width: 5 }
                   }}
                   onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                  onMountError={(error) => {
+                    console.error("Camera Error:", error);
+                  }}
                 />
                 <BarcodeMask width={viewfinderWidth} height={viewfinderHeight} />
-              </>
+              </>:<></>
         }
 
       </Block>

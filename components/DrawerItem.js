@@ -1,5 +1,6 @@
 import { Block, Text, theme } from 'galio-framework';
 import { StyleSheet, TouchableOpacity } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 import React from 'react';
 import nowTheme from '../constants/Theme';
@@ -11,53 +12,23 @@ class DrawerItem extends React.Component {
     switch (title) {
       case 'Inicio':
         return (
-          <Text
-            name="app2x"
-            family="lato-semibold"
-            size={18}
-            color={focused ? nowTheme.COLORS.PRIMARY : 'black'}
-            style={{ opacity: 0.5 }}
-          >I</Text>
+          <Ionicons name="home" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }}/>
         );
       case 'Carrito':
         return (
-          <Text
-            name="atom2x"
-            family="lato-semibold"
-            size={18}
-            color={focused ? nowTheme.COLORS.PRIMARY : 'black'}
-            style={{ opacity: 0.5 }}
-          >C</Text>
+          <Ionicons name="cart" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }}/>
         );
       case 'Guardado':
         return (
-          <Text
-            name="paper"
-            family="lato-semibold"
-            size={18}
-            color={focused ? nowTheme.COLORS.PRIMARY : 'black'}
-            style={{ opacity: 0.5 }}
-            >G</Text>
+          <Ionicons name="bookmark" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }}/>
         );
       case 'Historial':
         return (
-          <Text
-            name="profile-circle"
-            family="lato-semibold"
-            size={18}
-            color={focused ? nowTheme.COLORS.PRIMARY : 'black'}
-            style={{ opacity: 0.5 }}
-            >H</Text>
+          <Ionicons name="receipt" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }}/>
         );
       case 'Acerca de':
         return (
-          <Text
-            name="badge2x"
-            family="lato-semibold"
-            size={18}
-            color={focused ? nowTheme.COLORS.PRIMARY : 'black'}
-            style={{ opacity: 0.5 }}
-            >A</Text>
+          <Ionicons name="information-circle" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }}/>
         );
       default:
         return null;
