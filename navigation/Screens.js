@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 // header for screens
 import { Header } from '../components';
 import { nowTheme } from '../constants';
@@ -13,12 +13,13 @@ import Info from '../screens/Info';
 
 import Onboarding from '../screens/Onboarding';
 import BarcodeScanner from '../screens/BarcodeScanner';
+import Supermarket from '../screens/Supermarket';
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { RightButtonContextProvider } from '../context/RightButtonContext';
 
-const { width } = Dimensions.get("window");
+const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -57,12 +58,12 @@ function CartStack() {
     >
       <Stack.Screen
         name="CartI"
-        component={BarcodeScanner}
+        component={Supermarket}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="" back white transparent navigation={navigation} scene={scene} />
+            <Header title="Super Mercado" back navigation={navigation} scene={scene} />
           ),
-          headerTransparent: true,
+          cardStyle: { backgroundColor: '#FFFFFF' },
         }}
       />
     </Stack.Navigator>

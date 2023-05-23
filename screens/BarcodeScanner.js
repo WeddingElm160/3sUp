@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Animated, KeyboardAvoidingView, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
-import { Block, Button, Text, theme, Item } from 'galio-framework';
+import { Animated, KeyboardAvoidingView, StyleSheet, Dimensions, Platform } from 'react-native';
+import { Block, Button, Text, theme } from 'galio-framework';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import BarcodeMask from 'react-native-barcode-mask';
 import { Camera } from 'expo-camera';
-import { Input, Icon } from '../components';
+import { Input } from '../components';
 import { nowTheme } from '../constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { RightButtonContext } from '../context/RightButtonContext';
 import { useIsFocused } from '@react-navigation/native';
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
-
 
 export default function BarcodeScanner(props) {
   const {setButttonRight} = useContext(RightButtonContext)
@@ -253,7 +252,7 @@ export default function BarcodeScanner(props) {
             placeholder="Escanea el código del producto"
             shadowless
             iconContent={
-              <Ionicons name="barcode-outline" size={32} color="#747474" />
+              <Ionicons name="barcode-outline" size={32} color="#747474" style={{marginEnd: 5}} />
             }
             onChangeText={(value) => setBarCode(value)}
           />
