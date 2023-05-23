@@ -10,58 +10,8 @@ import nowTheme from '../constants/Theme';
 //const {butttonRight} = useContext(RightButtonContext)
 const { width } = Dimensions.get('window');
 
-const BellButton = ({ isWhite, style, navigation }) => (
-  <TouchableOpacity
-    style={[styles.button, style]}
-    onPress={() => navigation.navigate('Pro')}
-  >
-    <Text
-      family="lato-semibold"
-      size={16}
-      name="bulb"
-      color={nowTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
-    >lla</Text>
-    <Block middle style={[styles.notify, { backgroundColor: nowTheme.COLORS[isWhite ? 'WHITE' : 'PRIMARY'] }]} />
-  </TouchableOpacity>
-);
-
-const BasketButton = ({ isWhite, style, navigation }) => (
-  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
-    <Text
-      family="lato-semibold"
-      size={16}
-      name="basket2x"
-      color={nowTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
-    >llb</Text>
-  </TouchableOpacity>
-);
-
-
-
 class Header extends React.Component {
   static contextType = RightButtonContext
-
-  state = {
-    isUpdate: true,
-  };
-
-  setUpdateFunction = ()=>{
-    this.setState({ isUpdate: !this.state.isUpdate });
-  }
-
-  /*componentDidMount() {
-    // Access context variable
-    //console.log(this.context.isUpdate);
-    
-    // Listen for changes to context variable
-    //console.log(RightButtonContext);
-    this.unsubscribe = this.context.addListener(() => {
-      console.log('Context variable changed:', this.context.isUpdate);
-    });
-    this.unsubscribe();
-    
-  }*/
-  
 
   handleLeftPress = () => {
     const { back, navigation } = this.props;
@@ -69,70 +19,8 @@ class Header extends React.Component {
   };
   renderRight = () => {
     const { white, title, navigation } = this.props;
-    
-    //const {butttonRight} = useContext(this.contextType)
-    
-    if (title === 'Title') {
-      return [
-        <BellButton key="chat-title" navigation={navigation} isWhite={white} />,
-        <BasketButton key="basket-title" navigation={navigation} isWhite={white} />
-      ];
-    }
-    if (title === '') {
-      return [this.context.butttonRight];
-    }
-    
 
-    /*switch (title) {
-      case 'Home':
-        return [
-          <BellButton key="chat-home" navigation={navigation} isWhite={white} />,
-          <BasketButton key="basket-home" navigation={navigation} isWhite={white} />
-        ];
-      case 'Deals':
-        return [
-          <BellButton key="chat-categories" navigation={navigation} />,
-          <BasketButton key="basket-categories" navigation={navigation} />
-        ];
-      case 'Categories':
-        return [
-          <BellButton key="chat-categories" navigation={navigation} isWhite={white} />,
-          <BasketButton key="basket-categories" navigation={navigation} isWhite={white} />
-        ];
-      case 'Category':
-        return [
-          <BellButton key="chat-deals" navigation={navigation} isWhite={white} />,
-          <BasketButton key="basket-deals" navigation={navigation} isWhite={white} />
-        ];
-      case 'Profile':
-        return [
-          <BellButton key="chat-profile" navigation={navigation} isWhite={white} />,
-          <BasketButton key="basket-deals" navigation={navigation} isWhite={white} />
-        ];
-      case 'Account':
-        return [
-          <BellButton key="chat-profile" navigation={navigation} />,
-          <BasketButton key="basket-deals" navigation={navigation} />
-        ];
-      case 'Product':
-        return [
-          <BellButton key="chat-profile" navigation={navigation} isWhite={white} />,
-          <BasketButton key="basket-product" navigation={navigation} isWhite={white} />
-        ];
-      case 'Search':
-        return [
-          <BellButton key="chat-search" navigation={navigation} isWhite={white} />,
-          <BasketButton key="basket-search" navigation={navigation} isWhite={white} />
-        ];
-      case 'Settings':
-        return [
-          <BellButton key="chat-search" navigation={navigation} isWhite={white} />,
-          <BasketButton key="basket-search" navigation={navigation} isWhite={white} />
-        ];
-      default:
-        break;
-    }*/
-
+    return this.context.butttonRight;
   };
   renderOptions = () => {
     const { navigation, optionLeft, optionRight } = this.props;
@@ -214,13 +102,13 @@ class Header extends React.Component {
           style={navbarStyles}
           transparent={transparent}
           right={this.renderRight()}
-          rightStyle={{ alignItems: 'center' }}
+          rightStyle={{ alignItems: 'flex-end', marginRight: 10}}
           left={
-            <Button style={{width:45, height: 45, borderRadius: 11, opacity: title ? 1:.5, margin: 0 }} onPress={this.handleLeftPress}>
+            <Button style={{width:45, height: 45, borderRadius: 11, opacity: title ? 1:.6, margin: 0 }} onPress={this.handleLeftPress}>
               <Ionicons name={back ? 'chevron-back' : 'menu'} size={20} color={nowTheme.COLORS.WHITE} />
             </Button>
           }
-          leftStyle={{ marginLeft: 10}}
+          leftStyle={{ alignItems: 'flex-start', marginLeft: 10}}
           titleStyle={[
             styles.title,
             { color: nowTheme.COLORS[white ? 'WHITE' : 'HEADER'] },
@@ -246,7 +134,6 @@ const styles = StyleSheet.create({
   },
   navbar: {
     zIndex: 5,
-    backgroundColor: "rgba(255, 0, 0, 1)"
   },
   shadow: {
     backgroundColor: theme.COLORS.WHITE,

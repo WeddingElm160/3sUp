@@ -21,7 +21,13 @@ export function AppIsReadyContextProvider(props) {
                     'inter-medium': require('../assets/font/Inter-Medium.ttf'),
                     'lato-bold': require('../assets/font/Lato-Bold.ttf'),
                     'lato-semibold': require('../assets/font/Lato-SemiBold.ttf'),
-                    'Novera-Classic-ExtraBold-Italic': require('../assets/font/novera-classic-extrabold-italic.otf')
+                    'Novera-Classic-ExtraBold-Italic': require('../assets/font/novera-classic-extrabold-italic.otf'),
+                    'DMSans-Regular': require('../assets/font/DMSans-Regular.ttf'),
+                    'DMSans-MediumItalic': require('../assets/font/DMSans-MediumItalic.ttf'),
+                    'DMSans-Medium': require('../assets/font/DMSans-Medium.ttf'),
+                    'DMSans-Italic': require('../assets/font/DMSans-Italic.ttf'),
+                    'DMSans-BoldItalic': require('../assets/font/DMSans-BoldItalic.ttf'),
+                    'DMSans-Bold': require('../assets/font/DMSans-Bold.ttf')
                 });
             } catch (e) {
                 console.warn(e);
@@ -39,7 +45,7 @@ export function AppIsReadyContextProvider(props) {
     }
 
     const onLayoutRootView = useCallback(async () => {
-        console.log(appIsReady, videoIsReady);
+        //console.log(appIsReady, videoIsReady);
         if (appIsReady&&videoIsReady) {
             // This tells the splash screen to hide immediately! If we call this after
             // `setAppIsReady`, then we may see a blank screen while the app is
