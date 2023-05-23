@@ -15,7 +15,7 @@ class Home extends React.Component {
         >
           <Block style={styles.imageContainer}>
             <Image
-              source={require("../assets/imgs/gradient.png")}
+              source={require("../assets/imgs/home.jpg")}
               style={styles.gradient}
             />
             <Image
@@ -24,9 +24,6 @@ class Home extends React.Component {
             />
           </Block>
           <Block flex style={styles.group}>
-            <Text size={32} style={styles.title}>
-              ¡Bienvenido a 3S UP!
-            </Text>
             <Text size={24} style={styles.title}>
               Tu aliado para ahorrar mientras compras en el supermercado.
             </Text>
@@ -37,29 +34,24 @@ class Home extends React.Component {
               Con 3S UP!, escanea el código de barras de cada producto y lleva la cuenta de tu carrito físico.
               Nuestra aplicación registrará automáticamente la cantidad acumulada en tu carrito virtual,
               para que siempre sepas cuánto llevas gastado.
-            </Text>
-          </Block>
-
-          <Block flex style={styles.group}>
-            <Text size={16} style={styles.body}>
+              {"\n\n"}
               Toma el control de tus finanzas y evita sorpresas desagradables en la caja registradora.
               Con 3S UP!, puedes establecer un presupuesto personalizado y monitorear el monto total acumulado
               en tu carrito virtual. Ahorra y toma decisiones financieras inteligentes.
             </Text>
           </Block>
 
-          <Block flex style={styles.group}>
-            <Text size={16} style={styles.buttonText}>
-              ¿Qué esperas? ¡Empieza a ahorrar ahora! Ve a tu carrito virtual:
-            </Text>
+          <Block center style={{...styles.group, paddingHorizontal: 0, width: '100%'}}>
             <GaButton
               onPress={() => this.props.navigation.navigate('Carrito')}
               style={styles.button}
               color={nowTheme.COLORS.PRIMARY}
             >
-              Carrito
+              ¡Empieza a ahorrar ahora!
             </GaButton>
           </Block>
+          
+            
 
         </ScrollView>
       </Block>
@@ -81,7 +73,9 @@ const styles = StyleSheet.create({
     paddingBottom: theme.SIZES.BASE,
     paddingHorizontal: theme.SIZES.BASE * 2,
     marginTop: 1,
-    color: nowTheme.COLORS.HEADER
+    color: nowTheme.COLORS.HEADER,
+    textAlign: 'justify',
+    color: '#737373'
   },
   imageContainer: {
     alignItems: "center",
@@ -98,6 +92,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'stretch',
+    opacity: 0.6,
+    borderRadius: 15
   },
   buttonText: {
     fontFamily: 'DMSans-Bold',
@@ -112,11 +108,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   group: {
-    paddingTop: theme.SIZES.BASE
+    paddingTop: theme.SIZES.BASE/2
   },
   button: {
     marginBottom: theme.SIZES.BASE,
-    width: width - theme.SIZES.BASE * 2,
+    padding: 0,
+    paddingHorizontal: theme.SIZES.BASE * 2,
+    width: 'auto'
   },
   image: {
     width: (width - theme.SIZES.BASE * 6) / 2,

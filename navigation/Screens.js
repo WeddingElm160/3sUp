@@ -59,7 +59,7 @@ function CartStack() {
         component={Supermarket}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="Super Mercado" back navigation={navigation} scene={scene} />
+            <Header title="Tienda" navigation={navigation} scene={scene} />
           ),
           cardStyle: { backgroundColor: '#FFFFFF' },
         }}
@@ -77,14 +77,15 @@ function SavedStack() {
         headerShown: 'screen',
       }}
     >
+      
       <Stack.Screen
-        name="SavedI"
+        name="Pro"
         component={Pro}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="Guardado" navigation={navigation} scene={scene} />
+            <Header title="" white transparent navigation={navigation} scene={scene} />
           ),
-          cardStyle: { backgroundColor: '#FFFFFF' },
+          headerTransparent: true,
         }}
       />
     </Stack.Navigator>
@@ -101,13 +102,13 @@ function HistoryStack() {
       }}
     >
       <Stack.Screen
-        name="HistoryI"
+        name="Pro"
         component={Pro}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="Historial" navigation={navigation} scene={scene} />
+            <Header title="" white transparent navigation={navigation} scene={scene} />
           ),
-          cardStyle: { backgroundColor: '#FFFFFF' },
+          headerTransparent: true,
         }}
       />
     </Stack.Navigator>
