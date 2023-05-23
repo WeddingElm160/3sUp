@@ -13,7 +13,7 @@ const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" 
 
 
 export default function BarcodeScanner(props) {
-  const {setButttonRight, updateComponent} = useContext(RightButtonContext)
+  const {setButttonRight} = useContext(RightButtonContext)
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   //const [text, setText] = useState('Not yet scanned');
@@ -21,8 +21,8 @@ export default function BarcodeScanner(props) {
   const [cameraHeight, setcameraHeight] = useState(0);
   const [barCode, setBarCode] = useState('');
   const [disabledButton, setDisabledButton] = useState(true);
-  const [disabledFlash, setDisabledFlash] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+  const disabledFlash = useRef(false);
 
   const [barCodeBox, setBarCodeBox] = useState({
     height: 0,
@@ -51,11 +51,18 @@ export default function BarcodeScanner(props) {
   }
 
   const flashPress = () => {
-    setDisabledFlash(!disabledFlash)
-    /*updateComponent();*/
-    console.log('hola mundo');
-    console.log(disabledFlash);
-    
+    disabledFlash.current = !disabledFlash.current;
+    setButttonRight(
+      <Button
+        key="flash-button"
+        color="info"
+        textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
+        style={{ ...styles.buttonFlash, opacity: disabledFlash.current ? 0.4 : 0.6 }}
+        onPress={() =>{flashPress();}}
+      >
+        <Ionicons key="flash-icon" name={disabledFlash.current ? 'flash-off' : 'flash'} size={16} color="white" />
+      </Button>
+      );
   }
 
 
@@ -66,17 +73,13 @@ export default function BarcodeScanner(props) {
       key="flash-button"
       color="info"
       textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
-      style={{ ...styles.buttonFlash, opacity: disabledFlash ? 0.5 : 1 }}
+      style={{ ...styles.buttonFlash, opacity: disabledFlash.current ? 0.4 : 0.6 }}
       onPress={() =>{flashPress();}}
     >
-      <Ionicons key="flash-icon" name={disabledFlash ? 'flash-off' : 'flash'} size={18} color="white" />
+      <Ionicons key="flash-icon" name={disabledFlash.current ? 'flash-off' : 'flash'} size={16} color="white" />
     </Button>
     );
   }, []);
-
-  useEffect(() => {
-    setDisabledButton(!Boolean(barCode));
-  }, [disabledFlash]);
 
 
   useEffect(() => {
@@ -191,7 +194,7 @@ export default function BarcodeScanner(props) {
               : <>
                 <Camera
                   style={styles.backgroundBarCodeScanner}
-                  flashMode={disabledFlash ? Camera.Constants.FlashMode.off : Camera.Constants.FlashMode.torch}
+                  flashMode={disabledFlash.current ? Camera.Constants.FlashMode.off : Camera.Constants.FlashMode.torch}
                   barCodeScannerSettings={{
                     barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
                   }}
@@ -324,10 +327,11 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonFlash: {
-    width: 30,
-    height: 30,
+    width: 45,
+    height: 45,
     borderRadius: 250,
-    backgroundColor: nowTheme.COLORS.PRIMARY
+    backgroundColor: nowTheme.COLORS.PRIMARY,
+    margin: 0,
   },
   buttonDisabled: {
     backgroundColor: theme.COLORS.DEFAULT,

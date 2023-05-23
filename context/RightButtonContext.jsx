@@ -5,14 +5,9 @@ export const RightButtonContext = createContext();
 
 export function RightButtonContextProvider(props) {
     const [butttonRight, setButttonRight] = useState(<></>);
-    const [isUpdate, setIsUpdate] = useState(true);
-
-
-    const updateComponent = () =>{
-        setIsUpdate(!isUpdate)
-    }
+    
     return (
-        <RightButtonContext.Provider value={{ updateComponent, isUpdate, butttonRight, setButttonRight }}>
+        <RightButtonContext.Provider value={{ butttonRight, setButttonRight }} key={'Proovedor'}>
             {props.children}
         </RightButtonContext.Provider>
     )
