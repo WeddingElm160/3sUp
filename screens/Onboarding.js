@@ -1,17 +1,23 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ImageBackground, Image, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
 import { Block, Button, Text, theme } from 'galio-framework';
 import { Video, ResizeMode } from 'expo-av';
 import { AppIsReadyContext } from '../context/AppIsReadyContext';
-
-const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
+import { useIsFocused } from '@react-navigation/native';
 import { Images, nowTheme } from '../constants/';
+const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
 export default function Onboarding(props) {
 
-  const {videoReady} = useContext(AppIsReadyContext)
-
+  const {videoReady} = useContext(AppIsReadyContext);
+ 
+  const video = React.useRef(null);
   const { navigation } = props;
+
+  const dectectIsFocused = useIsFocused();
+  useEffect(() => {
+    !dectectIsFocused ? video.current.pauseAsync() : video.current.playAsync()
+  }, [dectectIsFocused]);
 
   return (
     <Block flex style={styles.container}>
@@ -23,6 +29,7 @@ export default function Onboarding(props) {
           />*/}
         <Video
           source={require("../assets/vids/background.mp4")}
+          ref={video}
           style={styles.backgroundVideo}
           isMuted
           isLooping
