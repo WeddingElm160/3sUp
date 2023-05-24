@@ -12,6 +12,7 @@ import Info from '../screens/Info';
 import Onboarding from '../screens/Onboarding';
 import BarcodeScanner from '../screens/BarcodeScanner';
 import Supermarket from '../screens/Supermarket';
+import Cart from '../screens/Cart'
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -55,7 +56,7 @@ function CartStack() {
       }}
     >
       <Stack.Screen
-        name="CartI"
+        name="Cart"
         component={Supermarket}
         options={{
           header: ({ navigation, scene }) => (
@@ -64,7 +65,18 @@ function CartStack() {
           cardStyle: { backgroundColor: '#FFFFFF' },
         }}
       />
+      <Stack.Screen
+        name="Cart2"
+        component={Cart}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header back title="Carrito" navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: '#FFFFFF' },
+        }}
+      />
     </Stack.Navigator>
+    
   );
 }
 //Saved

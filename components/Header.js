@@ -1,6 +1,6 @@
 import React from 'react';
 import { withNavigation } from '@react-navigation/compat';
-import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { Button, Block, NavBar, Text, theme } from 'galio-framework';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { RightButtonContext } from '../context/RightButtonContext';
@@ -18,7 +18,7 @@ class Header extends React.Component {
     return back ? navigation.goBack() : navigation.openDrawer();
   };
   renderRight = () => {
-    const { white, title, navigation } = this.props;
+    //const { white, title, navigation } = this.props;
 
     return this.context.butttonRight;
   };
@@ -50,7 +50,7 @@ class Header extends React.Component {
             <Text
               size={18}
               name="bag-162x"
-              family="lato-semibold"
+              family="lato-bold"
               style={{ paddingRight: 8 }}
               color={nowTheme.COLORS.HEADER}
             >lld</Text>
@@ -86,13 +86,13 @@ class Header extends React.Component {
       ...props
     } = this.props;
 
-    const noShadow = ['Search', 'Categories', 'Deals', 'Pro', 'Profile'].includes(title);
+    const noShadow = ['Carrito'].includes(title);
     const headerStyles = [
       !noShadow ? styles.shadow : null,
       transparent ? { backgroundColor: 'rgba(0,0,0,0)' } : null
     ];
 
-    const navbarStyles = [styles.navbar, bgColor && { backgroundColor: bgColor }, ];
+    const navbarStyles = [styles.navbar, bgColor && { backgroundColor: bgColor }, noShadow&&{paddingBottom: theme.SIZES.BASE*1.25}];
 
     return (
       <Block style={headerStyles}>
@@ -102,13 +102,13 @@ class Header extends React.Component {
           style={navbarStyles}
           transparent={transparent}
           right={this.renderRight()}
-          rightStyle={{ alignItems: 'flex-end', marginRight: 10}}
+          rightStyle={{ alignItems: 'flex-end', marginRight: 0, height: 40 }}
           left={
-            <Button style={{width:45, height: 45, borderRadius: 11, opacity: title ? 1:.6, margin: 0 }} onPress={this.handleLeftPress}>
+            <Button style={{width:40, height: 40, borderRadius: 11, opacity: title ? 1:.6, margin: 0 }} onPress={this.handleLeftPress}>
               <Ionicons name={back ? 'chevron-back' : 'menu'} size={20} color={nowTheme.COLORS.WHITE} />
             </Button>
           }
-          leftStyle={{ alignItems: 'flex-start', marginLeft: 10}}
+          leftStyle={{ alignItems: 'flex-start', marginLeft: 0, height: 40 }}
           titleStyle={[
             styles.title,
             { color: nowTheme.COLORS[white ? 'WHITE' : 'HEADER'] },
@@ -129,12 +129,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     fontFamily: 'lato-bold'
   },
   navbar: {
     zIndex: 5,
-  },
+    paddingHorizontal: theme.SIZES.BASE,
+    height: 40,
+    paddingTop: theme.SIZES.BASE*2, 
+    paddingBottom: theme.SIZES.BASE*2
+    },
   shadow: {
     backgroundColor: theme.COLORS.WHITE,
     shadowColor: 'black',

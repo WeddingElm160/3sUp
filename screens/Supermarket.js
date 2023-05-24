@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Input } from '../components';
 import { KeyboardAvoidingView, StyleSheet, Image, Dimensions, Platform, TouchableOpacity, ScrollView } from 'react-native';
-import { Block, Button, Text, theme } from 'galio-framework';
+import { Block, Text, theme } from 'galio-framework';
 import { Images } from '../constants/';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { createFilter } from 'react-native-search-filter';
@@ -33,7 +33,7 @@ function Supermarket(props) {
           {
             filteredEmails.length?<ScrollView>
             {filteredEmails.map((store, index) =><Block key={index}>
-              <TouchableOpacity onPress={() => props.navigation.navigate('cart')}>
+              <TouchableOpacity onPress={() => props.navigation.navigate('Cart2')}>
                 <Block row style={styles.defaultStyle}>
                   <Block middle style={{ marginRight: 5}}>
                   <Image source={store.image? store.image : Images.cart} style={{...styles.storeImage, backgroundColor: store.image? 'transparent' : '#c0c0c0',}}/>
@@ -78,9 +78,8 @@ function Supermarket(props) {
 
 const styles = StyleSheet.create({
   contain: {
-    width: width - theme.SIZES.BASE * 2,
-    paddingVertical: theme.SIZES.BASE,
-    paddingHorizontal: 2,
+    width: '100%',
+    padding: theme.SIZES.BASE,
   },
   storeImage: {
     width: 48,
