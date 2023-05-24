@@ -53,6 +53,7 @@ function CustomDrawerContent({ drawerPosition, navigation, profile, focused, sta
               </Text>
             </Block>
           <DrawerCustomItem title="Acerca de" navigation={navigation} />
+          <DrawerCustomItem title="Cerrar Sesion" navigation={navigation} />
         </ScrollView>
       </Block>
     </Block>

@@ -33,7 +33,7 @@ function Supermarket(props) {
           {
             filteredEmails.length?<ScrollView>
             {filteredEmails.map((store, index) =><Block key={index}>
-              <TouchableOpacity onPress={() => props.navigation.navigate('Cart2')}>
+              <TouchableOpacity onPress={() => props.navigation.navigate('Supermarket')}>
                 <Block row style={styles.defaultStyle}>
                   <Block middle style={{ marginRight: 5}}>
                   <Image source={store.image? store.image : Images.cart} style={{...styles.storeImage, backgroundColor: store.image? 'transparent' : '#c0c0c0',}}/>

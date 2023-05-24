@@ -12,23 +12,27 @@ class DrawerItem extends React.Component {
     switch (title) {
       case 'Inicio':
         return (
-          <Ionicons name="home" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }}/>
+          <Ionicons name="home" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }} />
         );
       case 'Carrito':
         return (
-          <Ionicons name="cart" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }}/>
+          <Ionicons name="cart" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }} />
         );
       case 'Guardado':
         return (
-          <Ionicons name="bookmark" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }}/>
+          <Ionicons name="bookmark" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }} />
         );
       case 'Historial':
         return (
-          <Ionicons name="receipt" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }}/>
+          <Ionicons name="receipt" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }} />
         );
       case 'Acerca de':
         return (
-          <Ionicons name="information-circle" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }}/>
+          <Ionicons name="information-circle" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }} />
+        );
+      case 'Cerrar Sesion':
+        return (
+          <Ionicons name="ios-exit" size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'black'} style={{ opacity: 0.5 }} />
         );
       default:
         return null;
@@ -47,7 +51,7 @@ class DrawerItem extends React.Component {
       <TouchableOpacity
         style={{ height: 60 }}
         onPress={() =>
-          navigation.navigate(title)
+          navigation.navigate(title == 'Cerrar Sesion' ? 'Onboarding' : title)
         }
       >
         <Block flex row style={containerStyles}>

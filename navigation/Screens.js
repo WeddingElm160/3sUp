@@ -8,9 +8,12 @@ import CustomDrawerContent from './Menu';
 import Home from '../screens/Home';
 import Pro from '../screens/Pro';
 import Info from '../screens/Info';
+import Cart from '../screens/Cart';
+import Success from '../screens/Success';
+import Product from '../screens/Product';
+import AddProduct from '../screens/AddProduct';
 
 import Onboarding from '../screens/Onboarding';
-import BarcodeScanner from '../screens/BarcodeScanner';
 import Supermarket from '../screens/Supermarket';
 import Cart from '../screens/Cart'
 
@@ -49,18 +52,58 @@ function HomeStack(props) {
 function CartStack() {
   return (
     <Stack.Navigator
-      initialRouteName="Cart"
+      initialRouteName="Supermarket"
       screenOptions={{
         presentation: 'card',
         headerShown: 'screen',
       }}
     >
       <Stack.Screen
-        name="Cart"
+        name="Supermarket"
         component={Supermarket}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="Tienda" navigation={navigation} scene={scene} />
+            <Header title="Supermercados" navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: '#FFFFFF' },
+        }}
+      />
+      <Stack.Screen
+        name="Cart"
+        component={Cart}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="Carrito" navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: '#FFFFFF' },
+        }}
+      />
+      <Stack.Screen
+        name="Success"
+        component={Success}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="" white transparent navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: '#FFFFFF' },
+        }}
+      />
+      <Stack.Screen
+        name="Product"
+        component={Product}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="" white transparent navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: '#FFFFFF' },
+        }}
+      />
+      <Stack.Screen
+        name="AddProduct"
+        component={AddProduct}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="" white transparent navigation={navigation} scene={scene} />
           ),
           cardStyle: { backgroundColor: '#FFFFFF' },
         }}
@@ -83,13 +126,12 @@ function CartStack() {
 function SavedStack() {
   return (
     <Stack.Navigator
-    initialRouteName="Saved"
+    initialRouteName="Pro"
       screenOptions={{
         presentation: 'card',
         headerShown: 'screen',
       }}
     >
-      
       <Stack.Screen
         name="Pro"
         component={Pro}
@@ -107,7 +149,7 @@ function SavedStack() {
 function HistoryStack() {
   return (
     <Stack.Navigator
-    initialRouteName="History"
+    initialRouteName="Pro"
       screenOptions={{
         presentation: 'card',
         headerShown: 'screen',
@@ -130,7 +172,7 @@ function HistoryStack() {
 function InfoStack() {
   return (
     <Stack.Navigator
-    initialRouteName="Info"
+    initialRouteName="InfoI"
       screenOptions={{
         presentation: 'card',
         headerShown: 'screen',
