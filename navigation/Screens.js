@@ -15,7 +15,6 @@ import AddProduct from '../screens/AddProduct';
 
 import Onboarding from '../screens/Onboarding';
 import Supermarket from '../screens/Supermarket';
-import Cart from '../screens/Cart'
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
