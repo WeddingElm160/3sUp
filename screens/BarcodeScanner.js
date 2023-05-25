@@ -9,6 +9,7 @@ import { nowTheme } from '../constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { RightButtonContext } from '../context/RightButtonContext';
 import { useIsFocused } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
@@ -273,7 +274,7 @@ export default function BarcodeScanner(props) {
           </Button>
         </Block>
       </Animated.View>
-
+      <StatusBar style="light" backgroundColor="#000000" />
     </KeyboardAvoidingView>
   );
 }

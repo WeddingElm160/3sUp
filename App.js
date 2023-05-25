@@ -5,6 +5,8 @@ import { Block, GalioProvider } from 'galio-framework';
 import { nowTheme } from './constants';
 import Screens from './navigation/Screens';
 import { AppIsReadyContextProvider } from './context/AppIsReadyContext';
+import { StatusBar } from 'expo-status-bar';
+
 
 export default function App() {
 
@@ -21,6 +23,7 @@ export default function App() {
           </Block>
         </GalioProvider>
       </NavigationContainer>
+      <StatusBar style="dark" backgroundColor="#FFFFFF" />
    </AppIsReadyContextProvider>
   );
 

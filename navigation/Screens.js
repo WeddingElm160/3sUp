@@ -12,6 +12,7 @@ import Cart from '../screens/Cart';
 import Success from '../screens/Success';
 import Product from '../screens/Product';
 import AddProduct from '../screens/AddProduct';
+import BarcodeScanner from '../screens/BarcodeScanner';
 
 import Onboarding from '../screens/Onboarding';
 import Supermarket from '../screens/Supermarket';
@@ -108,24 +109,24 @@ function CartStack() {
         }}
       />
       <Stack.Screen
-        name="Cart2"
-        component={Cart}
+        name="BarcodeScanner"
+        component={BarcodeScanner}
         options={{
           header: ({ navigation, scene }) => (
-            <Header back title="Carrito" navigation={navigation} scene={scene} />
+            <Header transparent title="" navigation={navigation} scene={scene} />
           ),
           cardStyle: { backgroundColor: '#FFFFFF' },
         }}
       />
     </Stack.Navigator>
-    
+
   );
 }
 //Saved
 function SavedStack() {
   return (
     <Stack.Navigator
-    initialRouteName="Pro"
+      initialRouteName="Pro"
       screenOptions={{
         presentation: 'card',
         headerShown: 'screen',
@@ -148,7 +149,7 @@ function SavedStack() {
 function HistoryStack() {
   return (
     <Stack.Navigator
-    initialRouteName="Pro"
+      initialRouteName="Pro"
       screenOptions={{
         presentation: 'card',
         headerShown: 'screen',
@@ -171,7 +172,7 @@ function HistoryStack() {
 function InfoStack() {
   return (
     <Stack.Navigator
-    initialRouteName="InfoI"
+      initialRouteName="InfoI"
       screenOptions={{
         presentation: 'card',
         headerShown: 'screen',
@@ -195,70 +196,70 @@ function AppStack() {
   return (
     <RightButtonContextProvider>
       <Drawer.Navigator initialRouteName="Inicio" useLegacyImplementation
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
-      screenOptions={{
-        drawerStyle:{
-          backgroundColor: nowTheme.COLORS.GRAY,
-          width: width * 0.8,
-        },
-        drawerActiveTintColor: nowTheme.COLORS.YOUTUBE,
-        drawerInactiveTintColor: nowTheme.COLORS.WHITE,
-        drawerActiveBackgroundColor: 'transparent',
-        drawerItemStyle: {
-          width: width * 0.75,
-          backgroundColor: 'transparent',
-          paddingVertical: 16,
-          paddingHorizonal: 12,
-          justifyContent: 'center',
-          alignContent: 'center',
-          alignItems: 'center',
-          overflow: 'hidden',
-        },
-        drawerLabelStyle: {
-          fontSize: 18,
-          marginLeft: 12,
-          fontWeight: 'normal',
-        },
-      }}
-    >
-      <Drawer.Screen
-        name="Inicio"
-        component={HomeStack}
-        options={{
-          headerShown: false,
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
+        screenOptions={{
+          drawerStyle: {
+            backgroundColor: nowTheme.COLORS.GRAY,
+            width: width * 0.8,
+          },
+          drawerActiveTintColor: nowTheme.COLORS.YOUTUBE,
+          drawerInactiveTintColor: nowTheme.COLORS.WHITE,
+          drawerActiveBackgroundColor: 'transparent',
+          drawerItemStyle: {
+            width: width * 0.75,
+            backgroundColor: 'transparent',
+            paddingVertical: 16,
+            paddingHorizonal: 12,
+            justifyContent: 'center',
+            alignContent: 'center',
+            alignItems: 'center',
+            overflow: 'hidden',
+          },
+          drawerLabelStyle: {
+            fontSize: 18,
+            marginLeft: 12,
+            fontWeight: 'normal',
+          },
         }}
-      />
-      <Drawer.Screen
-        name="Carrito"
-        component={CartStack}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Drawer.Screen
-        name="Guardado"
-        component={SavedStack}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Drawer.Screen
-        name="Historial"
-        component={HistoryStack}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Drawer.Screen
-        name="Acerca de"
-        component={InfoStack}
-        options={{
-          headerShown: false,
-        }}
-      />
-    </Drawer.Navigator>
+      >
+        <Drawer.Screen
+          name="Inicio"
+          component={HomeStack}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Drawer.Screen
+          name="Carrito"
+          component={CartStack}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Drawer.Screen
+          name="Guardado"
+          component={SavedStack}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Drawer.Screen
+          name="Historial"
+          component={HistoryStack}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Drawer.Screen
+          name="Acerca de"
+          component={InfoStack}
+          options={{
+            headerShown: false,
+          }}
+        />
+      </Drawer.Navigator>
     </RightButtonContextProvider>
-    
+
   );
 }
 
