@@ -1,15 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Animated, StyleSheet, Dimensions, ScrollView } from "react-native";
-import { Block, Button, theme, Text } from "galio-framework";
+import { Block, Button, theme, Text, Input } from "galio-framework";
 import Card from "../components/Card";
 import { nowTheme } from '../constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const { width } = Dimensions.get("window");
 
 function Home() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [disabledButton, setDisabledButton] = useState(true);
+  const [showAlert, setShowAlert] = useState(false);
+  const [temporalBudget, setTemporalBudget] = useState(0.0);
+  const [budget, setBudget] = useState(0.0);
+  //const [thereBudget, setThereBudget] = useState(false);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -17,13 +22,22 @@ function Home() {
       duration: 500,
       useNativeDriver: true,
     }).start();
+    
+    setTimeout(function(){
+      setShowAlert(true);
+    }, 400);
+    
   }, []);
 
   return (
     <Block flex center style={styles.contain}>
       <Block style={styles.upperSection} row middle>
         <Text size={16} family="lato-semibold" >Presupesto   </Text>
-        <Text size={16} family="inter-bold" color="#B7814F" bold>$150.00</Text>
+        <Text size={16} family="inter-bold" color="#B7814F" bold>${budget}</Text>
+        <Button style={{ ...styles.optionButton, marginStart: 5 }} onPress={()=>setShowAlert(true)} >
+          <Ionicons name="create-outline" size={10} color={nowTheme.COLORS.BLACK} />
+        </Button>
+        
       </Block>
       <Block style={styles.mainSection} middle>
         <ScrollView style={{ width: '100%' }}>
@@ -81,6 +95,7 @@ function Home() {
               <Text size={16} family="lato-semibold" >Cambio        </Text>
               <Text size={16} family="inter-bold" color="#55BCAE" bold>$150.00</Text>
             </Block>
+            
           </Block>
           <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
             style={{ ...styles.button, backgroundColor: disabledButton ? '#d4e9e6' : nowTheme.COLORS.PRIMARY }}
@@ -92,6 +107,38 @@ function Home() {
         </Block>
         
       </Animated.View>
+
+      <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={budget?"Actualizar presupuesto":"Antes de empezar..."}
+          closeOnTouchOutside={false}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText={budget?"Cancelar":"No necesito"}
+          confirmText="Aceptar"
+          confirmButtonColor={Boolean(temporalBudget)?nowTheme.COLORS.PRIMARY: '#d4e9e6'}
+          onCancelPressed={() => setShowAlert(false)}
+          customView={<Input
+            shadowlesshhh
+            color={theme.COLORS.BLACK}
+            value={temporalBudget}
+            placeholderTextColor="#747474"
+            placeholder="Presupuesto inicial."
+            iconContent={
+              <Ionicons name="logo-usd" size={15} color="#747474" style={{ marginEnd: 5 }} />
+            }
+            onChangeText={(value) => setTemporalBudget(value.replace(/[^0-9.]/g, ''))}
+          />}
+          onConfirmPressed={() => {
+            if(temporalBudget){
+              setBudget(temporalBudget)
+            setShowAlert(false)
+            }
+            
+          }}
+        />
       
     </Block>
   );
@@ -151,6 +198,15 @@ const styles = StyleSheet.create({
   buttonLeft: {
     borderBottomEndRadius: 20,
     borderTopEndRadius: 20
+  },
+  optionButton: {
+    backgroundColor: '#def0eb',
+    borderRadius: 6,
+    width: 20,
+    height: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 0
   }
 });
 
