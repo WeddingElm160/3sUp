@@ -1,7 +1,7 @@
 export class Cart{
     receipt; products;
     constructor(){
-        products = []
+        this.products = []
         this.receipt = {
             budget: 0,
             subtotal: 0,
