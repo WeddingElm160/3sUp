@@ -1,11 +1,15 @@
+import { Cart } from "./Cart"
 export class User{
     carts
-    constructor(){
-        this.carts = []
+    constructor(user){
+        if(user){
+            this.carts = user.carts.map(cart => new Cart(cart))
+        }else
+            this.carts = []
     }
 
-    addCart(cart) {
-        this.carts.unshift(cart)
+    addCart() {
+        this.carts.unshift(new Cart())
     }
 
     removeCart() {

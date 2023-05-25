@@ -48,7 +48,7 @@ export function AppIsReadyContextProvider(props) {
 
   const onLayoutRootView = useCallback(async () => {
     //console.log(appIsReady, videoIsReady);
-    if (appIsReady && videoIsReady && userIsReady) {
+    if (appIsReady && videoIsReady ) {
       // This tells the splash screen to hide immediately! If we call this after
       // `setAppIsReady`, then we may see a blank screen while the app is
       // loading its initial state and rendering its first pixels. So instead,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Input } from '../components';
 import { KeyboardAvoidingView, StyleSheet, Image, Dimensions, Platform, TouchableOpacity, ScrollView } from 'react-native';
 import { Block, Text, theme } from 'galio-framework';
@@ -6,11 +6,13 @@ import { Images } from '../constants/';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { createFilter } from 'react-native-search-filter';
 import stores from '../constants/stores';
+import { UserContext } from "../context/UserContext";
 const KEYS_TO_FILTERS = ['name'];
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
 function Supermarket(props) {
+  const { user } = useContext(UserContext)
   const [filteredEmails, setFilteredEmails] = useState(stores);
   const searchUpdated = (term) => {
     setFilteredEmails(stores.filter(createFilter(term, KEYS_TO_FILTERS)))
@@ -33,7 +35,7 @@ function Supermarket(props) {
           {
             filteredEmails.length?<ScrollView>
             {filteredEmails.map((store, index) =><Block key={index}>
-              <TouchableOpacity onPress={() => props.navigation.navigate('Cart')}>
+              <TouchableOpacity onPress={() => {props.navigation.navigate('Cart'); user.addCart(); }}>
                 <Block row style={styles.defaultStyle}>
                   <Block middle style={{ marginRight: 5}}>
                   <Image source={store.image? store.image : Images.cart} style={{...styles.storeImage, backgroundColor: store.image? 'transparent' : '#c0c0c0',}}/>

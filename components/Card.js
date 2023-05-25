@@ -3,6 +3,7 @@ import { StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Block, theme, Button, Text } from "galio-framework";
 import nowTheme from '../constants/Theme';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Images } from '../constants';
 
 function Card(props) {
   const [quantity, setQuantity] = useState(1);
@@ -13,7 +14,7 @@ function Card(props) {
   };
   
   useEffect(() => {
-    props.setQuantity(quantity)
+    props.product.setQuantity(quantity)
   }, [quantity]);
 
   const decrementQuantity = () => {
@@ -25,12 +26,12 @@ function Card(props) {
     <TouchableOpacity activeOpacity={0.6}>
       <Block style={styles.contain} row card>
         <Block middle>
-          <Image source={{uri: props.image,}} style={{ ...styles.productImage }} />
+          <Image source={props.product.image?{uri: props.product.image}:Images.cart} style={{ ...styles.productImage, backgroundColor: "#c0c0c0" }} />
         </Block>
         <Block flex>
-          <Text style={{ fontSize: 16, fontFamily: 'lato-semibold', fontWeight: 'bold' }} numberOfLines={1}>{props.name}</Text>
-          <Text style={{ fontSize: 12, fontFamily: 'lato-semibold', color: '#858585', height: 32 }} numberOfLines={2}>{props.description}</Text>
-          <Text style={{ fontSize: 18, fontFamily: 'lato-bold', color: '#55BCAE' }}>${props.price}</Text>
+          <Text style={{ fontSize: 16, fontFamily: 'lato-semibold', fontWeight: 'bold' }} numberOfLines={1}>{props.product.name}</Text>
+          <Text style={{ fontSize: 12, fontFamily: 'lato-semibold', color: '#858585', height: 32 }} numberOfLines={2}>{props.product.description}</Text>
+          <Text style={{ fontSize: 18, fontFamily: 'lato-bold', color: '#55BCAE' }}>${props.product.price}</Text>
         </Block>
         <Block style={styles.counter} middle row space="between">
           <Button style={{ ...styles.counterButton, backgroundColor: '#5faca0' }} onPress={decrementQuantity}>
@@ -43,7 +44,7 @@ function Card(props) {
         </Block>
         <Block middle row style={styles.option}>
           <Button style={{ ...styles.optionButton }} >
-            <Ionicons name="close" size={10} color={nowTheme.COLORS.BLACK} onPress={props.quantity}/>
+            <Ionicons name="close" size={10} color={nowTheme.COLORS.BLACK} onPress={()=>props.remove()}/>
           </Button>
         </Block>
       </Block>

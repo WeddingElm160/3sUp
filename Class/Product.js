@@ -1,11 +1,20 @@
 export class Product {
 
-    constructor(name, description, price, image) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.quantity = 1;
-        this.image = image;
+    constructor(name, description, price, quantity, image) {
+        if (typeof name === 'string') {
+            this.name = name;
+            this.description = description;
+            this.price = parseFloat(price);
+            this.quantity = parseInt(quantity);
+            this.image = image;
+        }else{
+            this.name = name.name;
+            this.description = name.description;
+            this.price = parseFloat(name.price);
+            this.quantity = parseInt(name.quantity);
+            this.image = name.image;
+        }
+        
     }
 
     setName(newName) {

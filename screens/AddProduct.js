@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, ScrollView, Image, TouchableOpacity, TextInput } from "react-native";
 import { Text, Block, Button, theme } from "galio-framework";
 import { nowTheme } from '../constants';
+import { UserContext } from "../context/UserContext";
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Product } from "../Class/Product";
 
-function AddProduct() {
+function AddProduct(props) {
   const [quantity, setQuantity] = useState(1);
   const [price, setPrice] = useState("0.00");
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
+  const { user } = useContext(UserContext);
 
   const incrementQuantity = () => {
     if (quantity < 99) {
@@ -33,17 +36,21 @@ function AddProduct() {
   const handleProductDescriptionChange = (value) => {
     setProductDescription(value);
   };
-
+  const Addpress = () => {
+      user.carts[0].addProduct(new Product(productName,productDescription,price,quantity,null));
+      props.navigation.goBack('')
+    };
   return (
     <Block contentContainerStyle={styles.container} flex>
       {/* Sección superior */}
       <Block style={styles.topSection}>
         <TouchableOpacity style={styles.imageContainer} onPress={() => { }}>
-          {productName ? (
+          {/*productName ? (
             <Image source={{ uri: productName }} style={styles.image} resizeMode="cover" />
           ) : (
             <Text style={styles.placeholderText}>Agregar Foto(s)</Text>
-          )}
+          )*/}
+          <Text style={styles.placeholderText}>Agregar Foto(s)</Text>
         </TouchableOpacity>
       </Block>
 
@@ -91,7 +98,9 @@ function AddProduct() {
             />
           </Block>
         </Block>
-        <Button style={styles.addButton}>
+        <Button style={{...styles.addButton, backgroundColor: productName? nowTheme.COLORS.PRIMARY : '#d4e9e6'  }}
+        disabled={!Boolean(productName)}
+        onPress={()=>Addpress()}>
           <Text style={styles.addButtonLabel}>Agregar</Text>
         </Button>
       </Block>

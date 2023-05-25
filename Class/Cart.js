@@ -1,27 +1,40 @@
-export class Cart{
-    receipt; products;
-    constructor(){
-        this.products = []
-        this.receipt = {
-            budget: 0,
-            subtotal: 0,
-            change: 0
-        }
+import Product from './Product'
+export class Cart {
+  receipt; products;
+  constructor(cart) {
+    if (cart) {
+      this.receipt = {
+        budget: parseFloat(cart.receipt.budget),
+        subtotal: parseFloat(cart.receipt.subtotal),
+        change: parseFloat(cart.receipt.change)
+      } 
+      this.products = cart.products.map(product => new Product(product))
+    } else {
+      this.products = []
+      this.receipt = {
+        budget: 0,
+        subtotal: 0,
+        change: 0
+      }
     }
 
-    setBudget(budget){
-        this.receipt.budget=budget;
-    }
-    
-    addProduct(product){
-        push(product);
-        this.receipt.subtotal = product.price;
-        this.receipt.change = this.receipt.budget ? (this.receipt.budget - this.receipt.subtotal) : 0
-    }
+  }
 
-    removeProduct(key){
-        product = array.splice(key, 1)
-        this.receipt.subtotal = product.price;
-        this.receipt.change = this.receipt.budget ? (this.receipt.budget + this.receipt.subtotal) : 0
-    }
+  setBudget(budget) {
+    budget=parseFloat(budget)
+    this.receipt.budget = budget;
+    this.receipt.change = budget - this.receipt.subtotal;
+  }
+
+  addProduct(product) {
+    this.products.push(product);
+    this.receipt.subtotal += product.price;
+    this.receipt.change = this.receipt.budget ? (this.receipt.budget - this.receipt.subtotal) : 0
+  }
+
+  removeProduct(key) {
+    const product = this.products.splice(key, 1)[0]
+    this.receipt.subtotal -= product.price;
+    this.receipt.change = this.receipt.budget ? (this.receipt.budget + this.receipt.subtotal) : 0
+  }
 }

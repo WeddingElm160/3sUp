@@ -1,24 +1,24 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import { Animated, StyleSheet, Dimensions, ScrollView } from "react-native";
+import { Animated, StyleSheet, Dimensions, ScrollView, Image } from "react-native";
 import { Block, Button, theme, Text, Input } from "galio-framework";
 import Card from "../components/Card";
 import { nowTheme } from '../constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import {Cart as CartClass} from '../Class/Cart'
 import { UserContext } from "../context/UserContext";
+import { useIsFocused } from '@react-navigation/native';
+import {Images} from "../constants";
 
 const { width, height } = Dimensions.get("window");
 
-function Home(props) {
+function Cart(props) {
   const { user } = useContext(UserContext)
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const [disabledButton, setDisabledButton] = useState(true);
   const [showAlert, setShowAlert] = useState(false);
   const [temporalBudget, setTemporalBudget] = useState(0.0);
-  const [budget, setBudget] = useState(0.0);
+  const dectectIsFocused = useIsFocused();
+  const [updateScreen, setUpdateScreen] = useState(false);
   //const actualCart = useRef(new CartClass())
-
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -29,25 +29,34 @@ function Home(props) {
     
     setTimeout(function(){
       setShowAlert(true);
-    }, 400);
-    
+    }, 400);      
   }, []);
+
+  /*useEffect(() => {
+    if(dectectIsFocused)
+    console.log(user.carts[0]); 
+   }, [dectectIsFocused]);*/
 
   return (
     <Block flex center style={styles.contain}>
       <Block style={styles.upperSection} row middle>
         <Text size={16} family="lato-semibold" >Presupesto   </Text>
-        <Text size={16} family="inter-bold" color="#B7814F" bold>${budget}</Text>
+        <Text size={16} family="inter-bold" color="#B7814F" bold>${user.carts[0].receipt.budget}</Text>
         <Button style={{ ...styles.optionButton, marginStart: 5 }} onPress={()=>setShowAlert(true)} >
           <Ionicons name="create-outline" size={10} color={nowTheme.COLORS.BLACK} />
         </Button>
         
       </Block>
       <Block style={styles.mainSection} middle>
+        {user.carts[0].products.length?
         <ScrollView style={{ width: '100%' }}>
-          {/* <Card /> */}
+           {user.carts[0].products.map((product, i)=><Card product={product} key={i} remove={()=>{user.carts[0].removeProduct(i); setUpdateScreen(!updateScreen)}}/>)}
+          
           <Block height={theme.SIZES.BASE + 40} />
         </ScrollView>
+        :
+        <Image source={Images.emptyCart} style={{ width: '65%'}} resizeMode={'contain'} />
+        }
       </Block>
       <Animated.View style={{ ...styles.lowerSection, translateY: fadeAnim }}>
         <Block styles={styles.buttonSection} row flex middle>
@@ -86,18 +95,18 @@ function Home(props) {
           <Block flex>
             <Block row>
               <Text size={16} family="lato-semibold" >Sub. Total   </Text>
-              <Text size={16} family="inter-bold" color="#B5B74F" bold>$150.00</Text>
+              <Text size={16} family="inter-bold" color="#B5B74F" bold>${user.carts[0].receipt.subtotal}</Text>
             </Block>
             <Block row>
               <Text size={16} family="lato-semibold" >Cambio       </Text>
-              <Text size={16} family="inter-bold" color="#55BCAE" bold>$150.00</Text>
+              <Text size={16} family="inter-bold" color="#55BCAE" bold>${user.carts[0].receipt.change}</Text>
             </Block>
             
           </Block>
           <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
-            style={{ ...styles.button, backgroundColor: disabledButton ? '#d4e9e6' : nowTheme.COLORS.PRIMARY }}
+            style={{ ...styles.button, backgroundColor: user.carts[0].products.length? nowTheme.COLORS.PRIMARY : '#d4e9e6' }}
             //onPress={}
-            disabled={disabledButton}
+            disabled={!Boolean(user.carts[0].products.length)}
           >
             CUENTA
           </Button>
@@ -108,12 +117,12 @@ function Home(props) {
       <AwesomeAlert
           show={showAlert}
           showProgress={false}
-          title={budget?"Actualizar presupuesto":"Antes de empezar..."}
+          title={user.carts[0].budget?"Actualizar presupuesto":"Antes de empezar..."}
           closeOnTouchOutside={false}
           closeOnHardwareBackPress={false}
           showCancelButton={true}
           showConfirmButton={true}
-          cancelText={budget?"Cancelar":"No necesito"}
+          cancelText={user.carts[0].budget?"Cancelar":"No necesito"}
           confirmText="Aceptar"
           confirmButtonColor={Boolean(temporalBudget)?nowTheme.COLORS.PRIMARY: '#d4e9e6'}
           onCancelPressed={() => setShowAlert(false)}
@@ -130,8 +139,8 @@ function Home(props) {
           />}
           onConfirmPressed={() => {
             if(temporalBudget){
-              setBudget(temporalBudget)
-            setShowAlert(false)
+              user.carts[0].setBudget(temporalBudget);
+              setShowAlert(false)
             }
           }}
           overlayStyle={{height: height+48}}
@@ -207,4 +216,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Home;
+export default Cart;

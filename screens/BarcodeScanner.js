@@ -10,10 +10,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { RightButtonContext } from '../context/RightButtonContext';
 import { useIsFocused } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
+import {APP_KEY, SIGNATURE} from '@env'
+
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
 export default function BarcodeScanner(props) {
+  
   const { setButttonRight } = useContext(RightButtonContext)
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -22,7 +25,6 @@ export default function BarcodeScanner(props) {
   const [cameraHeight, setcameraHeight] = useState(0);
   const [barCode, setBarCode] = useState('');
   const [disabledButton, setDisabledButton] = useState(true);
-  const [isFocused, setIsFocusedn] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
   const disabledFlash = useRef(true);
   const dectectIsFocused = useIsFocused();
@@ -72,7 +74,6 @@ export default function BarcodeScanner(props) {
   }
 
   useEffect(() => {
-    setIsFocusedn(dectectIsFocused);
     if (!dectectIsFocused)
       setButttonRight(<></>);
     else
@@ -114,6 +115,19 @@ export default function BarcodeScanner(props) {
 
   const onGetItemPress = () => {
     // do something with button press
+    const upcCode = '0075486090289';
+
+    fetch(`https://www.digit-eyes.com/gtin/v2_0/?upcCode=${upcCode}%20&field_names=price&language=es&app_key=${APP_KEY}&signature=${SIGNATURE}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      //console.log(util.inspect(data, { depth: null }));
+      /*const mxnOffers = data.prices.offers.filter(offer => offer.currencyCode === 'MXN');
+      console.log(mxnOffers);*/
+    })
+    .catch(error => {
+      console.error(error);
+    });
   }
 
   const onCancelPress = () => {
@@ -193,7 +207,7 @@ export default function BarcodeScanner(props) {
                   Allow Camera
                 </Button>
               </Block>
-              : isFocused ?
+              : dectectIsFocused ?
                 <>
                   <Camera
                     ref={cameraRef}
@@ -355,8 +369,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonFlash: {
-    width: 45,
-    height: 45,
+    width: 40,
+    height: 40,
     borderRadius: 250,
     backgroundColor: nowTheme.COLORS.PRIMARY,
     margin: 0,

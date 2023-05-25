@@ -105,7 +105,7 @@ function CartStack() {
           header: ({ navigation, scene }) => (
             <Header title="" white transparent navigation={navigation} scene={scene} back/>
           ),
-          cardStyle: { backgroundColor: '#FFFFFF' },
+          headerTransparent: true,
         }}
       />
       <Stack.Screen
