@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Animated, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { Block, Button, theme, Text, Input } from "galio-framework";
 import Card from "../components/Card";
@@ -6,16 +6,19 @@ import { nowTheme } from '../constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import {Cart as CartClass} from '../Class/Cart'
+import { UserContext } from "../context/UserContext";
 
 const { width, height } = Dimensions.get("window");
 
 function Home(props) {
+  const { user } = useContext(UserContext)
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [disabledButton, setDisabledButton] = useState(true);
   const [showAlert, setShowAlert] = useState(false);
   const [temporalBudget, setTemporalBudget] = useState(0.0);
   const [budget, setBudget] = useState(0.0);
-  const actualCart = useRef(new CartClass())
+  //const actualCart = useRef(new CartClass())
+
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
