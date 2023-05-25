@@ -27,6 +27,7 @@ export default function BarcodeScanner(props) {
   const [cameraHeight, setcameraHeight] = useState(0);
   const [barCode, setBarCode] = useState('');
   const [disabledButton, setDisabledButton] = useState(true);
+  const [isLoad, setIsLoad] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
   const disabledFlash = useRef(true);
   const dectectIsFocused = useIsFocused();
@@ -116,6 +117,7 @@ export default function BarcodeScanner(props) {
   };
 
   const onGetItemPress = () => {
+    setIsLoad(true);
     const upcCode = barCode;
     fetchData(upcCode)
       .then(data => {
@@ -293,6 +295,7 @@ export default function BarcodeScanner(props) {
             style={{ ...styles.button, backgroundColor: disabledButton ? theme.COLORS.DEFAULT : nowTheme.COLORS.PRIMARY }}
             onPress={onGetItemPress}
             disabled={disabledButton}
+            loading={isLoad}
           >
             BUSCAR PRODUCTO
           </Button>
