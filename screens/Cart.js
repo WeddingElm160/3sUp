@@ -8,7 +8,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 
 const { width } = Dimensions.get("window");
 
-function Home() {
+function Home(props) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [disabledButton, setDisabledButton] = useState(true);
   const [showAlert, setShowAlert] = useState(false);
@@ -67,7 +67,7 @@ function Home() {
           </Block>
           <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
             style={[styles.allButtonsSection, styles.buttonCenter]}
-          //onPress={}
+            onPress={() => props.navigation.navigate('BarcodeScanner')}
           >
             <Block flex middle row>
               <Ionicons name="barcode-outline" size={24} color={theme.COLORS.WHITE} /><Text size={12} family="lato-semibold" color={theme.COLORS.WHITE} >  Escanear</Text>
