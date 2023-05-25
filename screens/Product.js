@@ -5,11 +5,12 @@ import { FontAwesome } from "@expo/vector-icons";
 import { nowTheme } from '../constants';
 import { UserContext } from '../context/UserContext';
 
-function Product() {
+function Product(props) {
     const [quantity, setQuantity] = useState(1);
     const [price, setPrice] = useState("0.00");
     const { user } = useContext(UserContext);
-console.log(user.carts[0].products[user.carts[0].products.length - 1]);
+
+console.log(user.carts[0].productIndex);
     const incrementQuantity = () => {
         if (quantity < 99) {
             setQuantity(quantity + 1);
@@ -29,13 +30,13 @@ console.log(user.carts[0].products[user.carts[0].products.length - 1]);
         <Block contentContainerStyle={styles.container} flex>
             {/* Sección superior */}
             <Block style={styles.topSection}>
-                <Image source={!user.carts[0].products[user.carts[0].products.length - 1].image ? require("../assets/imgs/productNotFound.png") : { uri: user.carts[0].products[user.carts[0].products.length - 1].image }} style={styles.image} resizeMode="contain" />
+                <Image source={!user.carts[0].products[user.carts[0].productIndex].image ? require("../assets/imgs/productNotFound.png") : { uri: user.carts[0].products[user.carts[0].productIndex].image }} style={styles.image} resizeMode="contain" />
             </Block>
 
             {/* Sección central */}
             <Block style={styles.middleSection}>
                 <Block style={styles.productInfo}>
-                    <Text style={styles.sampleProductText}>{user.carts[0].products[user.carts[0].products.length - 1].name}</Text>
+                    <Text style={styles.sampleProductText}>{user.carts[0].products[user.carts[0].productIndex].name}</Text>
                     <Block style={styles.counter}>
                         <TouchableOpacity style={styles.counterButton} onPress={decrementQuantity}>
                             <Block style={styles.counterIcon}>
@@ -52,7 +53,7 @@ console.log(user.carts[0].products[user.carts[0].products.length - 1]);
                 </Block>
                 <ScrollView>
                     <Text style={styles.loremText}>
-                        {user.carts[0].products[user.carts[0].products.length - 1].description}
+                        {user.carts[0].products[user.carts[0].productIndex].description}
                     </Text>
                 </ScrollView>
             </Block>
@@ -65,13 +66,13 @@ console.log(user.carts[0].products[user.carts[0].products.length - 1]);
                         <FontAwesome name="dollar" size={16} color={nowTheme.COLORS.BLACK} style={styles.priceIcon} />
                         <TextInput
                             style={styles.priceInput}
-                            value={user.carts[0].products[user.carts[0].products.length - 1].price.toString()}
+                            value={user.carts[0].products[user.carts[0].productIndex].price.toString()}
                             onChangeText={handlePriceChange}
                             keyboardType="numeric"
                         />
                     </Block>
                 </Block>
-                <Button style={styles.addButton}>
+                <Button style={styles.addButton} onPress={()=>props.navigation.navigate('Cart')}>
                     <Text style={styles.addButtonLabel}>Agregar al Carrito</Text>
                 </Button>
             </Block>
@@ -103,6 +104,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     sampleProductText: {
+        maxWidth: "70%",
         fontWeight: "bold",
     },
     counter: {

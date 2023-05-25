@@ -124,7 +124,7 @@ export default function BarcodeScanner(props) {
         const product = new Product(data.name, data.description, data.price, data.quantity, data.image);
         //Actualizar el estado del usuario
         user.carts[0].addProduct(product);
-        props.navigation.navigate('Product')
+        props.navigation.navigate('Cart')
       })
       .catch(error => {
         console.error(error);

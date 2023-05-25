@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Block, theme, Button, Text } from "galio-framework";
 import nowTheme from '../constants/Theme';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Images } from '../constants';
+import { UserContext } from '../context/UserContext';
 
 function Card(props) {
+  
+  const { user } = useContext(UserContext);
   const [quantity, setQuantity] = useState(1);
   const incrementQuantity = () => {
     if (quantity < 99) {
@@ -22,8 +25,14 @@ function Card(props) {
       setQuantity(quantity - 1);
     }
   };
+
+  const selectProduct = () => {
+    user.carts[0].setProductIndex(props.index);
+    props.navigation.navigate('Product');
+  };
+
   return (
-    <TouchableOpacity activeOpacity={0.6}>
+    <TouchableOpacity activeOpacity={0.6} onPress={selectProduct}>
       <Block style={styles.contain} row card>
         <Block middle>
           <Image source={props.product.image?{uri: props.product.image}:Images.cart} style={{ ...styles.productImage, backgroundColor: "#c0c0c0" }} />
