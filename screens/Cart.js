@@ -5,7 +5,7 @@ import Card from "../components/Card";
 import { nowTheme } from '../constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import Cart from '../Class/Cart'
+import {Cart as CartClass} from '../Class/Cart'
 
 const { width, height } = Dimensions.get("window");
 
@@ -15,7 +15,7 @@ function Home(props) {
   const [showAlert, setShowAlert] = useState(false);
   const [temporalBudget, setTemporalBudget] = useState(0.0);
   const [budget, setBudget] = useState(0.0);
-  const [actualCart, setActualCart] = useState(new Cart());
+  const actualCart = useRef(new CartClass())
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
