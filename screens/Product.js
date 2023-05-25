@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, ScrollView, Image, TouchableOpacity, TextInput } from "react-native";
 import { Text, Block, Button } from "galio-framework";
 import { FontAwesome } from "@expo/vector-icons";
 import { nowTheme } from '../constants';
+import { UserContext } from '../context/UserContext';
 
 function Product() {
     const [quantity, setQuantity] = useState(1);
-    const [price, setPrice] = useState("14.00");
+    const [price, setPrice] = useState("0.00");
+    const { user } = useContext(UserContext);
 
     const incrementQuantity = () => {
         if (quantity < 99) {
@@ -23,12 +25,11 @@ function Product() {
     const handlePriceChange = (value) => {
         setPrice(value);
     };
-
     return (
         <Block contentContainerStyle={styles.container} flex>
             {/* Sección superior */}
             <Block style={styles.topSection}>
-                <Image source={require("../assets/imgs/productNotFound.png")} style={styles.image} resizeMode="cover" />
+                <Image source={!user.carts[0].products[user.carts[0].products.length - 1].image ? require("../assets/imgs/productNotFound.png") : { uri: user.carts[0].products[user.carts[0].products.length - 1].image }} style={styles.image} resizeMode="cover" />
             </Block>
 
             {/* Sección central */}

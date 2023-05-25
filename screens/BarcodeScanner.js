@@ -10,13 +10,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { RightButtonContext } from '../context/RightButtonContext';
 import { useIsFocused } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import {APP_KEY, SIGNATURE} from '@env'
+import fetchData from '../constants/apiCaller';
+import { UserContext } from '../context/UserContext';
+import { Product } from '../Class/Product';
 
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
 export default function BarcodeScanner(props) {
-  
+  const { user } = useContext(UserContext);
   const { setButttonRight } = useContext(RightButtonContext)
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -114,20 +116,17 @@ export default function BarcodeScanner(props) {
   };
 
   const onGetItemPress = () => {
-    // do something with button press
-    const upcCode = '0075486090289';
-
-    fetch(`https://www.digit-eyes.com/gtin/v2_0/?upcCode=${upcCode}%20&field_names=price&language=es&app_key=${APP_KEY}&signature=${SIGNATURE}`)
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      //console.log(util.inspect(data, { depth: null }));
-      /*const mxnOffers = data.prices.offers.filter(offer => offer.currencyCode === 'MXN');
-      console.log(mxnOffers);*/
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    const upcCode = barCode;
+    fetchData(upcCode)
+      .then(data => {
+        const product = new Product(data.name, data.description, data.price, data.quantity, data.image);
+        //Actualizar el estado del usuario
+        user.carts[0].addProduct(product);
+        props.navigation.navigate('Product')
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
 
   const onCancelPress = () => {
