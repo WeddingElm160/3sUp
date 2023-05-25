@@ -29,7 +29,7 @@ function Card(props) {
           <Image source={props.product.image?{uri: props.product.image}:Images.cart} style={{ ...styles.productImage, backgroundColor: "#c0c0c0" }} />
         </Block>
         <Block flex>
-          <Text style={{ fontSize: 16, fontFamily: 'lato-semibold', fontWeight: 'bold' }} numberOfLines={1}>{props.product.name}</Text>
+          <Text style={{ fontSize: 16, fontFamily: 'lato-semibold', fontWeight: 'bold', marginRight: 40}} numberOfLines={1}>{props.product.name}</Text>
           <Text style={{ fontSize: 12, fontFamily: 'lato-semibold', color: '#858585', height: 32 }} numberOfLines={2}>{props.product.description}</Text>
           <Text style={{ fontSize: 18, fontFamily: 'lato-bold', color: '#55BCAE' }}>${props.product.price}</Text>
         </Block>
