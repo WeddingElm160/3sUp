@@ -15,7 +15,7 @@ function Home(props) {
   const [showAlert, setShowAlert] = useState(false);
   const [temporalBudget, setTemporalBudget] = useState(0.0);
   const [budget, setBudget] = useState(0.0);
-  //const [thereBudget, setThereBudget] = useState(false);
+  const [actualCart, setActualCart] = useState(new Cart());
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -50,7 +50,7 @@ function Home(props) {
         <Block styles={styles.buttonSection} row flex middle>
           <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
             style={[styles.allButtonsSection, styles.buttonRight]}
-          //onPress={}
+            onPress={() => props.navigation.navigate('AddProduct')}
           >
             <Block flex middle row>
               <Ionicons name="pencil-sharp" size={18} color={theme.COLORS.WHITE} /><Text size={12} family="lato-semibold" color={theme.COLORS.WHITE} >  Nuevo</Text>
