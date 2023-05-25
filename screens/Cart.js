@@ -5,6 +5,7 @@ import Card from "../components/Card";
 import { nowTheme } from '../constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import Cart from '../Class/Cart'
 
 const { width, height } = Dimensions.get("window");
 
@@ -41,13 +42,6 @@ function Home(props) {
       </Block>
       <Block style={styles.mainSection} middle>
         <ScrollView style={{ width: '100%' }}>
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
           <Card />
           <Block height={theme.SIZES.BASE + 40} />
         </ScrollView>
