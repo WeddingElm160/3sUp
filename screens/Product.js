@@ -9,7 +9,7 @@ function Product() {
     const [quantity, setQuantity] = useState(1);
     const [price, setPrice] = useState("0.00");
     const { user } = useContext(UserContext);
-
+console.log(user.carts[0].products[user.carts[0].products.length - 1]);
     const incrementQuantity = () => {
         if (quantity < 99) {
             setQuantity(quantity + 1);
@@ -29,13 +29,13 @@ function Product() {
         <Block contentContainerStyle={styles.container} flex>
             {/* Sección superior */}
             <Block style={styles.topSection}>
-                <Image source={!user.carts[0].products[user.carts[0].products.length - 1].image ? require("../assets/imgs/productNotFound.png") : { uri: user.carts[0].products[user.carts[0].products.length - 1].image }} style={styles.image} resizeMode="cover" />
+                <Image source={!user.carts[0].products[user.carts[0].products.length - 1].image ? require("../assets/imgs/productNotFound.png") : { uri: user.carts[0].products[user.carts[0].products.length - 1].image }} style={styles.image} resizeMode="contain" />
             </Block>
 
             {/* Sección central */}
             <Block style={styles.middleSection}>
                 <Block style={styles.productInfo}>
-                    <Text style={styles.sampleProductText}>Producto de Muestra</Text>
+                    <Text style={styles.sampleProductText}>{user.carts[0].products[user.carts[0].products.length - 1].name}</Text>
                     <Block style={styles.counter}>
                         <TouchableOpacity style={styles.counterButton} onPress={decrementQuantity}>
                             <Block style={styles.counterIcon}>
@@ -52,9 +52,7 @@ function Product() {
                 </Block>
                 <ScrollView>
                     <Text style={styles.loremText}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec maximus metus ut velit dapibus, quis finibus
-                        quam posuere. Sed luctus, justo sed commodo ultrices, risus massa tincidunt velit, vel scelerisque felis sem
-                        eget odio. Ut pellentesque sollicitudin nunc vel congue.
+                        {user.carts[0].products[user.carts[0].products.length - 1].description}
                     </Text>
                 </ScrollView>
             </Block>
@@ -67,7 +65,7 @@ function Product() {
                         <FontAwesome name="dollar" size={16} color={nowTheme.COLORS.BLACK} style={styles.priceIcon} />
                         <TextInput
                             style={styles.priceInput}
-                            value={price}
+                            value={user.carts[0].products[user.carts[0].products.length - 1].price.toString()}
                             onChangeText={handlePriceChange}
                             keyboardType="numeric"
                         />
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
     topSection: {
         width: "100%",
         aspectRatio: 1.5, // Ajusta el tamaño de acuerdo a tus necesidades
-        backgroundColor:"#F2F3F8",
+        backgroundColor: "#F2F3F8",
         borderBottomEndRadius: 21,
         borderBottomStartRadius: 21,
     },
@@ -129,8 +127,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     counterText: {
-        justifyContent:"center",
-        alignItems:"center",
+        justifyContent: "center",
+        alignItems: "center",
         color: nowTheme.COLORS.BLACK,
         fontFamily: "inter-medium",
     },
