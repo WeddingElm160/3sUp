@@ -14,7 +14,7 @@ import { StatusBar } from 'expo-status-bar';
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
 export default function BarcodeScanner(props) {
-  const {setButttonRight} = useContext(RightButtonContext)
+  const { setButttonRight } = useContext(RightButtonContext)
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   //const [text, setText] = useState('Not yet scanned');
@@ -55,27 +55,27 @@ export default function BarcodeScanner(props) {
   }
 
   const ButttonRight = () => <Button
-      key="flash-button"
-      color="info"
-      textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
-      style={{ ...styles.buttonFlash, opacity: disabledFlash.current ? 0.4 : 0.6 }}
-      onPress={() =>{flashPress();}}
-    >
-      <Ionicons key="flash-icon" name={disabledFlash.current ? 'flash-off' : 'flash'} size={16} color="white" />
-    </Button>
+    key="flash-button"
+    color="info"
+    textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
+    style={{ ...styles.buttonFlash, opacity: disabledFlash.current ? 0.4 : 0.6 }}
+    onPress={() => { flashPress(); }}
+  >
+    <Ionicons key="flash-icon" name={disabledFlash.current ? 'flash-off' : 'flash'} size={16} color="white" />
+  </Button>
 
   const flashPress = () => {
     disabledFlash.current = !disabledFlash.current;
     setButttonRight(
       ButttonRight()
-      );
+    );
   }
 
   useEffect(() => {
     setIsFocusedn(dectectIsFocused);
-    if(!dectectIsFocused)
+    if (!dectectIsFocused)
       setButttonRight(<></>);
-      else
+    else
       setButttonRight(ButttonRight());
   }, [dectectIsFocused]);
 
@@ -99,8 +99,6 @@ export default function BarcodeScanner(props) {
       x: boundingBox.origin.y,
       y: boundingBox.origin.x,
     }
-
-    
 
     if (aabb(viewFinderBounds, barCodeBox)) {
       setScanned(true);
@@ -195,26 +193,26 @@ export default function BarcodeScanner(props) {
                   Allow Camera
                 </Button>
               </Block>
-              : isFocused?
-              <>
-                <Camera
-                  ref={cameraRef}
-                  style={styles.backgroundBarCodeScanner}
-                  flashMode={disabledFlash.current ? Camera.Constants.FlashMode.off : Camera.Constants.FlashMode.torch}
-                  barCodeScannerSettings={{
-                    barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
-                  }}
-                  BarCodeBounds={{
-                    origin: { x: 0, y: 0 },
-                    size: { height: 5, width: 5 }
-                  }}
-                  onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                  onMountError={(error) => {
-                    console.error("Camera Error:", error);
-                  }}
-                />
-                <BarcodeMask width={viewfinderWidth} height={viewfinderHeight} />
-              </>:<></>
+              : isFocused ?
+                <>
+                  <Camera
+                    ref={cameraRef}
+                    style={styles.backgroundBarCodeScanner}
+                    flashMode={disabledFlash.current ? Camera.Constants.FlashMode.off : Camera.Constants.FlashMode.torch}
+                    barCodeScannerSettings={{
+                      barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
+                    }}
+                    BarCodeBounds={{
+                      origin: { x: 0, y: 0 },
+                      size: { height: 5, width: 5 }
+                    }}
+                    onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                    onMountError={(error) => {
+                      console.error("Camera Error:", error);
+                    }}
+                  />
+                  <BarcodeMask width={viewfinderWidth} height={viewfinderHeight} />
+                </> : <></>
         }
 
       </Block>
@@ -243,34 +241,46 @@ export default function BarcodeScanner(props) {
         }}
       /> */}
       {
-        scanned?<Block style={styles.curtain}/>:<></>
+        scanned ? <Block style={styles.curtain} /> : <></>
       }
+      <Block style={styles.manuaSection} flex middle>
+        <Button style={styles.manualButtom} onPress={() => {
+          setScanned(true);
+          Animated.timing(fadeAnim, {
+            toValue: -184,
+            duration: 500,
+            useNativeDriver: true,
+          }).start();
+          setBarCode('')
+        }}>Añadir manualmente</Button>
+      </Block>
 
-      <Animated.View style={{...styles.lowerSection, translateY: fadeAnim}}>
+
+      <Animated.View style={{ ...styles.lowerSection, translateY: fadeAnim }}>
         <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
           <Input
             value={barCode}
             placeholder="Escanea el código del producto"
             shadowless
             iconContent={
-              <Ionicons name="barcode-outline" size={32} color="#747474" style={{marginEnd: 5}} />
+              <Ionicons name="barcode-outline" size={32} color="#747474" style={{ marginEnd: 5 }} />
             }
             onChangeText={(value) => setBarCode(value)}
           />
         </Block>
         <Block center row>
           <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
+            style={{ ...styles.button, backgroundColor: nowTheme.COLORS.DEFAULT }}
+            onPress={onCancelPress}
+          >
+            CANCELAR
+          </Button>
+          <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
             style={{ ...styles.button, backgroundColor: disabledButton ? theme.COLORS.DEFAULT : nowTheme.COLORS.PRIMARY }}
             onPress={onGetItemPress}
             disabled={disabledButton}
           >
             BUSCAR PRODUCTO
-          </Button>
-          <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
-            style={{ ...styles.button, backgroundColor: nowTheme.COLORS.DEFAULT }}
-            onPress={onCancelPress}
-          >
-            CANCELAR
           </Button>
         </Block>
       </Animated.View>
@@ -306,6 +316,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25
+  },
+  manuaSection: {
+    position: 'absolute',
+    bottom: theme.SIZES.BASE,
+    width: '100%',
+  },
+  manualButtom: {
+    borderRadius: 25,
+    opacity: 0.6
   },
   container: {
     backgroundColor: theme.COLORS.BLACK,

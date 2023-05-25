@@ -6,7 +6,7 @@ import { nowTheme } from '../constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AwesomeAlert from 'react-native-awesome-alerts';
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 function Home(props) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -92,7 +92,7 @@ function Home(props) {
               <Text size={16} family="inter-bold" color="#B5B74F" bold>$150.00</Text>
             </Block>
             <Block row>
-              <Text size={16} family="lato-semibold" >Cambio        </Text>
+              <Text size={16} family="lato-semibold" >Cambio       </Text>
               <Text size={16} family="inter-bold" color="#55BCAE" bold>$150.00</Text>
             </Block>
             
@@ -121,9 +121,9 @@ function Home(props) {
           confirmButtonColor={Boolean(temporalBudget)?nowTheme.COLORS.PRIMARY: '#d4e9e6'}
           onCancelPressed={() => setShowAlert(false)}
           customView={<Input
-            shadowlesshhh
+            shadowless
             color={theme.COLORS.BLACK}
-            value={temporalBudget}
+            value={Boolean(temporalBudget)?temporalBudget:""}
             placeholderTextColor="#747474"
             placeholder="Presupuesto inicial."
             iconContent={
@@ -136,8 +136,8 @@ function Home(props) {
               setBudget(temporalBudget)
             setShowAlert(false)
             }
-            
           }}
+          overlayStyle={{height: height+48}}
         />
       
     </Block>
