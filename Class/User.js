@@ -5,6 +5,10 @@ export class User{
     }
 
     addCart(cart) {
-        this.carts.push(cart);
+        this.carts.unshift(cart)
+    }
+
+    removeCart() {
+        this.carts.shift()
     }
 }
