@@ -42,7 +42,7 @@ function Home(props) {
       </Block>
       <Block style={styles.mainSection} middle>
         <ScrollView style={{ width: '100%' }}>
-          <Card />
+          {/* <Card /> */}
           <Block height={theme.SIZES.BASE + 40} />
         </ScrollView>
       </Block>
