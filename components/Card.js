@@ -1,16 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Block, theme, Button, Text } from "galio-framework";
 import nowTheme from '../constants/Theme';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-function Card() {
+function Card(props) {
   const [quantity, setQuantity] = useState(1);
   const incrementQuantity = () => {
     if (quantity < 99) {
       setQuantity(quantity + 1);
     }
   };
+  
+  useEffect(() => {
+    props.setQuantity(quantity)
+  }, [quantity]);
 
   const decrementQuantity = () => {
     if (quantity > 1) {
@@ -21,12 +25,12 @@ function Card() {
     <TouchableOpacity activeOpacity={0.6}>
       <Block style={styles.contain} row card>
         <Block middle>
-          <Image source={require('../assets/icon.png')} style={{ ...styles.productImage }} />
+          <Image source={{uri: props.image,}} style={{ ...styles.productImage }} />
         </Block>
         <Block flex>
-          <Text style={{ fontSize: 16, fontFamily: 'lato-semibold', fontWeight: 'bold' }} numberOfLines={1}>Producto 1</Text>
-          <Text style={{ fontSize: 12, fontFamily: 'lato-semibold', color: '#858585', height: 32 }} numberOfLines={2}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id viverra mauris amet semper laoreet sit urna semper libero. Nibh vel suspendisse sed sodales. . Read more</Text>
-          <Text style={{ fontSize: 18, fontFamily: 'lato-bold', color: '#55BCAE' }}>$23.50</Text>
+          <Text style={{ fontSize: 16, fontFamily: 'lato-semibold', fontWeight: 'bold' }} numberOfLines={1}>{props.name}</Text>
+          <Text style={{ fontSize: 12, fontFamily: 'lato-semibold', color: '#858585', height: 32 }} numberOfLines={2}>{props.description}</Text>
+          <Text style={{ fontSize: 18, fontFamily: 'lato-bold', color: '#55BCAE' }}>${props.price}</Text>
         </Block>
         <Block style={styles.counter} middle row space="between">
           <Button style={{ ...styles.counterButton, backgroundColor: '#5faca0' }} onPress={decrementQuantity}>
@@ -39,7 +43,7 @@ function Card() {
         </Block>
         <Block middle row style={styles.option}>
           <Button style={{ ...styles.optionButton }} >
-            <Ionicons name="close" size={10} color={nowTheme.COLORS.BLACK} />
+            <Ionicons name="close" size={10} color={nowTheme.COLORS.BLACK} onPress={props.quantity}/>
           </Button>
         </Block>
       </Block>
