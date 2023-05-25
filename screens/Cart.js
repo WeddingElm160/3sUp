@@ -50,7 +50,7 @@ function Cart(props) {
       <Block style={styles.mainSection} middle>
         {user.carts[0].products.length?
         <ScrollView style={{ width: '100%' }}>
-           {user.carts[0].products.map((product, i)=><Card product={product} key={i} remove={()=>{user.carts[0].removeProduct(i); setUpdateScreen(!updateScreen)}} navigation={props.navigation}/>)}
+           {user.carts[0].products.map((product, i)=><Card product={product} key={i} remove={()=>{user.carts[0].removeProduct(i); setUpdateScreen(!updateScreen)}} navigation={props.navigation} setProductIndex={user.carts[0].setProductIndex}/>)}
           
           <Block height={theme.SIZES.BASE + 40} />
         </ScrollView>
