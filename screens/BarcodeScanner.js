@@ -279,6 +279,7 @@ export default function BarcodeScanner(props) {
               <Ionicons name="barcode-outline" size={32} color="#747474" style={{ marginEnd: 5 }} />
             }
             onChangeText={(value) => setBarCode(value)}
+            keyboardType="numeric"
           />
         </Block>
         <Block center row>

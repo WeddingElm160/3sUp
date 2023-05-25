@@ -134,7 +134,8 @@ function Cart(props) {
             placeholder="Presupuesto inicial."
             iconContent={
               <Ionicons name="logo-usd" size={15} color="#747474" style={{ marginEnd: 5 }} />
-            }
+            }            
+            keyboardType="numeric"
             onChangeText={(value) => setTemporalBudget(value.replace(/[^0-9.]/g, ''))}
           />}
           onConfirmPressed={() => {
