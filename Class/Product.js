@@ -7,12 +7,15 @@ export class Product {
             this.price = parseFloat(price);
             this.quantity = parseInt(quantity);
             this.image = image;
+            //this.totalPrice = price;
         }else{
             this.name = name.name;
             this.description = name.description;
             this.price = parseFloat(name.price);
             this.quantity = parseInt(name.quantity);
             this.image = name.image;
+            //this.totalPrice = this.quantity * this.quantity;
+            
         }
         
     }
@@ -27,6 +30,7 @@ export class Product {
 
     setPrice(newPrice) {
         this.price = newPrice;
+        //this.totalPrice = this.quantity * this.price
     }
 
     setQuantity(newQuantity) {
