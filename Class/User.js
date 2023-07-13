@@ -8,8 +8,8 @@ export class User{
             this.carts = []
     }
 
-    addCart() {
-        this.carts.unshift(new Cart())
+    addCart(storeName) {
+        this.carts.unshift(new Cart(storeName))
     }
 
     removeCart() {

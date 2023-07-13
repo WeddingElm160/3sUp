@@ -2,81 +2,66 @@ export default [
   {
     name: 'Walmart',
     image: require("../assets/imgs/walmart.jpg"),
+    activated: true
   },
   {
-    name: 'Soriana',
-    image: require("../assets/imgs/soriana.png"),
+    name: 'Bodega Aurrera',
+    image: require("../assets/imgs/bodegaAurrera.jpg"),
+    activated: true
   },
   {
     name: 'Chedraui',
     image: require("../assets/imgs/chedraui.png"),
+    activated: true
+  },
+  {
+    name: 'Soriana',
+    image: require("../assets/imgs/soriana.png"),
+    activated: true
   },
   {
     name: 'La Comer',
     image: require("../assets/imgs/laComer.jpg"),
+    activated: false
   },
   {
     name: 'HEB',
-    image: undefined,
+    image: require("../assets/imgs/heb.jpg"),
+    activated: false
   },
   {
     name: 'Casa Ley',
     image: require("../assets/imgs/casaLey.png"),
+    activated: false
   },
   {
     name: 'Calimax',
     image: require("../assets/imgs/calimax.jpg"),
-  },
-  {
-    name: 'Super Del Norte',
-    image: undefined,
+    activated: false
   },
   {
     name: 'Alsuper',
     image: require("../assets/imgs/alsuper.png"),
-  },
-  {
-    name: 'S-Mart',
-    image: undefined,
-  },
-  {
-    name: 'City Market',
-    image: require("../assets/imgs/cityMarket.png"),
-  },
-  {
-    name: 'Fresko',
-    image: undefined,
-  },
-  {
-    name: 'Bodega Aurrerá',
-    image: undefined,
-  },
-  {
-    name: 'Bara',
-    image: undefined,
-  },
-  {
-    name: 'Waldos',
-    image: undefined,
+    activated: false
   },
   {
     name: 'Zorro',
     image: require("../assets/imgs/zorro.jpg"),
-  },
-  {
-    name: 'Merza',
-    image: require("../assets/imgs/merza.jpeg"),
+    activated: false
   },
   {
     name: 'Costco',
     image: require("../assets/imgs/costco.jpg"),
+    activated: false
   },
   {
     name: 'Sams Club',
     image: require("../assets/imgs/samsClub.png"),
+    activated: false
   },
   {
     name: 'City Club',
     image: require("../assets/imgs/cityClub.png"),
+    activated: false
   },
 ];

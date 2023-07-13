@@ -77,17 +77,12 @@ export default function BarcodeScanner(props) {
   }
 
   useEffect(() => {
-    if (!dectectIsFocused)
-      setButttonRight(<></>);
-    else
+    if (dectectIsFocused)
       setButttonRight(ButttonRight());
   }, [dectectIsFocused]);
 
   useEffect(() => {
     askForCameraPermission();
-    setButttonRight(
-      ButttonRight()
-    );
   }, []);
 
 

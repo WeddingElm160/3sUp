@@ -1,8 +1,8 @@
 import Product from './Product'
 export class Cart {
-  receipt; products; productIndex;
+  receipt; products; productIndex; storeName;
   constructor(cart) {
-    if (cart) {
+    if (typeof cart !== 'string') {
       this.receipt = {
         budget: parseFloat(cart.receipt.budget),
         subtotal: parseFloat(cart.receipt.subtotal),
@@ -10,7 +10,9 @@ export class Cart {
       } 
       this.products = cart.products.map(product => new Product(product))
       this.productIndex = cart.productIndex
+      this.storeName = cart.storeName
     } else {
+      this.storeName = cart
       this.productIndex = 0
       this.products = []
       this.receipt = {

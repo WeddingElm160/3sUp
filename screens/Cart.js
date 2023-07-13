@@ -8,8 +8,11 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import { UserContext } from "../context/UserContext";
 import { useIsFocused } from '@react-navigation/native';
 import {Images} from "../constants";
+import { RightButtonContext } from '../context/RightButtonContext';
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 
 const { width, height } = Dimensions.get("window");
+const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN'});
 
 function Cart(props) {
   const { user } = useContext(UserContext)
@@ -18,7 +21,15 @@ function Cart(props) {
   const [temporalBudget, setTemporalBudget] = useState(0.0);
   const dectectIsFocused = useIsFocused();
   const [updateScreen, setUpdateScreen] = useState(false);
+  const { setButttonRight } = useContext(RightButtonContext)
   //const actualCart = useRef(new CartClass())
+  const showOptions = useRef(false);
+  const [refresh, setRefresh] = useState(false);
+
+  const optionsPress = () => {
+    showOptions.current = !showOptions.current;
+    setRefresh(!refresh);
+  }
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -29,22 +40,96 @@ function Cart(props) {
     
     setTimeout(function(){
       setShowAlert(true);
-    }, 400);      
+    }, 400);    
   }, []);
+
+  useEffect(() => {
+    if (!dectectIsFocused)
+      setButttonRight(<></>);
+    else
+      setButttonRight(
+      <Button style={{width:40, height: 40, borderRadius: 11, opacity: 1, margin: 0 }} onPress={optionsPress}>
+          <Ionicons name='options-outline' size={20} color={nowTheme.COLORS.WHITE} />
+        </Button>
+      );
+  }, [dectectIsFocused]);
 
   /*useEffect(() => {
     if(dectectIsFocused)
     console.log(user.carts[0]); 
-   }, [dectectIsFocused]);*/
+  }, [dectectIsFocused]);*/
+
+  
+  function formatNumber(n) {
+    return n.replace(/\D/g, "").replace(/[^0-9.]/g, '')
+  }
+
+  function formatCurrency(input_val, blur) {
+    if (input_val.indexOf(".") >= 0) {
+      var decimal_pos = input_val.indexOf(".");
+      var left_side = input_val.substring(0, decimal_pos);
+      var right_side = input_val.substring(decimal_pos);
+      left_side = formatNumber(left_side);
+      right_side = formatNumber(right_side);
+      if (blur) {
+        right_side += "00";
+      }
+      right_side = right_side.substring(0, 2);
+      input_val = left_side + "." + right_side;
+  
+    } else {
+      input_val = formatNumber(input_val);
+      input_val = input_val;
+      if (blur) {
+        input_val += ".00";
+      }
+    }
+    
+    setTemporalBudget(input_val);
+  }
 
   return (
     <Block flex center style={styles.contain}>
-      <Block style={styles.upperSection} row middle>
-        <Text size={16} family="lato-semibold" >Presupesto   </Text>
-        <Text size={16} family="inter-bold" color="#B7814F" bold>${user.carts[0].receipt.budget}</Text>
-        <Button style={{ ...styles.optionButton, marginStart: 5 }} onPress={()=>setShowAlert(true)} >
-          <Ionicons name="create-outline" size={10} color={nowTheme.COLORS.BLACK} />
-        </Button>
+    <Block style={{position: 'absolute', right: 16, top: -40,}}>
+      <Menu
+        visible={showOptions.current}
+        onRequestClose={optionsPress}
+        anchor={<></>}
+      >
+        <MenuItem disabled={!user.carts[0].products.length} onPress={optionsPress}>Seleccionar</MenuItem>
+        <MenuItem disabled={!user.carts[0].products.length} onPress={optionsPress}>Borrar todo</MenuItem>
+        <MenuItem disabled={true}>Compartir...</MenuItem> 
+        <MenuDivider />
+        {
+          !user.carts[0].receipt.budget?
+          <MenuItem onPress={()=>{optionsPress(); setShowAlert(true)}}>Añadir Presupesto</MenuItem>
+          :
+          <MenuItem onPress={()=>{optionsPress(); user.carts[0].setBudget(0); setTemporalBudget(0)}}>Eliminar Presupesto</MenuItem>
+        }
+        
+        
+      </Menu>
+    </Block>
+    
+      <Block style={styles.upperSection} row middle >
+      {
+        user.carts[0].receipt.budget?<>
+          <Text size={16} family="lato-semibold" >Presupesto   </Text>
+          <Text size={16} family="inter-bold" color="#B7814F" bold>{formatter.format(user.carts[0].receipt.budget)}</Text>
+          <Button style={{ ...styles.optionButton, marginStart: 5 }} onPress={()=>setShowAlert(true)} >
+            <Ionicons name="create-outline" size={10} color={nowTheme.COLORS.BLACK} />
+          </Button>
+        </>
+        :<></>
+      }
+        {/* <Button style={{ backgroundColor: '#def0eb', borderRadius: 30, margin: 0, height: 32, width: '100%'}} onPress={()=>setShowAlert(true)} >
+          <Block flex middle row style={{}}>
+            <Text size={16} family="lato-semibold" style={{lineHeight: 16}}>Añadir Presupesto</Text>
+            <Ionicons name="cash-outline" size={18} color={nowTheme.COLORS.BLACK} style={{lineHeight: 16, marginLeft: 8}}/>
+          </Block>
+        </Button> */}
+        
+        
         
       </Block>
       <Block style={styles.mainSection} middle>
@@ -94,14 +179,17 @@ function Cart(props) {
         <Block style={styles.accountSection} center row flex >
           <Block flex>
             <Block row>
-              <Text size={16} family="lato-semibold" >Sub. Total   </Text>
-              <Text size={16} family="inter-bold" color="#B5B74F" bold>${user.carts[0].receipt.subtotal}</Text>
+              <Text size={16} family="lato-semibold" >Subtotal     </Text>
+              <Text size={16} family="inter-bold" color="#B5B74F" bold>{formatter.format(user.carts[0].receipt.subtotal)}</Text>
             </Block>
-            <Block row>
-              <Text size={16} family="lato-semibold" >Cambio       </Text>
-              <Text size={16} family="inter-bold" color="#55BCAE" bold>${user.carts[0].receipt.change}</Text>
+            {
+              user.carts[0].receipt.budget?
+              <Block row>
+              <Text size={16} family="lato-semibold" >Cambio      </Text>
+              <Text size={16} family="inter-bold" color="#55BCAE" bold>{formatter.format(user.carts[0].receipt.change)}</Text>
             </Block>
-            
+              :<></>
+            }
           </Block>
           <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
             style={{ ...styles.button, backgroundColor: user.carts[0].products.length? nowTheme.COLORS.PRIMARY : '#d4e9e6' }}
@@ -117,12 +205,12 @@ function Cart(props) {
       <AwesomeAlert
           show={showAlert}
           showProgress={false}
-          title={user.carts[0].budget?"Actualizar presupuesto":"Antes de empezar..."}
+          title={user.carts[0].receipt.budget?"Actualizar presupuesto":"Antes de empezar..."}
           closeOnTouchOutside={false}
           closeOnHardwareBackPress={false}
           showCancelButton={true}
           showConfirmButton={true}
-          cancelText={user.carts[0].budget?"Cancelar":"No necesito"}
+          cancelText={user.carts[0].receipt.budget?"Cancelar":"No necesito"}
           confirmText="Aceptar"
           confirmButtonColor={Boolean(temporalBudget)?nowTheme.COLORS.PRIMARY: '#d4e9e6'}
           onCancelPressed={() => setShowAlert(false)}
@@ -136,10 +224,11 @@ function Cart(props) {
               <Ionicons name="logo-usd" size={15} color="#747474" style={{ marginEnd: 5 }} />
             }            
             keyboardType="numeric"
-            onChangeText={(value) => setTemporalBudget(value.replace(/[^0-9.]/g, ''))}
+            onChangeText={(value) => formatCurrency(value)}
           />}
           onConfirmPressed={() => {
             if(temporalBudget){
+              formatCurrency(temporalBudget,true)
               user.carts[0].setBudget(temporalBudget);
               setShowAlert(false)
             }
