@@ -93,9 +93,9 @@ function CartStack() {
         component={Product}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="" white transparent navigation={navigation} scene={scene} back/>
+            <Header transparent title=""  navigation={navigation} scene={scene} back/>
           ),
-          cardStyle: { backgroundColor: '#FFFFFF' },
+          headerTransparent: true,
         }}
       />
       <Stack.Screen
@@ -103,7 +103,7 @@ function CartStack() {
         component={AddProduct}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="" white transparent navigation={navigation} scene={scene} back/>
+            <Header transparent title="" white  navigation={navigation} scene={scene} back/>
           ),
           headerTransparent: true,
         }}

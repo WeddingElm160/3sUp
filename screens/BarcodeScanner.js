@@ -114,12 +114,15 @@ export default function BarcodeScanner(props) {
   const onGetItemPress = () => {
     setIsLoad(true);
     const upcCode = barCode;
-    fetchData(upcCode)
-      .then(data => {
-        const product = new Product(data.name, data.description, data.price, data.quantity, data.image);
-        //Actualizar el estado del usuario
-        user.carts[0].addProduct(product);
-        props.navigation.navigate('Cart')
+    fetchData(upcCode, user.carts[0].storeName)
+      .then(({statusCode,body}) => {
+        if(statusCode === 200){
+          const product = new Product(body.name, body.description, body.price, 1, body.images);
+          //Actualizar el estado del usuario
+          user.carts[0].addProduct(product);
+          props.navigation.navigate('Cart')
+        }
+        
       })
       .catch(error => {
         console.error(error);
@@ -262,7 +265,7 @@ export default function BarcodeScanner(props) {
             useNativeDriver: true,
           }).start();
           setBarCode('')
-        }}>Añadir manualmente</Button>
+        }}><Text size={16} family="lato-semibold" color={theme.COLORS.WHITE}>Añadir manualmente</Text></Button>
       </Block>
 
 
@@ -336,7 +339,9 @@ const styles = StyleSheet.create({
   },
   manualButtom: {
     borderRadius: 25,
-    opacity: 0.6
+    opacity: 0.6,
+    width: 'auto',
+    paddingHorizontal: theme.SIZES.BASE
   },
   container: {
     backgroundColor: theme.COLORS.BLACK,

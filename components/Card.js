@@ -35,7 +35,7 @@ function Card(props) {
     <TouchableOpacity activeOpacity={0.6} onPress={selectProduct}>
       <Block style={styles.contain} row card>
         <Block middle>
-          <Image source={props.product.image?{uri: props.product.image}:Images.cart} style={{ ...styles.productImage, backgroundColor: "#c0c0c0" }} />
+          <Image source={props.product.image?{uri: props.product.image[0]}:Images.cart} style={{ ...styles.productImage, backgroundColor: "#c0c0c0" }} />
         </Block>
         <Block flex>
           <Text style={{ fontSize: 16, fontFamily: 'lato-semibold', fontWeight: 'bold', marginRight: 40}} numberOfLines={1}>{props.product.name}</Text>

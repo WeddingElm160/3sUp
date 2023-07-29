@@ -1,32 +1,136 @@
-import { Product } from "../Class/Product";
-import { APP_KEY } from '@env';
+import * as cheerio from 'cheerio';
 
-const fetchData = async (upcCode) => {
-    const appKey = process.env.APP_KEY;
-    const language = 'es';
 
-    try {
-        const response = await fetch(`https://www.digit-eyes.com/gtin/v2_0/?upcCode=${upcCode}%20&field_names=description,%20usage,%20price,%20image&language=${language}&app_key=${APP_KEY}&signature=${process.env.SIGNATURE}`);
-        //                           `https://www.digit-eyes.com/gtin/v2_0/?upcCode=0075486090289%20&field_names=all&language=en&app_key=/2Mfeb7pBwTA&signature=16A41i+h+JxjWjIHgMCbNqYuZmU=`
-        const data = await response.json();
-        console.log(data);
-        const { description, image, prices, usage } = data;
+const fetchData = async (upc, supermarket) => {
+  
+  switch (supermarket) {
+    case 'Bodega Aurrera':{
+      url =(`https://despensa.bodegaaurrera.com.mx/p/00${upc.slice(0, -1)}`);
+      
+      const response = await fetch("https://deadpool.instaleap.io/api/v2", {
+        "headers": {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36',
+          "accept": "*/*",
+          "accept-language": "es-419,es;q=0.9,es-ES;q=0.8,en;q=0.7,en-GB;q=0.6,en-US;q=0.5",
+          "apollographql-client-name": "Ecommerce",
+          "apollographql-client-version": "3.12.1",
+          "content-type": "application/json",
+          "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Microsoft Edge\";v=\"114\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"Windows\"",
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "cross-site",
+          "token": "",
+          "Referrer-Policy": "no-referrer-when-downgrade"
+        },
+        "body": `[{\"operationName\":\"GetProducts\",\"variables\":{\"storeId\":\"565\",\"filter\":{\"sku\":{\"eq\":\"00${upc.slice(0, -1)}\"}},\"variants\":false,\"showProductsWithoutStock\":true},\"query\":\"fragment BaseProductV2 on Product {\\n  id\\n  description\\n  name\\n  brand\\n  photosUrls\\n  sku\\n  unit\\n  price\\n  specialPrice\\n  promotion {\\n    description\\n    type\\n    isActive\\n    conditions\\n    __typename\\n  }\\n  variants {\\n    selectors\\n    productModifications\\n    __typename\\n  }\\n  isAvailable\\n  stock\\n  nutritionalDetails\\n  clickMultiplier\\n  subQty\\n  subUnit\\n  maxQty\\n  minQty\\n  specialMaxQty\\n  ean\\n  boost\\n  showSubUnit\\n  isActive\\n  slug\\n  categoriesPath\\n  categories {\\n    id\\n    name\\n    __typename\\n  }\\n  formats {\\n    format\\n    equivalence\\n    unitEquivalence\\n    minQty\\n    maxQty\\n    __typename\\n  }\\n  tags {\\n    id\\n    tagReference\\n    name\\n    filter\\n    enabled\\n    description\\n    backgroundColor\\n    textColor\\n    __typename\\n  }\\n  __typename\\n}\\n\\nquery GetProducts($pagination: paginationInput, $search: SearchInput, $storeId: ID!, $categoryId: ID, $onlyThisCategory: Boolean, $filter: ProductsFilterInput, $orderBy: productsSortInput, $variants: Boolean, $showProductsWithoutStock: Boolean) {\\n  getProducts(\\n    pagination: $pagination\\n    search: $search\\n    storeId: $storeId\\n    categoryId: $categoryId\\n    onlyThisCategory: $onlyThisCategory\\n    filter: $filter\\n    orderBy: $orderBy\\n    variants: $variants\\n    showProductsWithoutStock: $showProductsWithoutStock\\n  ) {\\n    redirectTo\\n    products {\\n      ...BaseProductV2\\n      __typename\\n    }\\n    paginator {\\n      pages\\n      page\\n      __typename\\n    }\\n    __typename\\n  }\\n}\"}]`,
+        "method": "POST"
+      });
+      
+      const productData = (await response.json())[0]?.data?.getProducts?.products[0];
 
-        const mxnOffers = prices.offers.find(offer => offer.currencyCode === 'MXN');
-        const { price } = mxnOffers;
-
-       /*  console.log('nombre:', description);
-        console.log('Image:', image);
-        console.log('Price:', price);
-        console.log('Description:', usage); */
-
-        const product = new Product(description, usage, price, 1, image);
-        // El objeto product ya está actualizado en el contexto
-        return product;
-    } catch (error) {
-        console.error(error);
-        throw error;
+      if (!productData) {
+        data = {
+          statusCode: 404
+        }
+        break
+      }
+      data = {
+        statusCode: 200,
+        body: {
+          name: productData.name,
+          price: productData.specialPrice? productData.specialPrice : productData.price,
+          oldPrice: productData.specialPrice? productData.price : null,
+          description: productData.description,
+          images: productData.photosUrls
+        }
+        
+      };
     }
+    break
+    case 'Chedraui':{
+      const results = (await (await fetch(`https://www.googleapis.com/customsearch/v1?key=AIzaSyB2-DrsIMb2t473Kc466S-OtDJaTBxkjGo&cx=64b7b1f2799364153&q=%22${upc}_00%22`)).json())?.items;
+      
+      if (!results) {
+        data = {
+          statusCode: 404
+        }
+        break
+      }
+
+      url = results[0].link
+      const productId = url.slice(-9, -2)
+
+      const response = await fetch("https://www.chedraui.com.mx/api/catalog_system/pub/products/search?fq=productId:"+productId, {
+        "headers": {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36',
+          "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Microsoft Edge\";v=\"114\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"Windows\"",
+          "Referrer-Policy": "strict-origin-when-cross-origin"
+        },
+        "body": null,
+        "method": "GET"
+      });
+      const productData = (await response.json())[0];
+
+      data = {
+        statusCode: 200,
+        body: {
+          name: productData.productName,
+          price: productData.items[0].sellers[0].commertialOffer.Price,
+          oldPrice: productData.items[0].sellers[0].commertialOffer.Price == productData.items[0].sellers[0].commertialOffer.PriceWithoutDiscount? null: productData.items[0].sellers[0].commertialOffer.PriceWithoutDiscount,
+          description: productData.metaTagDescription,
+          images: productData.items[0].images.map(img => img.imageUrl)
+        }
+        
+      };
+    }
+    break
+    case 'Soriana':{
+
+      const results = (await (await fetch(`https://www.googleapis.com/customsearch/v1?key=AIzaSyB2-DrsIMb2t473Kc466S-OtDJaTBxkjGo&cx=e0b119c0184c541b5&q=site:www.soriana.com%20${upc}_A.jpg`)).json())?.items;
+      
+      if (!results) {
+        data = {
+          statusCode: 404
+        }
+        break
+      }
+
+      url = results[0].link
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36',
+        },
+      });
+      
+      const $ = cheerio.load(await response.text());
+      
+      const productData = JSON.parse($('script[type="application/ld+json"]:first').text());
+      
+      data= {
+        statusCode: 200,
+        body: {
+          name: productData.name,
+          price: productData.offers.price,
+          oldPrice: $('span.value:first')?.attr("content"),
+          description: productData.description,
+          images: $('.carousel-item img')?.toArray().map(img => $(img).attr('src').slice(0, -21))
+        }
+      };
+    }
+    break
+    default:
+    data = {
+      statusCode: 400
+    }
+  }
+  if(data.body)
+  data.body.url = url
+  console.log(data);
+  return data;
 };
 
 export default fetchData;

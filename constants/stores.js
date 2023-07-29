@@ -1,10 +1,5 @@
 export default [
   {
-    name: 'Walmart',
-    image: require("../assets/imgs/walmart.jpg"),
-    activated: true
-  },
-  {
     name: 'Bodega Aurrera',
     image: require("../assets/imgs/bodegaAurrera.jpg"),
     activated: true
@@ -20,6 +15,11 @@ export default [
     activated: true
   },
   {
+    name: 'Walmart',
+    image: require("../assets/imgs/walmart.jpg"),
+    activated: false
+  },
+  {
     name: 'La Comer',
     image: require("../assets/imgs/laComer.jpg"),
     activated: false
@@ -27,6 +27,14 @@ export default [
   {
     name: 'HEB',
     image: require("../assets/imgs/heb.jpg"),
+    activated: false
+  },
+  {
+    name: 'Amazon',
+    activated: false
+  },
+  {
+    name: 'Mercado Libre',
     activated: false
   },
   {

@@ -35,7 +35,7 @@ function Supermarket(props) {
           {
             filteredEmails.length?<ScrollView>
             {filteredEmails.map((store, index) =><Block key={index}>
-              <TouchableOpacity onPress={() => {if(store.activated){props.navigation.navigate('Cart'); user.addCart(store.name); }}} style={!store.activated?{backgroundColor: 'rgba(0, 0, 0, 0.2)', opacity: 0.6}:{}} activeOpacity={.5}>
+              <TouchableOpacity onPress={() => {if(store.activated){user.addCart(store.name); props.navigation.navigate('Cart'); }}} style={!store.activated?{backgroundColor: 'rgba(0, 0, 0, 0.2)', opacity: 0.6}:{}} activeOpacity={.5}>
                 <Block row style={styles.defaultStyle} >
                   <Block middle style={{ marginRight: 5}}>
                   <Image source={store.image? store.image : Images.cart} style={{...styles.storeImage, backgroundColor: store.image? 'transparent' : '#c0c0c0',}}/>

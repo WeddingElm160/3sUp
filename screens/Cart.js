@@ -10,6 +10,7 @@ import { useIsFocused } from '@react-navigation/native';
 import {Images} from "../constants";
 import { RightButtonContext } from '../context/RightButtonContext';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
+import fetchData from '../constants/apiCaller';
 
 const { width, height } = Dimensions.get("window");
 const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN'});
@@ -169,7 +170,7 @@ function Cart(props) {
           </Block>
           <Button textStyle={{ fontFamily: 'lato-semibold', fontSize: 12 }}
             style={[styles.allButtonsSection, styles.buttonLeft]}
-          //onPress={}
+          //onPress={fetchData}
           >
             <Block flex middle row>
               <Ionicons name="filter" size={20} color={theme.COLORS.WHITE} /><Text size={12} family="lato-semibold" color={theme.COLORS.WHITE} >  Filtrar</Text>
