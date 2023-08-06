@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -11,11 +11,26 @@ import { FontAwesome } from "@expo/vector-icons";
 import { nowTheme } from "../constants";
 import { UserContext } from "../context/UserContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useIsFocused } from '@react-navigation/native';
+import { RightButtonContext } from '../context/RightButtonContext';
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 function Product(props) {
-  const [quantity, setQuantity] = useState(1);
-  const [price, setPrice] = useState("");
   const { user } = useContext(UserContext);
+  const [product, setProduct] = useState(user.carts[0].temporalProduct);
+  const [quantity, setQuantity] = useState(product.quantity);
+  const [price, setPrice] = useState("");
+  const dectectIsFocused = useIsFocused();
+  const { setButttonRight } = useContext(RightButtonContext)
+  const showOptions = useRef(false);
+  const [refresh, setRefresh] = useState(false);
+  const [showAlertInfo, setShowAlertInfo] = useState(false);
+
+  const optionsPress = () => {
+    showOptions.current = !showOptions.current;
+    setRefresh(!refresh);
+  }
 
   function formatNumber(n) {
     return n.replace(/\D/g, "").replace(/[^0-9.]/g, "");
@@ -45,7 +60,16 @@ function Product(props) {
   };
 
   useEffect(() => {
-    formatCurrency(user.carts[0].products[user.carts[0].productIndex].price.toString(), true)
+    if (dectectIsFocused)
+      setButttonRight(
+      <Button style={{width:40, height: 40, borderRadius: 11, opacity: 1, margin: 0, opacity: 0.6 }} onPress={optionsPress}>
+          <Ionicons name='options-outline' size={20} color={nowTheme.COLORS.WHITE} />
+        </Button>
+      );
+  }, [dectectIsFocused]);
+
+  useEffect(() => {
+    formatCurrency(product.price.toString(), true)
   }, []);
 
   const incrementQuantity = () => {
@@ -60,20 +84,38 @@ function Product(props) {
     }
   };
 
-  const addPress = (value) => {
-    formatCurrency(price)
+  useEffect(() => {
+    product.setQuantity(quantity)
+  }, [quantity]);
+
+  const addPress = () => {
+    if(!product.added){
+      user.carts[0].addProduct(user.carts[0].temporalProduct);
+    }
     props.navigation.navigate("Cart")
   };
   return (
     <Block contentContainerStyle={styles.container} flex>
+    <Block style={{position: 'absolute', right: 16, top: -40,}}>
+      <Menu
+        visible={showOptions.current}
+        onRequestClose={optionsPress}
+        anchor={<></>}
+      >
+        <MenuItem disabled={!user.carts[0].products.length} onPress={optionsPress}>Eliminar Artículo</MenuItem>
+        <MenuItem disabled={true}>Compartir...</MenuItem> 
+        <MenuDivider />
+        <MenuItem onPress={()=>{optionsPress();}}>Editar Artículo</MenuItem>
+      </Menu>
+    </Block>
       {/* Sección superior */}
       <Block style={styles.topSection}>
         <Image
           source={
-            !user.carts[0].products[user.carts[0].productIndex].image
+            !product.image
               ? require("../assets/imgs/productNotFound.png")
               : {
-                  uri: user.carts[0].products[user.carts[0].productIndex]
+                  uri: product
                     .image[0],
                 }
           }
@@ -86,7 +128,7 @@ function Product(props) {
       <Block style={styles.middleSection}>
         <Block style={styles.productInfo}>
           <Text style={styles.sampleProductText} numberOfLines={2}>
-            {user.carts[0].products[user.carts[0].productIndex].name}
+            {product.name}
           </Text>
           <Block style={styles.counter}>
             <TouchableOpacity
@@ -97,7 +139,7 @@ function Product(props) {
                 <FontAwesome
                   name="minus"
                   size={10}
-                  color={nowTheme.COLORS.BLACK}
+                  color={nowTheme.COLORS.PRIMARY}
                 />
               </Block>
             </TouchableOpacity>
@@ -110,7 +152,7 @@ function Product(props) {
                 <FontAwesome
                   name="plus"
                   size={10}
-                  color={nowTheme.COLORS.BLACK}
+                  color={nowTheme.COLORS.PRIMARY}
                 />
               </Block>
             </TouchableOpacity>
@@ -118,7 +160,7 @@ function Product(props) {
         </Block>
         <ScrollView>
           <Text style={styles.loremText}>
-            {user.carts[0].products[user.carts[0].productIndex].description}
+            {product.description}
           </Text>
         </ScrollView>
       </Block>
@@ -126,7 +168,16 @@ function Product(props) {
       {/* Sección inferior */}
       <Block style={styles.bottomSection}>
         <Block style={styles.priceContainer} flex={1} left>
-          <Text style={styles.priceLabel}>Precio</Text>
+          <Block row middle>
+            <Text style={styles.priceLabel}>Precio unitario</Text>
+          <Button
+            style={styles.infoButton}
+            onPress={()=>setShowAlertInfo(true)}
+          >
+            <Ionicons name="information-circle-outline" size={14} color={nowTheme.COLORS.BLACK} />
+          </Button>
+          </Block>
+          
           <Block style={styles.priceInputContainer} left>
             <Input
               style={styles.priceInput}
@@ -153,10 +204,28 @@ function Product(props) {
             style={styles.addButton}
             onPress={addPress}
           >
-            <Text style={styles.addButtonLabel}>Agregar</Text>
+            <Text style={styles.addButtonLabel}>{product.added?'Aceptar':'Agregar'}</Text>
           </Button>
         </Block>
       </Block>
+      <AwesomeAlert
+          show={showAlertInfo}
+          showProgress={false}
+          title="Precisión de precios"
+          message="Es importante tener en cuenta que los precios mostrados en esta App pueden no siempre coincidir con los precios de tienda. Por ello, le recomendamos ajustar manualmente el precio para llevar un registro preciso de sus compras. De esta manera, podrá mantener un control efectivo de sus gastos y tomar decisiones informadas al administrar su presupuesto."
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="Aceptar"
+          confirmButtonColor="#8DC4BD"
+          onConfirmPressed={() => {
+            setShowAlertInfo(false)
+          }}
+          contentStyle={{
+            textAlign: 'center',
+            color: 'red'
+          }} 
+        />
     </Block>
   );
 }
@@ -213,7 +282,7 @@ const styles = StyleSheet.create({
   counterText: {
     justifyContent: "center",
     alignItems: "center",
-    color: nowTheme.COLORS.BLACK,
+    color: nowTheme.COLORS.WHITE,
     fontFamily: "inter-medium",
   },
   loremText: {
@@ -267,6 +336,15 @@ const styles = StyleSheet.create({
   addButtonLabel: {
     color: nowTheme.COLORS.WHITE,
     fontWeight: "bold",
+  },
+  infoButton: {
+    backgroundColor: nowTheme.COLORS.BORDER,
+    height: 'auto',
+    width: "auto",
+    borderRadius: 25,
+    marginStart: 5,
+    margin: 0,
+    
   },
 });
 

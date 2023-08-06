@@ -136,7 +136,8 @@ function Cart(props) {
       <Block style={styles.mainSection} middle>
         {user.carts[0].products.length?
         <ScrollView style={{ width: '100%' }}>
-           {user.carts[0].products.map((product, i)=><Card product={product} key={i} remove={()=>{user.carts[0].removeProduct(i); setUpdateScreen(!updateScreen)}} navigation={props.navigation} setProductIndex={user.carts[0].setProductIndex} index={i} />)}
+        
+           {dectectIsFocused?user.carts[0].products.map((product, i)=><Card key={i} remove={()=>{user.carts[0].removeProduct(i); setUpdateScreen(!updateScreen)}} onClick={()=>{user.carts[0].setTemporalProduct(product); props.navigation.navigate('Product');}} index={i} />):<></>}
           
           <Block height={theme.SIZES.BASE + 40} />
         </ScrollView>
@@ -204,38 +205,38 @@ function Cart(props) {
       </Animated.View>
 
       <AwesomeAlert
-          show={showAlert}
-          showProgress={false}
-          title={user.carts[0].receipt.budget?"Actualizar presupuesto":"Antes de empezar..."}
-          closeOnTouchOutside={false}
-          closeOnHardwareBackPress={false}
-          showCancelButton={true}
-          showConfirmButton={true}
-          cancelText={user.carts[0].receipt.budget?"Cancelar":"No necesito"}
-          confirmText="Aceptar"
-          confirmButtonColor={Boolean(temporalBudget)?nowTheme.COLORS.PRIMARY: '#d4e9e6'}
-          onCancelPressed={() => setShowAlert(false)}
-          customView={<Input
-            shadowless
-            color={theme.COLORS.BLACK}
-            value={Boolean(temporalBudget)?temporalBudget:""}
-            placeholderTextColor="#747474"
-            placeholder="Presupuesto inicial."
-            iconContent={
-              <Ionicons name="logo-usd" size={15} color="#747474" style={{ marginEnd: 5 }} />
-            }            
-            keyboardType="numeric"
-            onChangeText={(value) => formatCurrency(value)}
-          />}
-          onConfirmPressed={() => {
-            if(temporalBudget){
-              formatCurrency(temporalBudget,true)
-              user.carts[0].setBudget(temporalBudget);
-              setShowAlert(false)
-            }
-          }}
-          overlayStyle={{height: height+48}}
-        />
+        show={showAlert}
+        showProgress={false}
+        title={user.carts[0].receipt.budget?"Actualizar presupuesto":"Antes de empezar..."}
+        closeOnTouchOutside={false}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText={user.carts[0].receipt.budget?"Cancelar":"No necesito"}
+        confirmText="Aceptar"
+        confirmButtonColor={Boolean(temporalBudget)?nowTheme.COLORS.PRIMARY: '#d4e9e6'}
+        onCancelPressed={() => setShowAlert(false)}
+        customView={<Input
+          shadowless
+          color={theme.COLORS.BLACK}
+          value={Boolean(temporalBudget)?temporalBudget:""}
+          placeholderTextColor="#747474"
+          placeholder="Presupuesto inicial."
+          iconContent={
+            <Ionicons name="logo-usd" size={15} color="#747474" style={{ marginEnd: 5 }} />
+          }            
+          keyboardType="numeric"
+          onChangeText={(value) => formatCurrency(value)}
+        />}
+        onConfirmPressed={() => {
+          if(temporalBudget){
+            formatCurrency(temporalBudget,true)
+            user.carts[0].setBudget(temporalBudget);
+            setShowAlert(false)
+          }
+        }}
+        overlayStyle={{height: height+48}}
+      />
       
     </Block>
   );

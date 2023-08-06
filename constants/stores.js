@@ -15,13 +15,13 @@ export default [
     activated: true
   },
   {
-    name: 'Walmart',
-    image: require("../assets/imgs/walmart.jpg"),
-    activated: false
-  },
-  {
     name: 'La Comer',
     image: require("../assets/imgs/laComer.jpg"),
+    activated: true
+  },
+  {
+    name: 'Walmart',
+    image: require("../assets/imgs/walmart.jpg"),
     activated: false
   },
   {

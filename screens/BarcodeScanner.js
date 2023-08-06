@@ -13,7 +13,7 @@ import { StatusBar } from 'expo-status-bar';
 import fetchData from '../constants/apiCaller';
 import { UserContext } from '../context/UserContext';
 import { Product } from '../Class/Product';
-
+import Card from "../components/Card";
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
@@ -28,10 +28,11 @@ export default function BarcodeScanner(props) {
   const [barCode, setBarCode] = useState('');
   const [disabledButton, setDisabledButton] = useState(true);
   const [isLoad, setIsLoad] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+  const fadeAnim = useRef(new Animated.Value(0)).current;
   const disabledFlash = useRef(true);
   const dectectIsFocused = useIsFocused();
   const cameraRef = useRef();
+  const [statusCode, setStatusCode] = useState(0);
 
   const [barCodeBox, setBarCodeBox] = useState({
     height: 0,
@@ -112,25 +113,37 @@ export default function BarcodeScanner(props) {
   };
 
   const onGetItemPress = () => {
-    setIsLoad(true);
-    const upcCode = barCode;
-    fetchData(upcCode, user.carts[0].storeName)
-      .then(({statusCode,body}) => {
-        if(statusCode === 200){
-          const product = new Product(body.name, body.description, body.price, 1, body.images);
-          //Actualizar el estado del usuario
-          user.carts[0].addProduct(product);
-          props.navigation.navigate('Cart')
-        }
-        
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    if(!statusCode){
+      setIsLoad(true);
+      //setDisabledButton(true)
+      const upcCode = barCode;
+      fetchData(upcCode, user.carts[0].storeName)
+        .then((element) => {        
+          if(element.statusCode === 200){
+            
+            //Actualizar el estado del usuario
+            //user.carts[0].addProduct(product);
+            //props.navigation.navigate('Cart')
+            user.carts[0].setTemporalProduct(new Product(element.body.name, element.body.description, element.body.price, 1, element.body.images));
+          }
+          setStatusCode(element.statusCode);
+          setIsLoad(false)
+          console.log(element);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }else{
+      user.carts[0].addProduct(user.carts[0].temporalProduct);
+      props.navigation.navigate('Cart')
+    }
+    
   }
 
   const onCancelPress = () => {
     setScanned(false);
+    setStatusCode(0);
+    setBarCode('');
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 500,
@@ -270,32 +283,42 @@ export default function BarcodeScanner(props) {
 
 
       <Animated.View style={{ ...styles.lowerSection, translateY: fadeAnim }}>
-        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
+        <Block style={{ paddingHorizontal: !statusCode? theme.SIZES.BASE:0 }}>
+        {
+          !statusCode?
           <Input
             value={barCode}
             placeholder="Escanea el código del producto"
             shadowless
+            editable={!isLoad}
             iconContent={
               <Ionicons name="barcode-outline" size={32} color="#747474" style={{ marginEnd: 5 }} />
             }
             onChangeText={(value) => setBarCode(value)}
             keyboardType="numeric"
-          />
+          />:
+          statusCode==200?
+          dectectIsFocused?<Card onClick={()=>{props.navigation.navigate('Product');}}/>:<></>
+          :<></>
+
+        }
+          
         </Block>
         <Block center row>
           <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
-            style={{ ...styles.button, backgroundColor: nowTheme.COLORS.DEFAULT }}
+            style={{ ...styles.button, backgroundColor: isLoad ? theme.COLORS.GREY : nowTheme.COLORS.DEFAULT }}
             onPress={onCancelPress}
+            disabled={isLoad}
           >
             CANCELAR
           </Button>
           <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
             style={{ ...styles.button, backgroundColor: disabledButton ? theme.COLORS.DEFAULT : nowTheme.COLORS.PRIMARY }}
             onPress={onGetItemPress}
-            disabled={disabledButton}
+            disabled={disabledButton||isLoad}
             loading={isLoad}
           >
-            BUSCAR PRODUCTO
+            {statusCode ?'AÑADIR PRODUCTO': 'BUSCAR PRODUCTO'}
           </Button>
         </Block>
       </Animated.View>

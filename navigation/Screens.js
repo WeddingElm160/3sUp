@@ -13,6 +13,7 @@ import Success from '../screens/Success';
 import Product from '../screens/Product';
 import AddProduct from '../screens/AddProduct';
 import BarcodeScanner from '../screens/BarcodeScanner';
+import Card from "../components/Card";
 
 import Onboarding from '../screens/Onboarding';
 import Supermarket from '../screens/Supermarket';

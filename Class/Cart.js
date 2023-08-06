@@ -1,6 +1,6 @@
 import Product from './Product'
 export class Cart {
-  receipt; products; productIndex; storeName;
+  receipt; products; productIndex; storeName; temporalProduct;
   constructor(cart) {
     if (typeof cart !== 'string') {
       this.receipt = {
@@ -21,7 +21,11 @@ export class Cart {
         change: 0
       }
     }
+    this.temporalProduct = {}
+  }
 
+  setTemporalProduct(temporalProduct){
+    this.temporalProduct = temporalProduct;
   }
 
   setProductIndex(productIndex) {
@@ -35,14 +39,15 @@ export class Cart {
   }
 
   addProduct(product) {
+    product.added = true;
     this.products.push(product);
-    this.receipt.subtotal += product.price;
+    this.receipt.subtotal += product.price*product.quantity;
     this.receipt.change = this.receipt.budget ? (this.receipt.budget - this.receipt.subtotal) : 0
   }
 
   removeProduct(key) {
     const product = this.products.splice(key, 1)[0]
-    this.receipt.subtotal -= product.price;
+    this.receipt.subtotal -= product.price*product.quantity;
     this.receipt.change = this.receipt.budget ? (this.receipt.budget + this.receipt.subtotal) : 0
   }
 }

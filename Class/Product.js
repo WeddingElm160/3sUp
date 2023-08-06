@@ -8,6 +8,7 @@ export class Product {
             this.quantity = parseInt(quantity);
             this.image = image;
             //this.totalPrice = price;
+            this.added = false;
         }else{
             this.name = name.name;
             this.description = name.description;
@@ -15,7 +16,7 @@ export class Product {
             this.quantity = parseInt(name.quantity);
             this.image = name.image;
             //this.totalPrice = this.quantity * this.quantity;
-            
+            this.added = true;
         }
         
     }

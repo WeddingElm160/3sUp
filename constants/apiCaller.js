@@ -1,8 +1,7 @@
 import * as cheerio from 'cheerio';
 
 
-const fetchData = async (upc, supermarket) => {
-  
+const fetchData = async (upc, supermarket) => {  
   switch (supermarket) {
     case 'Bodega Aurrera':{
       url =(`https://despensa.bodegaaurrera.com.mx/p/00${upc.slice(0, -1)}`);
@@ -122,14 +121,47 @@ const fetchData = async (upc, supermarket) => {
       };
     }
     break
-    default:
-    data = {
-      statusCode: 400
+    case 'La Comer':{
+      url =(`https://www.lacomer.com.mx/lacomer-api/api/v1/public/articulopasillo/detalleArticulo?artEan=${upc}&noPagina=1&succId=287`);
+      
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36',
+        },
+      });
+      
+      const productData = await response.json();
+
+      if (!productData.estrucArti) {
+        data = {
+          statusCode: 404
+        }
+        break
+      }
+      //console.log(productData);
+      data = {
+        statusCode: 200,
+        body: {
+          name: productData.estrucArti.art_des_com,
+          price: productData.estrucArti.artPrven,
+          oldPrice: (productData.estrucArti.artPrlin-productData.estrucArti.artPrven)>5?productData.estrucArti.artPrlin:null,
+          description: '',
+          images: Object.values(productData.estrucArtiImg)
+        }
+        
+      };
     }
+    break
+    default:
+      data = {
+        statusCode: 400
+      }
   }
-  if(data.body)
-  data.body.url = url
-  console.log(data);
+  if(data.body){
+    data.body.url = url
+    data.body.barCode = upc
+  }
+  //console.log(data);
   return data;
 };
 
