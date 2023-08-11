@@ -4,6 +4,8 @@ import * as cheerio from 'cheerio';
 const fetchData = async (upc, supermarket) => {  
   switch (supermarket) {
     case 'Bodega Aurrera':{
+      if(upc.length==12)
+        upc= '0'+upc
       url =(`https://despensa.bodegaaurrera.com.mx/p/00${upc.slice(0, -1)}`);
       
       const response = await fetch("https://deadpool.instaleap.io/api/v2", {
@@ -49,6 +51,8 @@ const fetchData = async (upc, supermarket) => {
     }
     break
     case 'Chedraui':{
+      if(upc.length==12)
+        upc= upc.slice(1);
       const results = (await (await fetch(`https://www.googleapis.com/customsearch/v1?key=AIzaSyB2-DrsIMb2t473Kc466S-OtDJaTBxkjGo&cx=64b7b1f2799364153&q=%22${upc}_00%22`)).json())?.items;
       
       if (!results) {

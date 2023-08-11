@@ -298,8 +298,8 @@ export default function BarcodeScanner(props) {
             keyboardType="numeric"
           />:
           statusCode==200?
-          dectectIsFocused?<Card onClick={()=>{props.navigation.navigate('Product');}}/>:<></>
-          :<></>
+          (dectectIsFocused?<Card onClick={()=>{props.navigation.navigate('Product');}}/>:<></>)
+          :statusCode==404?<Text size={16} family="lato-semibold" color={theme.COLORS.DEFAULT}>PRODUCTO NO DISPONIBLE</Text>:<Text size={16} family="lato-semibold" color={theme.COLORS.DEFAULT} center>HAY PROBLEMAS CON LOS SERVIDORES</Text>
 
         }
           
@@ -312,14 +312,17 @@ export default function BarcodeScanner(props) {
           >
             CANCELAR
           </Button>
-          <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
+          {(!statusCode||statusCode==200)?
+            <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
             style={{ ...styles.button, backgroundColor: disabledButton ? theme.COLORS.DEFAULT : nowTheme.COLORS.PRIMARY }}
             onPress={onGetItemPress}
             disabled={disabledButton||isLoad}
             loading={isLoad}
           >
             {statusCode ?'AÑADIR PRODUCTO': 'BUSCAR PRODUCTO'}
-          </Button>
+          </Button>:<></>
+          }
+          
         </Block>
       </Animated.View>
       <StatusBar style="light" backgroundColor="#000000" />
