@@ -5,7 +5,7 @@ const fetchData = async (upc, supermarket) => {
   switch (supermarket) {
     case 'Bodega Aurrera':{
       if(upc.length==12)
-        upc= '0'+upc
+        upc = '0'+upc
       url =(`https://despensa.bodegaaurrera.com.mx/p/00${upc.slice(0, -1)}`);
       
       const response = await fetch("https://deadpool.instaleap.io/api/v2", {

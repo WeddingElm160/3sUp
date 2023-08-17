@@ -14,6 +14,8 @@ import Product from '../screens/Product';
 import AddProduct from '../screens/AddProduct';
 import BarcodeScanner from '../screens/BarcodeScanner';
 import Card from "../components/Card";
+import Login from '../screens/Login';
+import Register from '../screens/Register';
 
 import Onboarding from '../screens/Onboarding';
 import Supermarket from '../screens/Supermarket';
@@ -44,6 +46,38 @@ function HomeStack(props) {
             <Header title="Inicio" navigation={navigation} scene={scene} />
           ),
           cardStyle: { backgroundColor: '#FFFFFF' },
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+function AutentificationStack(props) {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        presentation: 'card',
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen
+        name="Onboarding"
+        component={Onboarding}
+        options={{
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
+        name="Register"
+        component={Register}
+        options={{
+          headerTransparent: true,
         }}
       />
     </Stack.Navigator>
@@ -274,8 +308,8 @@ export default function OnboardingStack(props) {
       }}
     >
       <Stack.Screen
-        name="Onboarding"
-        component={Onboarding}
+        name="Autentification"
+        component={AutentificationStack}
         option={{
           headerTransparent: true,
         }}
