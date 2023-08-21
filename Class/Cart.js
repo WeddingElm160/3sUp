@@ -38,6 +38,10 @@ export class Cart {
     this.receipt.change = budget - this.receipt.subtotal;
   }
 
+  updateSubtotal(amount) {
+    this.receipt.subtotal+=amount;
+  }
+
   addProduct(product) {
     product.added = true;
     this.products.push(product);

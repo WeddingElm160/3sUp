@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { Text, Block, Button, Input } from "galio-framework";
+import { Text, Block, Button, Input, theme } from "galio-framework";
 import { FontAwesome } from "@expo/vector-icons";
 import { nowTheme } from "../constants";
 import { UserContext } from "../context/UserContext";
@@ -75,12 +75,16 @@ function Product(props) {
   const incrementQuantity = () => {
     if (quantity < 99) {
       setQuantity(quantity + 1);
+      if(product.added)
+        user.carts[0].updateSubtotal(product.price)
     }
   };
 
   const decrementQuantity = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
+      if(product.added)
+        user.carts[0].updateSubtotal(-product.price)
     }
   };
 
@@ -158,7 +162,7 @@ function Product(props) {
             </TouchableOpacity>
           </Block>
         </Block>
-        <ScrollView>
+        <ScrollView style={styles.description}>
           <Text style={styles.loremText}>
             {product.description}
           </Text>
@@ -346,6 +350,13 @@ const styles = StyleSheet.create({
     margin: 0,
     
   },
+  description: {
+    backgroundColor: nowTheme.COLORS.WHITE,
+    paddingHorizontal: theme.SIZES.BASE,
+    paddingVertical:theme.SIZES.BASE/2,
+    borderRadius: 15,
+    height: 5
+  }
 });
 
 export default Product;

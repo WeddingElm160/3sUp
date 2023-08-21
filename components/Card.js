@@ -11,11 +11,15 @@ const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 
 function Card(props) {
   
   const { user } = useContext(UserContext);
-  const [product, setProduct] = useState(props.index? user.carts[0].products[props.index] :user.carts[0].temporalProduct);
+  const [product, setProduct] = useState(props.remove? user.carts[0].products[props.index] :user.carts[0].temporalProduct);
   const [quantity, setQuantity] = useState(product.quantity);
   const incrementQuantity = () => {
     if (quantity < 99) {
       setQuantity(quantity + 1);
+      if(product.added){
+        user.carts[0].updateSubtotal(product.price)
+        props.updateScreen();
+      }
     }
   };
   
@@ -26,6 +30,10 @@ function Card(props) {
   const decrementQuantity = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
+      if(product.added){
+        user.carts[0].updateSubtotal(-product.price)
+        props.updateScreen();
+      }
     }
   };
 

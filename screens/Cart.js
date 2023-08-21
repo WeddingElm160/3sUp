@@ -26,10 +26,11 @@ function Cart(props) {
   //const actualCart = useRef(new CartClass())
   const showOptions = useRef(false);
   const [refresh, setRefresh] = useState(false);
+  
 
   const optionsPress = () => {
     showOptions.current = !showOptions.current;
-    setRefresh(!refresh);
+    setUpdateScreen(!updateScreen);
   }
 
   useEffect(() => {
@@ -137,7 +138,7 @@ function Cart(props) {
         {user.carts[0].products.length?
         <ScrollView style={{ width: '100%' }}>
         
-           {dectectIsFocused?user.carts[0].products.map((product, i)=><Card key={i} remove={()=>{user.carts[0].removeProduct(i); setUpdateScreen(!updateScreen)}} onClick={()=>{user.carts[0].setTemporalProduct(product); props.navigation.navigate('Product');}} index={i} />):<></>}
+           {dectectIsFocused?user.carts[0].products.map((product, i)=><Card key={i} remove={()=>{user.carts[0].removeProduct(i); setUpdateScreen(!updateScreen)}} updateScreen={()=>setUpdateScreen(!updateScreen)} onClick={()=>{user.carts[0].setTemporalProduct(product); props.navigation.navigate('Product');}} index={i} />):<></>}
           
           <Block height={theme.SIZES.BASE + 40} />
         </ScrollView>
