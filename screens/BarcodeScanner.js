@@ -115,16 +115,19 @@ export default function BarcodeScanner(props) {
   const onGetItemPress = () => {
     if(!statusCode){
       setIsLoad(true);
-      //setDisabledButton(true)
-      const upcCode = barCode;
-      fetchData(upcCode, user.carts[0].storeName)
+      if(user.carts[0].productIsAdded(barCode)){
+        setStatusCode(1)
+        setIsLoad(false)
+        return
+      }
+        
+      fetchData(barCode, user.carts[0].storeName)
         .then((element) => {        
           if(element.statusCode === 200){
-            
             //Actualizar el estado del usuario
             //user.carts[0].addProduct(product);
             //props.navigation.navigate('Cart')
-            user.carts[0].setTemporalProduct(new Product(element.body.name, element.body.description, element.body.price, 1, element.body.images));
+            user.carts[0].setTemporalProduct(new Product(element.body.name, element.body.description, element.body.price, 1, element.body.images, element.body.barCode));
           }
           setStatusCode(element.statusCode);
           setIsLoad(false)
@@ -133,11 +136,12 @@ export default function BarcodeScanner(props) {
         .catch(error => {
           console.error(error);
         });
-    }else{
-      user.carts[0].addProduct(user.carts[0].temporalProduct);
-      props.navigation.navigate('Cart')
-    }
-    
+    }else if (statusCode == 1) 
+      props.navigation.navigate('Product');
+      else{
+        user.carts[0].addProduct(user.carts[0].temporalProduct);
+        props.navigation.navigate('Cart')
+      }
   }
 
   const onCancelPress = () => {
@@ -297,9 +301,14 @@ export default function BarcodeScanner(props) {
             onChangeText={(value) => setBarCode(value)}
             keyboardType="numeric"
           />:
-          statusCode==200?
+          statusCode==1?<Text size={16} family="lato-semibold" color={theme.COLORS.DEFAULT} style={{textAlign: 'center', marginBottom: theme.SIZES.BASE}}>
+            PRODUCTO YA AÑADIDO AL CARRITO
+          </Text>
+          :statusCode==200?
           (dectectIsFocused?<Card onClick={()=>{props.navigation.navigate('Product');}}/>:<></>)
-          :statusCode==404?<Text size={16} family="lato-semibold" color={theme.COLORS.DEFAULT}>PRODUCTO NO DISPONIBLE</Text>:<Text size={16} family="lato-semibold" color={theme.COLORS.DEFAULT} center>HAY PROBLEMAS CON LOS SERVIDORES</Text>
+          :<Text size={16} family="lato-semibold" color={theme.COLORS.DEFAULT} style={{textAlign: 'center', marginBottom: theme.SIZES.BASE}}>
+            {statusCode==404?'PRODUCTO NO DISPONIBLE':'HAY PROBLEMAS CON LOS SERVIDORES'}
+          </Text>
 
         }
           
@@ -312,14 +321,14 @@ export default function BarcodeScanner(props) {
           >
             CANCELAR
           </Button>
-          {(!statusCode||statusCode==200)?
+          {(!statusCode||statusCode==200||statusCode==1)?
             <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
             style={{ ...styles.button, backgroundColor: disabledButton ? theme.COLORS.DEFAULT : nowTheme.COLORS.PRIMARY }}
             onPress={onGetItemPress}
             disabled={disabledButton||isLoad}
             loading={isLoad}
           >
-            {statusCode ?'AÑADIR PRODUCTO': 'BUSCAR PRODUCTO'}
+            {!statusCode ? 'BUSCAR PRODUCTO': statusCode==200?'AÑADIR PRODUCTO':'VER PRODUCTO'}
           </Button>:<></>
           }
           

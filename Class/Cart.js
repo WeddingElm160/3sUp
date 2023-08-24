@@ -54,4 +54,13 @@ export class Cart {
     this.receipt.subtotal -= product.price*product.quantity;
     this.receipt.change = this.receipt.budget ? (this.receipt.budget + this.receipt.subtotal) : 0
   }
+
+  productIsAdded(barcode){
+    const index = this.products.findIndex(product => product.barcode == barcode)
+    if(index >= 0){
+      this.temporalProduct = this.products[index];
+      return true
+    }else
+      return false
+  }
 }

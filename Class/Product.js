@@ -1,21 +1,21 @@
 export class Product {
 
-    constructor(name, description, price, quantity, image) {
+    constructor(name, description, price, quantity, image, barcode) {
         if (typeof name === 'string') {
             this.name = name;
             this.description = description;
             this.price = parseFloat(price);
             this.quantity = parseInt(quantity);
             this.image = image;
-            //this.totalPrice = price;
+            this.barcode = barcode;
             this.added = false;
         }else{
             this.name = name.name;
             this.description = name.description;
             this.price = parseFloat(name.price);
             this.quantity = parseInt(name.quantity);
-            this.image = name.image;
-            //this.totalPrice = this.quantity * this.quantity;
+            this.image = image;
+            this.barcode = name.barcode;
             this.added = true;
         }
         
