@@ -78,7 +78,7 @@ export default function Onboarding(props) {
                 shadowless
                 style={styles.button}
                 color={nowTheme.COLORS.PRIMARY}
-                onPress={() => navigation.navigate('App')}
+                onPress={() => navigation.navigate('Login')}
               >
                 <Text
                   style={{ fontFamily: 'lato-bold', fontSize: 14 }}
