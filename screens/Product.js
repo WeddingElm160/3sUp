@@ -30,10 +30,16 @@ function Product(props) {
   const showOptions = useRef(false);
   const [refresh, setRefresh] = useState(false);
   const [showAlertInfo, setShowAlertInfo] = useState(false);
+  const [resetPrice, setResetPrice] = useState(false);
 
   const optionsPress = () => {
     showOptions.current = !showOptions.current;
     setRefresh(!refresh);
+  }
+  
+  const resetPress = () => {
+    formatCurrency(product.price.toString(), true);
+    setResetPrice(false);
   }
 
   function formatNumber(n) {
@@ -97,9 +103,16 @@ function Product(props) {
   }, [quantity]);
 
   const addPress = () => {
+    
     if (!product.added) {
-      user.carts[0].addProduct(user.carts[0].temporalProduct);
+      product.setPrice(price);
+      user.carts[0].addProduct(product);
+    }else{
+      user.carts[0].updateSubtotal(-product.price*quantity)
+      user.carts[0].updateSubtotal(price*quantity)
+      product.setPrice(price);
     }
+    
     props.navigation.navigate("Cart")
   };
   return (
@@ -140,18 +153,17 @@ function Product(props) {
           {product.name}
         </Text>
         <Block style={styles.productInfo}>
-          <Block style={styles.priceContainer} flex={1} left>
-            <Block row middle>
-              <Text style={styles.priceLabel}>Precio unitario</Text>
-              <Button
-                style={styles.infoButton}
-                onPress={() => setShowAlertInfo(true)}
-              >
-                <Ionicons name="information-circle-outline" size={14} color={nowTheme.COLORS.BLACK} />
-              </Button>
-            </Block>
-
-            <Block style={styles.priceInputContainer} left>
+          <Block row>
+            <Text style={styles.priceLabel}>Precio unitario</Text>
+            <Button
+              style={styles.infoButton}
+              onPress={() => setShowAlertInfo(true)}
+            >
+              <Ionicons name="information-circle-outline" size={14} color={nowTheme.COLORS.BLACK} />
+            </Button>
+          </Block>
+          <Block row space='between' middle>
+            <Block style={styles.priceInputContainer} left flex={1}>
               <Input
                 style={styles.priceInput}
                 shadowless
@@ -168,12 +180,21 @@ function Product(props) {
                   />
                 }
                 keyboardType="numeric"
-                onChangeText={(value) => formatCurrency(value)}
+                onChangeText={(value) => {formatCurrency(value); setResetPrice(true)}}
               />
             </Block>
-          </Block>
-          <Block bottom>
-            <Block style={styles.counter}>
+            {
+              resetPrice?
+              <Button
+                style={styles.resetButton}
+                onPress={() => resetPress()}
+              >
+                <Ionicons name="refresh-outline" size={16} color={nowTheme.COLORS.BLACK} />
+              </Button>
+              :<></>
+            }
+            
+            <Block style={styles.counter} row middle>
               <TouchableOpacity
                 style={styles.counterButton}
                 onPress={decrementQuantity}
@@ -201,6 +222,8 @@ function Product(props) {
               </TouchableOpacity>
             </Block>
           </Block>
+            
+            
         </Block>
         <ScrollView style={styles.description}>
           <Text style={styles.loremText}>
@@ -217,7 +240,7 @@ function Product(props) {
           </Block>
 
           <Block style={styles.priceInputContainer} left>
-          <Text style={{ fontSize: 18, fontFamily: 'lato-bold', color: '#55BCAE' }}>{formatter.format(product.price*quantity)}</Text>
+          <Text style={{ fontSize: 18, fontFamily: 'lato-bold', color: '#55BCAE' }}>{formatter.format((price?price:0)*quantity)}</Text>
           </Block>
         </Block>
         <Block>
@@ -271,8 +294,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   productInfo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     marginBottom: theme.SIZES.BASE,
   },
   sampleProductText: {
@@ -283,9 +304,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.SIZES.BASE
   },
   counter: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    
     justifyContent: "space-between",
     backgroundColor: "rgba(85, 188, 174, 0.5)",
     borderRadius: 7,
@@ -335,7 +354,7 @@ const styles = StyleSheet.create({
   },
   priceInputContainer: {
     with: "100%",
-    marginEnd: 20,
+    marginEnd: theme.SIZES.BASE,
     padding: 0
   },
   priceIcon: {
@@ -369,10 +388,20 @@ const styles = StyleSheet.create({
     backgroundColor: nowTheme.COLORS.BORDER,
     height: 'auto',
     width: "auto",
+    paddingHorizontal:2.5,
     borderRadius: 25,
     marginStart: 5,
     margin: 0,
 
+  },
+  resetButton: {
+    backgroundColor: '#88888888',
+    height: 27,
+    width: 27,
+    borderRadius: 25,
+    margin: 0,
+    position:"absolute",
+    right: 75 + theme.SIZES.BASE,
   },
   description: {
     backgroundColor: nowTheme.COLORS.WHITE,

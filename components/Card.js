@@ -9,23 +9,34 @@ import { UserContext } from '../context/UserContext';
 const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN'});
 
 function Card(props) {
-  
   const { user } = useContext(UserContext);
   const [product, setProduct] = useState(props.remove? user.carts[0].products[props.index] :user.carts[0].temporalProduct);
   const [quantity, setQuantity] = useState(product.quantity);
+  const [refresh, setRefresh] = useState(true);
+  
+
+  useEffect(() => {
+    setRefresh(true);
+  }, [refresh]);
+  
+  useEffect(() => {
+    //console.log(product.name);
+  }, []);
+
+  useEffect(() => {
+    product.setQuantity(quantity)
+  }, [quantity]);
+  
   const incrementQuantity = () => {
     if (quantity < 99) {
       setQuantity(quantity + 1);
       if(product.added){
         user.carts[0].updateSubtotal(product.price)
         props.updateScreen();
+        setRefresh(true)
       }
     }
   };
-  
-  useEffect(() => {
-    product.setQuantity(quantity)
-  }, [quantity]);
 
   const decrementQuantity = () => {
     if (quantity > 1) {
@@ -33,6 +44,7 @@ function Card(props) {
       if(product.added){
         user.carts[0].updateSubtotal(-product.price)
         props.updateScreen();
+        setRefresh(true)
       }
     }
   };
@@ -46,9 +58,9 @@ function Card(props) {
         <Block flex>
           <Text style={{ fontSize: 16, fontFamily: 'lato-semibold', fontWeight: 'bold', marginRight: props.remove?40:0}} numberOfLines={1}>{product.name}</Text>
           <Text style={{ fontSize: 12, fontFamily: 'lato-semibold', color: '#858585', height: 32 }} numberOfLines={2}>{product.description}</Text>
-          <Text style={{ fontSize: 18, fontFamily: 'lato-bold', color: '#55BCAE' }}>{formatter.format(product.price*quantity)}</Text>
+          <Text style={{ fontSize: 18, fontFamily: 'lato-bold', color: '#55BCAE' }}>{formatter.format(product.price*quantity)}                  </Text>
         </Block>
-        <Block style={styles.counter} middle row space="between">
+        {refresh?<Block style={styles.counter} middle row space="between">
           <Button style={{ ...styles.counterButton, backgroundColor: '#5faca0' }} onPress={decrementQuantity}>
             <Ionicons name="remove" size={10} color={nowTheme.COLORS.WHITE} />
           </Button>
@@ -56,7 +68,8 @@ function Card(props) {
           <Button style={{ ...styles.counterButton, backgroundColor: '#d0d7ce' }} onPress={incrementQuantity} >
             <Ionicons name="add" size={10} color={'#278F7F'} />
           </Button>
-        </Block>
+        </Block>:<></>}
+        
         {
           props.remove?<Block middle row style={styles.option}>
           <Button style={{ ...styles.optionButton }} onPress={()=>props.remove()}>

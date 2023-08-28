@@ -131,7 +131,7 @@ export default function BarcodeScanner(props) {
           }
           setStatusCode(element.statusCode);
           setIsLoad(false)
-          console.log(element);
+          //console.log(element);
         })
         .catch(error => {
           console.error(error);

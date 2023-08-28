@@ -39,7 +39,7 @@ export class Cart {
   }
 
   updateSubtotal(amount) {
-    this.receipt.subtotal+=amount;
+    this.receipt.subtotal+=parseFloat(amount);
   }
 
   addProduct(product) {
