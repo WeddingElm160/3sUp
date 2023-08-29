@@ -264,7 +264,6 @@ function Cart(props) {
         }}
         overlayStyle={{ height: height + 48 }}
       />
-
     </Block>
   );
 }

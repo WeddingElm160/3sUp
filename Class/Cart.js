@@ -39,7 +39,10 @@ export class Cart {
   }
 
   updateSubtotal(amount) {
-    this.receipt.subtotal+=parseFloat(amount);
+    const amountFloat=parseFloat(amount);
+    this.receipt.subtotal+=amountFloat;
+    this.receipt.change-=amountFloat;
+
   }
 
   addProduct(product) {
@@ -50,6 +53,8 @@ export class Cart {
   }
 
   removeProduct(key) {
+    if (typeof key == 'string')
+      key = this.products.findIndex(product => product.barcode == key)
     const product = this.products.splice(key, 1)[0]
     this.receipt.subtotal -= product.price*product.quantity;
     this.receipt.change = this.receipt.budget ? (this.receipt.budget + this.receipt.subtotal) : 0

@@ -127,7 +127,7 @@ export default function BarcodeScanner(props) {
             //Actualizar el estado del usuario
             //user.carts[0].addProduct(product);
             //props.navigation.navigate('Cart')
-            user.carts[0].setTemporalProduct(new Product(element.body.name, element.body.description, element.body.price, 1, element.body.images, element.body.barCode));
+            user.carts[0].setTemporalProduct(new Product(element.body.name, element.body.description, element.body.price, 1, element.body.images, element.body.barCode, false));
           }
           setStatusCode(element.statusCode);
           setIsLoad(false)

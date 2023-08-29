@@ -4,6 +4,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { Button, Block, NavBar, Text, theme } from 'galio-framework';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { RightButtonContext } from '../context/RightButtonContext';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 import nowTheme from '../constants/Theme';
 
@@ -11,10 +12,33 @@ import nowTheme from '../constants/Theme';
 const { width } = Dimensions.get('window');
 
 class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { showAlert: false };
+  };
+
+  showAlert = () => {
+    this.setState({
+      showAlert: true
+    });
+  };
+
+  hideAlert = () => {
+    this.setState({
+      showAlert: false
+    });
+  };
+
   static contextType = RightButtonContext
 
   handleLeftPress = () => {
     const { back, navigation } = this.props;
+    if (this.context.butttonLeftWarning) {
+      this.setState({
+        showAlert: true
+      });
+      return
+    }
     return back ? navigation.goBack() : navigation.openDrawer();
   };
   renderRight = () => {
@@ -22,6 +46,7 @@ class Header extends React.Component {
 
     return this.context.butttonRight;
   };
+
   renderOptions = () => {
     const { navigation, optionLeft, optionRight } = this.props;
 
@@ -86,13 +111,14 @@ class Header extends React.Component {
       ...props
     } = this.props;
 
+    const {showAlert} = this.state;
     const noShadow = ['Carrito'].includes(title);
     const headerStyles = [
       !noShadow ? styles.shadow : null,
       transparent ? { backgroundColor: 'rgba(0,0,0,0)' } : null
     ];
 
-    const navbarStyles = [styles.navbar, bgColor && { backgroundColor: bgColor }, noShadow&&{paddingBottom: theme.SIZES.BASE*1.25}];
+    const navbarStyles = [styles.navbar, bgColor && { backgroundColor: bgColor }, noShadow && { paddingBottom: theme.SIZES.BASE * 1.25 }];
 
     return (
       <Block style={headerStyles}>
@@ -104,7 +130,7 @@ class Header extends React.Component {
           right={this.renderRight()}
           rightStyle={{ alignItems: 'flex-end', marginRight: 0, height: 40 }}
           left={
-            <Button style={{width:40, height: 40, borderRadius: 11, opacity: title ? 1:.6, margin: 0 }} onPress={this.handleLeftPress}>
+            <Button style={{ width: 40, height: 40, borderRadius: 11, opacity: title ? 1 : .6, margin: 0 }} onPress={this.handleLeftPress}>
               <Ionicons name={back ? 'chevron-back' : 'menu'} size={20} color={nowTheme.COLORS.WHITE} />
             </Button>
           }
@@ -112,11 +138,32 @@ class Header extends React.Component {
           titleStyle={[
             styles.title,
             { color: nowTheme.COLORS[white ? 'WHITE' : 'HEADER'] },
-            titleColor && { color: titleColor }, 
+            titleColor && { color: titleColor },
           ]}
           {...props}
         />
         {this.renderHeader()}
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title="Advertencia"
+          message={this.context.butttonLeftWarning}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="No, continuar"
+          confirmText="Si, descartar"
+          confirmButtonColor="#DD6B55"
+          onCancelPressed={() => {
+            this.hideAlert();
+          }}
+          onConfirmPressed={() => {
+            this.context.setButttonLeftWarning('');
+            this.hideAlert();
+            navigation.goBack();
+          }}
+        />
       </Block>
     );
   }
@@ -135,9 +182,9 @@ const styles = StyleSheet.create({
     zIndex: 5,
     paddingHorizontal: theme.SIZES.BASE,
     height: 40,
-    paddingTop: theme.SIZES.BASE*2, 
-    paddingBottom: theme.SIZES.BASE*2
-    },
+    paddingTop: theme.SIZES.BASE * 2,
+    paddingBottom: theme.SIZES.BASE * 2
+  },
   shadow: {
     backgroundColor: theme.COLORS.WHITE,
     shadowColor: 'black',

@@ -16,29 +16,46 @@ import { useIsFocused } from '@react-navigation/native';
 import { RightButtonContext } from '../context/RightButtonContext';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import Carousel from "react-native-reanimated-carousel";
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
-const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN'});
+const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
 function Product(props) {
   const { user } = useContext(UserContext);
-  const [product, setProduct] = useState(user.carts[0].temporalProduct);
+  const [product] = useState(user.carts[0].temporalProduct);
   const [quantity, setQuantity] = useState(product.quantity);
   const [price, setPrice] = useState("");
   const dectectIsFocused = useIsFocused();
-  const { setButttonRight } = useContext(RightButtonContext)
+  const { setButttonRight, setButttonLeftWarning } = useContext(RightButtonContext)
   const showOptions = useRef(false);
   const [refresh, setRefresh] = useState(false);
   const [showAlertInfo, setShowAlertInfo] = useState(false);
   const [resetPrice, setResetPrice] = useState(false);
 
+  const colors = [
+    "#26292E",
+    "#899F9C",
+    "#B3C680",
+    "#5C6265",
+  ];
+
+  const progressValue = useSharedValue(0);
+
   const optionsPress = () => {
     showOptions.current = !showOptions.current;
     setRefresh(!refresh);
   }
-  
+
   const resetPress = () => {
     formatCurrency(product.price.toString(), true);
+    setButttonLeftWarning('');
     setResetPrice(false);
   }
 
@@ -103,16 +120,17 @@ function Product(props) {
   }, [quantity]);
 
   const addPress = () => {
-    
+    setButttonLeftWarning('');
+
     if (!product.added) {
       product.setPrice(price);
       user.carts[0].addProduct(product);
-    }else{
-      user.carts[0].updateSubtotal(-product.price*quantity)
-      user.carts[0].updateSubtotal(price*quantity)
+    } else {
+      user.carts[0].updateSubtotal(-product.price * quantity)
+      user.carts[0].updateSubtotal(price * quantity)
       product.setPrice(price);
     }
-    
+
     props.navigation.navigate("Cart")
   };
   return (
@@ -124,28 +142,71 @@ function Product(props) {
           anchor={<></>}
         >
           {
-            product.added?<MenuItem onPress={optionsPress}>Eliminar Artículo</MenuItem>:<></>
+            product.added && <MenuItem onPress={() => { user.carts[0].removeProduct(product.barcode); optionsPress(); props.navigation.navigate("Cart") }}>Eliminar Artículo</MenuItem> 
           }
           <MenuItem disabled={true}>Compartir...</MenuItem>
-          <MenuDivider />
-          <MenuItem onPress={() => { optionsPress(); }}>Editar Artículo</MenuItem>
+          {
+            product.editable && <>
+            <MenuDivider />
+            <MenuItem onPress={() => { optionsPress(); }}>Editar Artículo</MenuItem>
+            </>
+          }
         </Menu>
       </Block>
       {/* Sección superior */}
       <Block style={styles.topSection}>
-        <Image
+        {/* <Image
           source={
             !product.image
               ? require("../assets/imgs/productNotFound.png")
               : {
-                uri: product
-                  .image[0],
+                uri: product.image[0],
               }
           }
           style={styles.image}
           resizeMode="contain"
+        /> */}
+        <Carousel
+          {...{
+            width: width
+          }}
+          loop
+          autoPlay={false}
+          data={product.image}
+          pagingEnabled={true}
+          onProgressChange={(_, absoluteProgress) =>
+            (progressValue.value = absoluteProgress)
+          }
+          renderItem={({ index }) => <Image
+            source={
+              !product.image
+                ? require("../assets/imgs/productNotFound.png")
+                : {
+                  uri: product.image[index],
+                }
+            }
+            style={styles.image}
+            resizeMode="contain"
+          />}
         />
+        <Block style={styles.PaginationItem}>
+          {product.image.map((_, index) => {
+            return (
+              <PaginationItem
+                backgroundColor={nowTheme.COLORS.PRIMARY}
+                animValue={progressValue}
+                index={index}
+                key={index}
+                isRotate={true}
+                length={colors.length}
+              />
+            );
+          })}
+        </Block>
       </Block>
+      {/*<Block key={index} style={{backgroundColor: 'red'}}>
+          <Text>Hola mundo</Text>
+        </Block> */}
 
       {/* Sección central */}
       <Block style={styles.middleSection}>
@@ -180,20 +241,19 @@ function Product(props) {
                   />
                 }
                 keyboardType="numeric"
-                onChangeText={(value) => {formatCurrency(value); setResetPrice(true)}}
+                onChangeText={(value) => { formatCurrency(value); setResetPrice(true); if (product.added) setButttonLeftWarning('¿Estás seguro de salir sin guardar cambios?') }}
               />
             </Block>
             {
-              resetPrice?
-              <Button
-                style={styles.resetButton}
-                onPress={() => resetPress()}
-              >
-                <Ionicons name="refresh-outline" size={16} color={nowTheme.COLORS.BLACK} />
-              </Button>
-              :<></>
+              resetPrice &&
+                <Button
+                  style={styles.resetButton}
+                  onPress={() => resetPress()}
+                >
+                  <Ionicons name="refresh-outline" size={16} color={nowTheme.COLORS.BLACK} />
+                </Button>
             }
-            
+
             <Block style={styles.counter} row middle>
               <TouchableOpacity
                 style={styles.counterButton}
@@ -222,8 +282,8 @@ function Product(props) {
               </TouchableOpacity>
             </Block>
           </Block>
-            
-            
+
+
         </Block>
         <ScrollView style={styles.description}>
           <Text style={styles.loremText}>
@@ -240,7 +300,7 @@ function Product(props) {
           </Block>
 
           <Block style={styles.priceInputContainer} left>
-          <Text style={{ fontSize: 18, fontFamily: 'lato-bold', color: '#55BCAE' }}>{formatter.format((price?price:0)*quantity)}</Text>
+            <Text style={{ fontSize: 18, fontFamily: 'lato-bold', color: '#55BCAE' }}>{formatter.format((price ? price : 0) * quantity)}</Text>
           </Block>
         </Block>
         <Block>
@@ -284,6 +344,15 @@ const styles = StyleSheet.create({
     backgroundColor: nowTheme.COLORS.WHITE,
     borderBottomEndRadius: 21,
     borderBottomStartRadius: 21,
+    overflow: 'hidden'
+  },
+  PaginationItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: 100,
+    alignSelf: "center",
+    position: 'relative',
+    top: -20,
   },
   image: {
     width: "100%",
@@ -304,7 +373,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.SIZES.BASE
   },
   counter: {
-    
+
     justifyContent: "space-between",
     backgroundColor: "rgba(85, 188, 174, 0.5)",
     borderRadius: 7,
@@ -388,7 +457,7 @@ const styles = StyleSheet.create({
     backgroundColor: nowTheme.COLORS.BORDER,
     height: 'auto',
     width: "auto",
-    paddingHorizontal:2.5,
+    paddingHorizontal: 2.5,
     borderRadius: 25,
     marginStart: 5,
     margin: 0,
@@ -400,7 +469,7 @@ const styles = StyleSheet.create({
     width: 27,
     borderRadius: 25,
     margin: 0,
-    position:"absolute",
+    position: "absolute",
     right: 75 + theme.SIZES.BASE,
   },
   description: {
@@ -410,5 +479,55 @@ const styles = StyleSheet.create({
 
   }
 });
+
+const PaginationItem = (props) => {
+  const { animValue, index, length, backgroundColor, isRotate } = props;
+  const width = 10;
+
+  const animStyle = useAnimatedStyle(() => {
+    let inputRange = [index - 1, index, index + 1];
+    let outputRange = [-width, 0, width];
+
+    if (index === 0 && animValue?.value > length - 1) {
+      inputRange = [length - 1, length, length + 1];
+      outputRange = [-width, 0, width];
+    }
+
+    return {
+      transform: [
+        {
+          translateX: interpolate(
+            animValue?.value,
+            inputRange,
+            outputRange,
+            Extrapolate.CLAMP,
+          ),
+        },
+      ],
+    };
+  }, [animValue, index, length]);
+  return (
+    <Block
+      style={{
+        backgroundColor: nowTheme.COLORS.BORDER,
+        width,
+        height: width,
+        borderRadius: 50,
+        overflow: "hidden",
+      }}
+    >
+      <Animated.View
+        style={[
+          {
+            borderRadius: 50,
+            backgroundColor,
+            flex: 1,
+          },
+          animStyle,
+        ]}
+      />
+    </Block>
+  );
+};
 
 export default Product;

@@ -1,6 +1,6 @@
 export class Product {
 
-    constructor(name, description, price, quantity, image, barcode) {
+    constructor(name, description, price, quantity, image, barcode, editable) {
         if (typeof name === 'string') {
             this.name = name;
             this.description = description;
@@ -8,6 +8,7 @@ export class Product {
             this.quantity = parseInt(quantity);
             this.image = image;
             this.barcode = barcode;
+            this.editable = editable;
             this.added = false;
         }else{
             this.name = name.name;
@@ -16,9 +17,14 @@ export class Product {
             this.quantity = parseInt(name.quantity);
             this.image = image;
             this.barcode = name.barcode;
+            this.editable = name.editable;
             this.added = true;
         }
         
+    }
+
+    setEditable(value) {
+        this.editable = value;
     }
 
     setName(newName) {
