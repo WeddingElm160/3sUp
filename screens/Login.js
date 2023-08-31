@@ -3,6 +3,7 @@ import { ImageBackground, Image, StyleSheet, TextInput, Dimensions } from 'react
 import { Block, Button, Text, theme } from 'galio-framework';
 import { Images, nowTheme } from '../constants/';
 const { width } = Dimensions.get("window");
+import {handleLogin} from '../constants/api'
 
 export default function Login(props) {
   const { navigation } = props;
@@ -49,7 +50,9 @@ export default function Login(props) {
             shadowless
             style={styles.button}
             color={(password === "" || nameUser === "") ? nowTheme.COLORS.BLACK : nowTheme.COLORS.ACTIVE}
-            onPress={() => navigation.navigate('App')}>
+            onPress={() => handleLogin((nameUser.trim()), password, navigation)}
+            
+          >
             <Text
               style={{ fontFamily: 'lato-bold', fontSize: 14 }}
               color={theme.COLORS.WHITE}

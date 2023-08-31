@@ -25,6 +25,7 @@
     "fs": "^0.0.1-security",
     "galio-framework": "^0.8.0",
     "google-it": "^1.6.4",
+    "jsonwebtoken": "^9.0.1",
     "native-base": "^3.4.28",
     "npm": "^9.8.1",
     "react": "18.2.0",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
+    "pretty-format": "^29.6.3",
     "react-native-dotenv": "^3.4.8"
   },
   "private": true

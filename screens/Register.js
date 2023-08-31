@@ -5,6 +5,7 @@ import { Block, Button, Text, theme } from 'galio-framework';
 import { Ionicons } from '@expo/vector-icons'; 'google-it/lib/utils';
 const { width } = Dimensions.get("window");
 import { Images } from '../constants';
+import {addUser} from '../constants/api'
 
 
 export default function Register(props) {
@@ -39,8 +40,8 @@ export default function Register(props) {
         </Button>
         <Block flex center>
           <Block style={styles.group}>
-            <Text size={25} style={styles.font} adjustsFontSizeToFit={true} numberOfLines={1}>
-              ¡Hola! Esta es la página de registro
+            <Text center size={25} style={styles.font} adjustsFontSizeToFit={true} numberOfLines={2}>
+              ¡Hola!{'\n'} Esta es la página de registro
             </Text>
 
             <Text size={20} style={styles.font} adjustsFontSizeToFit={true} numberOfLines={1}>
@@ -93,11 +94,12 @@ export default function Register(props) {
             {password.length <= 3 && password.length >=1 && (<Text style={{ color: 'red' }}>Minimo 4 caracteres en la contraseña</Text>)}
             <Block flex center >
               <Button
-                disabled={(nameUser === "" || password === "" || email === "" || confirmPw === "") ? true : false }
+                disabled={(nameUser === "" || password === ""  || password.length <= 3 || email === "" || !(confirmPw === password)) ? true : false }
                 shadowless
                 style={styles.button}
-                color={(nameUser === "" || password === "" || email === "" || confirmPw === "") ? nowTheme.COLORS.BLACK : nowTheme.COLORS.ACTIVE}
-                onPress={ () => navigation.navigate('Login')}
+                color={(nameUser === "" || password === "" || password.length <= 3 || email === "" || !(confirmPw === password)) ? nowTheme.COLORS.BLACK : nowTheme.COLORS.ACTIVE}
+                // onPress={ () => navigation.navigate('Login')}
+                onPress={ () => addUser(nameUser.trim(), email.trim(), password) ? navigation.navigate('Login') : false}
               >
                 <Text
                   style={{ fontFamily: 'lato-bold', fontSize: 14 }}

@@ -4,7 +4,7 @@ export class Product {
         if (typeof name === 'string') {
             this.name = name;
             this.description = description;
-            this.price = parseFloat(price);
+            this.price = parseFloat(price); 
             this.quantity = parseInt(quantity);
             this.image = image;
             this.barcode = barcode;

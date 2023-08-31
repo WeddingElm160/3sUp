@@ -146,7 +146,6 @@ function Cart(props) {
       <Block style={styles.mainSection} middle>
         {products.length ?
           <ScrollView style={{ width: '100%' }}>
-
             {dectectIsFocused && refreshItems ? products.map((product, i) => <Card key={i} remove={() => { user.carts[0].removeProduct(i); setRefreshItems(false); }} updateScreen={() => setRefreshPrice(false)} onClick={() => { user.carts[0].setTemporalProduct(product); props.navigation.navigate('Product'); }} index={i} />)
               : <></>}
 
@@ -220,7 +219,7 @@ function Cart(props) {
           <Block>
             <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
               style={{ ...styles.button, backgroundColor: products.length ? nowTheme.COLORS.PRIMARY : '#d4e9e6' }}
-              //onPress={}
+              onPress={() => console.log(user.carts[0].products[0])}
               disabled={!Boolean(products.length)}
             >
               <Ionicons name="receipt-outline" size={20} color={theme.COLORS.WHITE} />
