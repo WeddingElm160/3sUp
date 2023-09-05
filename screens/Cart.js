@@ -11,12 +11,14 @@ import { Images } from "../constants";
 import { RightButtonContext } from '../context/RightButtonContext';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import fetchData from '../constants/apiCaller';
+import { userEmail } from "../constants/api";
 
 const { width, height } = Dimensions.get("window");
 const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
 function Cart(props) {
   const { user } = useContext(UserContext)
+  user.setEmail(userEmail);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [showAlert, setShowAlert] = useState(false);
   const [temporalBudget, setTemporalBudget] = useState(0.0);
@@ -219,7 +221,9 @@ function Cart(props) {
           <Block>
             <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
               style={{ ...styles.button, backgroundColor: products.length ? nowTheme.COLORS.PRIMARY : '#d4e9e6' }}
-              onPress={() => console.log(user.carts[0].products[0])}
+              // onPress={() => addCart(user.carts[0], userEmail)}
+              // onPress={ () => getEveryCarts(user.email)}
+              onPress={() => props.navigation.navigate('Success')}
               disabled={!Boolean(products.length)}
             >
               <Ionicons name="receipt-outline" size={20} color={theme.COLORS.WHITE} />

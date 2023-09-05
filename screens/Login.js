@@ -4,10 +4,20 @@ import { Block, Button, Text, theme } from 'galio-framework';
 import { Images, nowTheme } from '../constants/';
 const { width } = Dimensions.get("window");
 import {handleLogin} from '../constants/api'
+let userEmail = ""
 
+const isValidEmail = (Email) => {
+  const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+  if (Email ==="") {
+    return true
+  }
+  else {
+    return emailRegex.test(Email)
+  }
+};
 export default function Login(props) {
   const { navigation } = props;
-  const [nameUser, onChangeUser] = React.useState('');
+  const [email, onChangeEmail] = React.useState('');
   const [password, onChangePassword] = React.useState('');
 
   return (
@@ -26,13 +36,13 @@ export default function Login(props) {
         </Block>
         <Block flex >
           <Text size={25} style={styles.font} >
-            Ingresa tu nombre de usuario
+            Ingresa tu correo electronico
           </Text>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeUser}
-            value={nameUser}
-            placeholder="User or email"
+            onChangeText={onChangeEmail}
+            value={email}
+            placeholder="email"
           />
 
           <Text size={25} style={styles.font}>
@@ -46,11 +56,11 @@ export default function Login(props) {
             placeholder="Password"
           />
           <Button
-            disabled={(password === "" || nameUser === "") ? true : false}
+            disabled={((password === "" || email === "") || !isValidEmail(email) ? true : false )}
             shadowless
             style={styles.button}
-            color={(password === "" || nameUser === "") ? nowTheme.COLORS.BLACK : nowTheme.COLORS.ACTIVE}
-            onPress={() => handleLogin((nameUser.trim()), password, navigation)}
+            color={(password === "" || email === "") || !isValidEmail(email) ? nowTheme.COLORS.BLACK : nowTheme.COLORS.ACTIVE}
+            onPress={() => handleLogin((email.trim()), password, navigation, userEmail = email.trim())}
             
           >
             <Text
@@ -132,3 +142,5 @@ const styles = StyleSheet.create({
     position: "relative",
   }
 });
+
+export {userEmail}

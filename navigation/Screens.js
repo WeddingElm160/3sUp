@@ -16,6 +16,8 @@ import BarcodeScanner from '../screens/BarcodeScanner';
 import Card from "../components/Card";
 import Login from '../screens/Login';
 import Register from '../screens/Register';
+import Record from '../screens/Record';
+import Ticket from '../screens/Ticket';
 
 import Onboarding from '../screens/Onboarding';
 import Supermarket from '../screens/Supermarket';
@@ -185,15 +187,25 @@ function SavedStack() {
 function HistoryStack() {
   return (
     <Stack.Navigator
-      initialRouteName="Pro"
+      initialRouteName="History"
       screenOptions={{
         presentation: 'card',
         headerShown: 'screen',
       }}
     >
       <Stack.Screen
-        name="Pro"
-        component={Pro}
+        name="Record"
+        component={Record}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="" white transparent navigation={navigation} scene={scene} />
+          ),
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
+        name="Ticket"
+        component={Ticket}
         options={{
           header: ({ navigation, scene }) => (
             <Header title="" white transparent navigation={navigation} scene={scene} />

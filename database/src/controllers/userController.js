@@ -12,61 +12,11 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// Controlador para obtener todos los usuarios
-exports.getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Controlador para obtener un usuario por su ID
-exports.getUserById = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Controlador para actualizar un usuario por su ID
-exports.updateUser = async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!user) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Controlador para eliminar un usuario por su ID
-exports.deleteUser = async (req, res) => {
-  try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-    res.status(204).json();
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-
 // Controller for login
 exports.loginUser = async (req, res) => {
   try {
-    const { usuario, contraseña} = req.body;
-    const user = await User.findOne({ usuario });
+    const { email, contraseña} = req.body;
+    const user = await User.findOne({ email: email });
     if (user == null){
       // console.log('Wrong User')
       res.status(404).json({ error: 'Credenciales: User inválidas'});
@@ -84,3 +34,37 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// contoller for add a new cart
+exports.addCart = async (req, res) =>{
+  try{
+    const { email, shoppingLists} = req.body;
+    const user = await User.findOne({ email });
+
+    if(!user){
+      return res.status(404).json({ message:"User not found"})
+    }
+    user.cart.shoppingLists.push(shoppingLists)
+    await user.save()
+    res.status(200).json({ message: "Cart added successfully"})
+
+
+  }catch(error){
+    console.error(error)
+  }
+}
+
+// controller to get all carts
+exports.getAllCarts = async(req, res) =>{
+  try{
+    const { email } = req.query;
+    const user = await User.findOne({ email })
+    if(!user){
+      res.status(404).json({message : "User not found"})
+    }
+      const carts = user.cart;
+      res.status(200).json({ carts })
+  }catch(error){
+    console.error(error)
+  }
+}

@@ -1,11 +1,17 @@
 import { Cart } from "./Cart"
 export class User{
-    carts
-    constructor(user){
+    email;carts;
+    constructor(user, email){
         if(user){
-            this.carts = user.carts.map(cart => new Cart(cart))
-        }else
-            this.carts = []
+            this.carts = user.carts.map(cart => new Cart(cart));
+        }else{
+            this.carts = [];
+        }
+        this.email = email;
+    }
+
+    setEmail(newEmail){
+        this.email = newEmail;
     }
 
     addCart(storeName) {

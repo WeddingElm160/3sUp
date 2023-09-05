@@ -5,7 +5,7 @@ const productSchema = new mongoose.Schema({
   price: Number,
   quantity: Number,
   // Agregar url de la imagen del producto en la posicion[0]
-  image: String,
+  image : String,
   barcode: String,
 });
 

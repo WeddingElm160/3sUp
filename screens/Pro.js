@@ -5,6 +5,7 @@ import nowTheme from "../constants/Theme";
 const { width } = Dimensions.get("window");
 
 
+
 class Pro extends React.Component {
   render() {
     return (

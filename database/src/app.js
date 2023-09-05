@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/userRoutes'); // Importa las rutas que has creado
-
+require('dotenv').config();
 const app = express();
 
 const cors = require('cors');
@@ -15,7 +15,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connection to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/users', {
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -25,7 +25,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/users', {
   .catch((error) => {
     console.error('Error al conectar a la base de datos:', error);
   });
-
 // Configure the routes
 app.use('/users', userRoutes);
 

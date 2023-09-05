@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { ImageBackground, Image, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
 import { Block, Button, Text, theme } from 'galio-framework';
-import { Video, ResizeMode } from 'expo-av';
+import { Video, ResizeMode } from 'expo-av'; 
 import { AppIsReadyContext } from '../context/AppIsReadyContext';
 import { useIsFocused } from '@react-navigation/native';
 import { Images, nowTheme } from '../constants/';
