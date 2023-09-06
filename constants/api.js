@@ -1,13 +1,14 @@
 // This file is for make request on the database
 let userEmail = ""
 let element = ""
+const userIP = '192.168.100.80'
 // Add User -> Only add an email, password and name user
 const addUser = async (usuario, email, contraseña) => {
   try {
     //   const newUser = { name, email, password };
     const newUser = { usuario, email, contraseña };
     // console.log(JSON.stringify(newUser));
-    const response = await fetch("http://192.168.100.35:3000/users/post", {
+    const response = await fetch("http://"+userIP+":3000/users/post", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -29,7 +30,7 @@ const addUser = async (usuario, email, contraseña) => {
 // Loggin -> This funtion only do a login with hash keys
 const handleLogin = async (email, contraseña, navigation) => {
   try {
-    const response = await fetch("http://192.168.100.35:3000/users/get/login", {
+    const response = await fetch("http://"+userIP+":3000/users/get/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -95,7 +96,7 @@ const addCart = async (cart, email, navigation) => {
     // shoppingListSchema = JSON.stringify(products, null, 2);
     // console.log(shoppingListSchema);
     // console.log(userEmail);
-    const response = await fetch("http://192.168.100.35:3000/users/update", {
+    const response = await fetch("http://"+userIP+":3000/users/update", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -117,7 +118,7 @@ const addCart = async (cart, email, navigation) => {
 
 const getEveryCarts = async (email) => {
   try {
-    const response = await fetch(`http://192.168.100.35:3000/users/get?email=${email}`, {
+    const response = await fetch(`http://"+userIP+":3000/users/get?email=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -129,7 +130,7 @@ const getEveryCarts = async (email) => {
     }
     userEmail = email;
     const data = await response.json();
-    // console.log(data.carts.shoppingLists[0]);
+    //console.log(data.carts.shoppingLists[0]);
     return data
     
     // console.log(data.carts.shoppingLists); // To extract the info
