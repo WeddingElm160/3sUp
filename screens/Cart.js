@@ -11,7 +11,11 @@ import { Images } from "../constants";
 import { RightButtonContext } from '../context/RightButtonContext';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import fetchData from '../constants/apiCaller';
+<<<<<<< HEAD
 import { userEmail } from "../constants/api";
+=======
+import { Product } from '../Class/Product';
+>>>>>>> 2fdfe26b462070da83d034bf0e8451b06c8d9258
 
 const { width, height } = Dimensions.get("window");
 const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
@@ -29,7 +33,12 @@ function Cart(props) {
   const showOptions = useRef(false);
   const [refreshItems, setRefreshItems] = useState(true);
   const [refreshPrice, setRefreshPrice] = useState(true);
-  const [products] = useState(user.carts[0].products);
+  const [products, setProducts] = useState(user.carts[0].products);
+  const [showWarningAlert, setShowWarningAlert] = useState(false);
+  const [goBack, setGoBack] = useState('');
+  const [removePress, setRemovePress] = useState(0);
+  const [selectMode, setSelectMode] = useState(false);
+  const selected = useRef(new Map()).current;
 
 
   const optionsPress = () => {
@@ -37,6 +46,27 @@ function Cart(props) {
     setUpdateScreen(!updateScreen);
   }
 
+  useEffect(
+    () =>
+    props.navigation.addListener('beforeRemove', (e) => {
+
+        if ((selectMode)){
+          Animated.timing(fadeAnim, {
+            toValue: -156,
+            duration: 500,
+            useNativeDriver: true,
+          }).start();
+          e.preventDefault();
+          setSelectMode(false);
+          setRefreshPrice(false);
+          return
+        }
+          
+      }),
+    [selectMode, goBack]
+  );
+
+  
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: -156,
@@ -68,6 +98,11 @@ function Cart(props) {
   useEffect(() => {
     setRefreshPrice(true);
   }, [refreshPrice]);
+
+  useEffect(() => {
+    selected.clear();
+  }, [selectMode]);
+  
 
 
 
@@ -107,16 +142,27 @@ function Cart(props) {
           onRequestClose={optionsPress}
           anchor={<></>}
         >
-          <MenuItem disabled={!products.length} onPress={optionsPress}>Seleccionar</MenuItem>
-          <MenuItem disabled={!products.length} onPress={optionsPress}>Borrar todo</MenuItem>
-          <MenuItem disabled={true}>Compartir...</MenuItem>
-          <MenuDivider />
           {
-            !user.carts[0].receipt.budget ?
-              <MenuItem onPress={() => { optionsPress(); setShowAlert(true) }}>Añadir Presupesto</MenuItem>
-              :
-              <MenuItem onPress={() => { optionsPress(); user.carts[0].setBudget(0); setTemporalBudget(0) }}>Eliminar Presupesto</MenuItem>
+            !selectMode ? <>
+              <MenuItem disabled={!products.length} onPress={() => { optionsPress(); setSelectMode(true); Animated.timing(fadeAnim, {
+      toValue: -48-theme.SIZES.BASE*2,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();}}>Seleccionar</MenuItem>
+              <MenuItem disabled={!products.length} onPress={() => { setRemovePress(2); setShowWarningAlert(true); optionsPress(); }}>Borrar todo</MenuItem>
+              <MenuItem disabled={true}>Compartir...</MenuItem>
+              <MenuDivider />
+              {
+                !user.carts[0].receipt.budget ?
+                  <MenuItem onPress={() => { optionsPress(); setShowAlert(true) }}>Añadir Presupesto</MenuItem>
+                  :
+                  <MenuItem onPress={() => { optionsPress(); user.carts[0].setBudget(0); setTemporalBudget(0) }}>Eliminar Presupesto</MenuItem>
+              }
+            </> : <>
+              <MenuItem onPress={() => { optionsPress(); products.forEach((_,i)=>selected.set(i, true))}}>Seleccionar todo</MenuItem>
+            </>
           }
+
 
 
         </Menu>
@@ -124,7 +170,7 @@ function Cart(props) {
 
       <Block style={styles.upperSection} row middle >
         {
-          user.carts[0].receipt.budget ? <>
+          user.carts[0].receipt.budget && !selectMode? <>
             <Text size={16} family="lato-semibold" >Presupesto   </Text>
             <Block style={{ maxWidth: width - 32 - 92.7 - 25 }}>
               <Text size={16} family="inter-bold" color="#B7814F" bold>{formatter.format(user.carts[0].receipt.budget)}</Text>
@@ -141,14 +187,16 @@ function Cart(props) {
             <Ionicons name="cash-outline" size={18} color={nowTheme.COLORS.BLACK} style={{lineHeight: 16, marginLeft: 8}}/>
           </Block>
         </Button> */}
-
-
-
       </Block>
-      <Block style={styles.mainSection} middle>
+      <Block style={{...styles.mainSection, marginBottom: selectMode?24:((user.carts[0].receipt.budget?89:68)+theme.SIZES.BASE*2)}} middle>
         {products.length ?
           <ScrollView style={{ width: '100%' }}>
+<<<<<<< HEAD
             {dectectIsFocused && refreshItems ? products.map((product, i) => <Card key={i} remove={() => { user.carts[0].removeProduct(i); setRefreshItems(false); }} updateScreen={() => setRefreshPrice(false)} onClick={() => { user.carts[0].setTemporalProduct(product); props.navigation.navigate('Product'); }} index={i} />)
+=======
+
+            {dectectIsFocused && refreshItems ? products.map((product, i) => <Card key={i} remove={() => { user.carts[0].setRemoveTemporalProduct(i); setRemovePress(1); setShowWarningAlert(true); }} select={selectMode?()=>{if(!selected.get(i)){selected.set(i, true);}else{selected.delete(i)} setRefreshPrice(false);}:null} isChecked={selected.get(i)} updateScreen={() => setRefreshPrice(false)} onClick={() => { user.carts[0].setTemporalProduct(product); user.carts[0].setRemoveTemporalProduct(i); props.navigation.navigate('Product'); }} index={i} />)
+>>>>>>> 2fdfe26b462070da83d034bf0e8451b06c8d9258
               : <></>}
 
             <Block height={theme.SIZES.BASE + 40} />
@@ -159,36 +207,51 @@ function Cart(props) {
       </Block>
       <Animated.View style={{ ...styles.lowerSection, translateY: fadeAnim }}>
         <Block styles={styles.buttonSection} row flex middle>
-          <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
-            style={[styles.allButtonsSection, styles.buttonRight]}
-            onPress={() => props.navigation.navigate('AddProduct')}
-          >
-            <Block flex middle row>
-              <Ionicons name="pencil-sharp" size={18} color={theme.COLORS.WHITE} /><Text size={12} family="lato-semibold" color={theme.COLORS.WHITE} >  Nuevo</Text>
-            </Block>
-          </Button>
-          <Block style={{ backgroundColor: nowTheme.COLORS.PRIMARY }} width={1} height={40} middle>
-            <Block style={{ backgroundColor: nowTheme.COLORS.WHITE }} width={1} height={24} />
-          </Block>
-          <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
-            style={[styles.allButtonsSection, styles.buttonCenter]}
-            onPress={() => props.navigation.navigate('BarcodeScanner')}
-          >
-            <Block flex middle row>
-              <Ionicons name="barcode-outline" size={24} color={theme.COLORS.WHITE} /><Text size={12} family="lato-semibold" color={theme.COLORS.WHITE} >  Escanear</Text>
-            </Block>
-          </Button>
-          <Block style={{ backgroundColor: nowTheme.COLORS.PRIMARY }} width={1} height={40} middle>
-            <Block style={{ backgroundColor: nowTheme.COLORS.WHITE }} width={1} height={24} />
-          </Block>
-          <Button textStyle={{ fontFamily: 'lato-semibold', fontSize: 12 }}
-            style={[styles.allButtonsSection, styles.buttonLeft]}
-          //onPress={fetchData}
-          >
-            <Block flex middle row>
-              <Ionicons name="filter" size={20} color={theme.COLORS.WHITE} /><Text size={12} family="lato-semibold" color={theme.COLORS.WHITE} >  Filtrar</Text>
-            </Block>
-          </Button>
+          {
+            !selectMode ? <>
+
+              <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
+                style={[styles.allButtonsSection, styles.buttonRight]}
+                onPress={() => { user.carts[0].setTemporalProduct(new Product('', '', 0, 1, [])); props.navigation.navigate('AddProduct'); }}
+              >
+                <Block flex middle row>
+                  <Ionicons name="pencil-sharp" size={18} color={theme.COLORS.WHITE} /><Text size={12} family="lato-semibold" color={theme.COLORS.WHITE} >  Nuevo</Text>
+                </Block>
+              </Button>
+              <Block style={{ backgroundColor: nowTheme.COLORS.PRIMARY }} width={1} height={40} middle>
+                <Block style={{ backgroundColor: nowTheme.COLORS.WHITE }} width={1} height={24} />
+              </Block>
+              <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
+                style={[styles.allButtonsSection, styles.buttonCenter]}
+                onPress={() => props.navigation.navigate('BarcodeScanner')}
+              >
+                <Block flex middle row>
+                  <Ionicons name="barcode-outline" size={24} color={theme.COLORS.WHITE} /><Text size={12} family="lato-semibold" color={theme.COLORS.WHITE} >  Escanear</Text>
+                </Block>
+              </Button>
+              <Block style={{ backgroundColor: nowTheme.COLORS.PRIMARY }} width={1} height={40} middle>
+                <Block style={{ backgroundColor: nowTheme.COLORS.WHITE }} width={1} height={24} />
+              </Block>
+              <Button textStyle={{ fontFamily: 'lato-semibold', fontSize: 12 }}
+                style={[styles.allButtonsSection, styles.buttonLeft]}
+              //onPress={fetchData}
+              >
+                <Block flex middle row>
+                  <Ionicons name="filter" size={20} color={theme.COLORS.WHITE} /><Text size={12} family="lato-semibold" color={theme.COLORS.WHITE} >  Buscar</Text>
+                </Block>
+              </Button>
+
+            </> : 
+            <Button textStyle={{ fontFamily: 'inter-bold', fontSize: 12 }}
+              style={[styles.allButtonsSection, styles.buttonCenter, {backgroundColor: selected.size?nowTheme.COLORS.YOUTUBE:'#D76B6B', width: 'auto', paddingHorizontal: 2*theme.SIZES.BASE}, styles.buttonLeft, styles.buttonRight]}
+              onPress={() => {setRemovePress(3); setShowWarningAlert(true);}}
+              disabled={!Boolean(selected.size)}
+            >
+              <Block flex middle row>
+                <Ionicons name="trash-outline" size={24} color={theme.COLORS.WHITE} /><Text size={12} family="lato-semibold" color={theme.COLORS.WHITE} >  Eliminar</Text>
+              </Block>
+            </Button>
+          }
         </Block>
         <Block style={styles.accountSection} row center>
           {refreshPrice ?
@@ -267,6 +330,64 @@ function Cart(props) {
         }}
         overlayStyle={{ height: height + 48 }}
       />
+      <AwesomeAlert
+        show={showWarningAlert}
+        showProgress={false}
+        title="Advertencia"
+        message={(() => {
+          switch (removePress) {
+            case 1:
+              return '¿Estás seguro de eliminar este producto?'
+            case 2:
+              return '¿Estás seguro de eliminar toda la lista de productos?'
+            case 3:
+              return '¿Estás seguro de eliminar estos productos seleccionados?'
+            default:
+              return '¿Estás seguro de salir sin guardar cambios?'
+          }
+        })()}
+        closeOnTouchOutside={false}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="No, continuar"
+        confirmText="Si, descartar"
+        confirmButtonColor="#DD6B55"
+        onCancelPressed={() => {
+          setRemovePress(0);
+          setShowWarningAlert(false);
+        }}
+        onDismiss={() => {
+          if (removePress) {
+            setRefreshItems(false);
+            setRemovePress(0);
+          }
+        }}
+        onConfirmPressed={() => {
+          switch (removePress) {
+            case 1:
+              user.carts[0].removeTemporalProduct(); break;
+            case 2:
+              user.carts[0].removeAllProducts();
+              setProducts(user.carts[0].products);
+              break;
+            case 3:
+              user.carts[0].removeProductList([...selected.keys()]);
+              setSelectMode(false); 
+              Animated.timing(fadeAnim, {
+                toValue: -156,
+                duration: 500,
+                useNativeDriver: true,
+              }).start();
+              break;
+
+          }
+
+          /*else
+            setGoBack('Back')*/
+          setShowWarningAlert(false);
+        }}
+      />
     </Block>
   );
 }
@@ -283,7 +404,6 @@ const styles = StyleSheet.create({
   },
   mainSection: {
     width: '100%',
-    marginBottom: 142,
   },
   lowerSection: {
     position: 'absolute',

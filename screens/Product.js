@@ -5,14 +5,15 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  Platform
+  Platform,
 } from "react-native";
+import { Images } from '../constants';
 import { Text, Block, Button, Input, theme } from "galio-framework";
 import { FontAwesome } from "@expo/vector-icons";
 import { nowTheme } from "../constants";
 import { UserContext } from "../context/UserContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, CommonActions } from '@react-navigation/native';
 import { RightButtonContext } from '../context/RightButtonContext';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -33,29 +34,49 @@ function Product(props) {
   const [quantity, setQuantity] = useState(product.quantity);
   const [price, setPrice] = useState("");
   const dectectIsFocused = useIsFocused();
-  const { setButttonRight, setButttonLeftWarning } = useContext(RightButtonContext)
+  const { setButttonRight } = useContext(RightButtonContext)
   const showOptions = useRef(false);
   const [refresh, setRefresh] = useState(false);
   const [showAlertInfo, setShowAlertInfo] = useState(false);
   const [resetPrice, setResetPrice] = useState(false);
-
-  const colors = [
-    "#26292E",
-    "#899F9C",
-    "#B3C680",
-    "#5C6265",
-  ];
+  const [showWarningAlert, setShowWarningAlert] = useState(false);
+  const [goBack, setGoBack] = useState('');
+  const [removePress, setRemovePress] = useState(false);
+  
 
   const progressValue = useSharedValue(0);
+
+  useEffect(
+    () =>
+    props.navigation.addListener('beforeRemove', (e) => {
+
+        if ((product.added&&resetPrice)&&!goBack){
+          e.preventDefault();
+          setShowWarningAlert(true)
+        }
+          
+      }),
+    [props.navigation, resetPrice, goBack]
+  );
+
+  useEffect(() => {
+    if(goBack) {
+      if(goBack!='Back')
+        props.navigation.navigate(goBack); 
+      else {
+        props.navigation.goBack()
+      
+      }
+    }
+  },[goBack]);
 
   const optionsPress = () => {
     showOptions.current = !showOptions.current;
     setRefresh(!refresh);
   }
 
-  const resetPress = () => {
+  const resetPricePress = () => {
     formatCurrency(product.price.toString(), true);
-    setButttonLeftWarning('');
     setResetPrice(false);
   }
 
@@ -120,7 +141,7 @@ function Product(props) {
   }, [quantity]);
 
   const addPress = () => {
-    setButttonLeftWarning('');
+    
 
     if (!product.added) {
       product.setPrice(price);
@@ -130,8 +151,7 @@ function Product(props) {
       user.carts[0].updateSubtotal(price * quantity)
       product.setPrice(price);
     }
-
-    props.navigation.navigate("Cart")
+    setGoBack("Cart");
   };
   return (
     <Block contentContainerStyle={styles.container} flex>
@@ -142,30 +162,20 @@ function Product(props) {
           anchor={<></>}
         >
           {
-            product.added && <MenuItem onPress={() => { user.carts[0].removeProduct(product.barcode); optionsPress(); props.navigation.navigate("Cart") }}>Eliminar Artículo</MenuItem> 
+            product.added && <MenuItem onPress={() => { setRemovePress(true); setShowWarningAlert(true); optionsPress(); }}>Eliminar Artículo</MenuItem> 
           }
           <MenuItem disabled={true}>Compartir...</MenuItem>
           {
-            product.editable && <>
+            !product.barcode && <>
             <MenuDivider />
-            <MenuItem onPress={() => { optionsPress(); }}>Editar Artículo</MenuItem>
+            <MenuItem onPress={() => { optionsPress(); props.navigation.navigate("AddProduct")}}>Editar Artículo</MenuItem>
             </>
           }
         </Menu>
       </Block>
       {/* Sección superior */}
       <Block style={styles.topSection}>
-        {/* <Image
-          source={
-            !product.image
-              ? require("../assets/imgs/productNotFound.png")
-              : {
-                uri: product.image[0],
-              }
-          }
-          style={styles.image}
-          resizeMode="contain"
-        /> */}
+        {product.image[0]?
         <Carousel
           {...{
             width: width
@@ -178,18 +188,19 @@ function Product(props) {
             (progressValue.value = absoluteProgress)
           }
           renderItem={({ index }) => <Image
-            source={
-              !product.image
-                ? require("../assets/imgs/productNotFound.png")
-                : {
-                  uri: product.image[index],
-                }
-            }
+            source={{ uri: product.image[index]}}
             style={styles.image}
             resizeMode="contain"
           />}
-        />
-        <Block style={styles.PaginationItem}>
+        />:
+        <Image
+            source={Images.productNotFound}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        }
+        
+        <Block style={{...styles.PaginationItem, justifyContent: product.image.length==1 ? 'center':"space-between"}}>
           {product.image.map((_, index) => {
             return (
               <PaginationItem
@@ -197,8 +208,7 @@ function Product(props) {
                 animValue={progressValue}
                 index={index}
                 key={index}
-                isRotate={true}
-                length={colors.length}
+                length={product.image.length}
               />
             );
           })}
@@ -241,14 +251,14 @@ function Product(props) {
                   />
                 }
                 keyboardType="numeric"
-                onChangeText={(value) => { formatCurrency(value); setResetPrice(true); if (product.added) setButttonLeftWarning('¿Estás seguro de salir sin guardar cambios?') }}
+                onChangeText={(value) => { formatCurrency(value); setResetPrice(true); }}
               />
             </Block>
             {
               resetPrice &&
                 <Button
                   style={styles.resetButton}
-                  onPress={() => resetPress()}
+                  onPress={() => resetPricePress()}
                 >
                   <Ionicons name="refresh-outline" size={16} color={nowTheme.COLORS.BLACK} />
                 </Button>
@@ -285,11 +295,15 @@ function Product(props) {
 
 
         </Block>
-        <ScrollView style={styles.description}>
-          <Text style={styles.loremText}>
-            {product.description}
-          </Text>
-        </ScrollView>
+        {
+          product.description&&
+          <ScrollView style={{...styles.description, maxHeight: product.barcode ? 101 : 'auto',}}>
+            <Text style={styles.loremText}>
+              {product.description}
+            </Text>
+          </ScrollView>
+        }
+        
       </Block>
 
       {/* Sección inferior */}
@@ -330,6 +344,32 @@ function Product(props) {
           color: 'red'
         }}
       />
+
+    <AwesomeAlert
+        show={showWarningAlert}
+        showProgress={false}
+        title="Advertencia"
+        message={!removePress?'¿Estás seguro de salir sin guardar cambios?':'¿Estás seguro de eliminar este producto?'}
+        closeOnTouchOutside={false}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="No, continuar"
+        confirmText="Si, descartar"
+        confirmButtonColor="#DD6B55"
+        onCancelPressed={() => {
+          setRemovePress(false)
+          setShowWarningAlert(false);
+        }}
+        onConfirmPressed={() => {
+          setShowWarningAlert(false);
+          if(removePress){
+            user.carts[0].removeTemporalProduct();
+            setGoBack('Cart')
+          }else
+          setGoBack('Back')
+        }}
+      />
     </Block>
   );
 }
@@ -348,7 +388,6 @@ const styles = StyleSheet.create({
   },
   PaginationItem: {
     flexDirection: "row",
-    justifyContent: "space-between",
     width: 100,
     alignSelf: "center",
     position: 'relative',
@@ -360,7 +399,7 @@ const styles = StyleSheet.create({
   },
   middleSection: {
     padding: theme.SIZES.BASE,
-    flex: 1,
+    flex: 1
   },
   productInfo: {
     marginBottom: theme.SIZES.BASE,
@@ -475,13 +514,11 @@ const styles = StyleSheet.create({
   description: {
     backgroundColor: nowTheme.COLORS.WHITE,
     borderRadius: 15,
-    maxHeight: 101,
-
   }
 });
 
 const PaginationItem = (props) => {
-  const { animValue, index, length, backgroundColor, isRotate } = props;
+  const { animValue, index, length, backgroundColor } = props;
   const width = 10;
 
   const animStyle = useAnimatedStyle(() => {
