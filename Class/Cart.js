@@ -1,6 +1,6 @@
 import Product from './Product'
 export class Cart {
-  receipt; products; productIndex; storeName; temporalProduct;
+  receipt; products; storeName; temporalProduct; removeTemporalProduct
   constructor(cart) {
     if (typeof cart !== 'string') {
       this.receipt = {
@@ -9,11 +9,9 @@ export class Cart {
         change: parseFloat(cart.receipt.change)
       } 
       this.products = cart.products.map(product => new Product(product))
-      this.productIndex = cart.productIndex
       this.storeName = cart.storeName
     } else {
       this.storeName = cart
-      this.productIndex = 0
       this.products = []
       this.receipt = {
         budget: 0,
@@ -24,12 +22,12 @@ export class Cart {
     this.temporalProduct = {}
   }
 
-  setTemporalProduct(temporalProduct){
-    this.temporalProduct = temporalProduct;
+  setRemoveTemporalProduct(index){
+    this.removeTemporalProduct = ()=>this.removeProduct(index)
   }
 
-  setProductIndex(productIndex) {
-    this.productIndex = productIndex
+  setTemporalProduct(temporalProduct){
+    this.temporalProduct = temporalProduct;
   }
 
   setBudget(budget) {
@@ -45,6 +43,13 @@ export class Cart {
 
   }
 
+  removeAllProducts(){
+    this.temporalProduct = {}
+    this.products = []
+    this.receipt.subtotal = 0;
+    this.receipt.change = this.receipt.budget;
+  }
+
   addProduct(product) {
     product.added = true;
     this.products.push(product);
@@ -52,9 +57,16 @@ export class Cart {
     this.receipt.change = this.receipt.budget ? (this.receipt.budget - this.receipt.subtotal) : 0
   }
 
+  removeProductList(list){
+    list.sort((a, b) => b - a);
+    for (let i = 0; i < list.length; i++) {
+      const product = this.products.splice(list[i], 1)[0];
+      this.receipt.subtotal -= product.price*product.quantity;
+      this.receipt.change = this.receipt.budget ? (this.receipt.budget + this.receipt.subtotal) : 0
+    }
+  }
+
   removeProduct(key) {
-    if (typeof key == 'string')
-      key = this.products.findIndex(product => product.barcode == key)
     const product = this.products.splice(key, 1)[0]
     this.receipt.subtotal -= product.price*product.quantity;
     this.receipt.change = this.receipt.budget ? (this.receipt.budget + this.receipt.subtotal) : 0
@@ -64,6 +76,7 @@ export class Cart {
     const index = this.products.findIndex(product => product.barcode == barcode)
     if(index >= 0){
       this.temporalProduct = this.products[index];
+      this.setRemoveTemporalProduct(index);
       return true
     }else
       return false

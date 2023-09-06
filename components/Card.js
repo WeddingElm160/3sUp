@@ -5,6 +5,7 @@ import nowTheme from '../constants/Theme';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Images } from '../constants';
 import { UserContext } from '../context/UserContext';
+import Checkbox from 'expo-checkbox';
 
 const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN'});
 
@@ -13,7 +14,7 @@ function Card(props) {
   const [product, setProduct] = useState(props.remove? user.carts[0].products[props.index] :user.carts[0].temporalProduct);
   const [quantity, setQuantity] = useState(product.quantity);
   const [refresh, setRefresh] = useState(true);
-  
+  const [isChecked, setChecked] = useState(false);
 
   useEffect(() => {
     setRefresh(true);
@@ -50,10 +51,11 @@ function Card(props) {
   };
 
   return (
-    <TouchableOpacity activeOpacity={0.6} onPress={props.onClick}>
-      <Block style={styles.contain} row card>
+    <Block>
+      <TouchableOpacity activeOpacity={0.6} onPress={props.onClick}>
+      <Block style={{...styles.contain, transform: [{scale: props.isChecked?0.95:1}]}} row card>
         <Block middle>
-          <Image source={product.image?{uri: product.image[0]}:Images.cart} style={{ ...styles.productImage, backgroundColor: "#c0c0c0" }} />
+          <Image source={product.image[0]?{uri: product.image[0]}:Images.cart} style={{ ...styles.productImage, backgroundColor: "#c0c0c0" }} />
         </Block>
         <Block flex>
           <Text style={{ fontSize: 16, fontFamily: 'lato-semibold', fontWeight: 'bold', marginRight: props.remove?40:0}} numberOfLines={1}>{product.name}</Text>
@@ -71,7 +73,7 @@ function Card(props) {
         </Block>:<></>}
         
         {
-          props.remove?<Block middle row style={styles.option}>
+          props.remove&&!props.select?<Block middle row style={styles.option}>
           <Button style={{ ...styles.optionButton }} onPress={()=>props.remove()}>
             <Ionicons name="close" size={10} color={nowTheme.COLORS.BLACK}/>
           </Button>
@@ -81,11 +83,30 @@ function Card(props) {
         
       </Block>
     </TouchableOpacity>
+    {
+      props.select&&
+      <TouchableOpacity style={{...styles.selectedCard, backgroundColor: props.isChecked?'rgba(255,255,255,0.5)':'transparent',}} onPress={props.select}>
+        <Checkbox style={styles.checkbox} value={props.isChecked} onValueChange={props.select} />
+      </TouchableOpacity>
+    }
+    
+    </Block>
+    
 
   )
 }
 
 const styles = StyleSheet.create({
+  checkbox: {
+    position:'absolute',
+    top: 12,
+    right: 18,
+  },
+  selectedCard: {
+    width: '100%',
+    height: '100%',
+    position:'absolute',
+  },
   contain: {
     width: '100%',
     padding: theme.SIZES.BASE,

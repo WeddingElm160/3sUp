@@ -14,31 +14,12 @@ const { width } = Dimensions.get('window');
 class Header extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { showAlert: false };
-  };
-
-  showAlert = () => {
-    this.setState({
-      showAlert: true
-    });
-  };
-
-  hideAlert = () => {
-    this.setState({
-      showAlert: false
-    });
   };
 
   static contextType = RightButtonContext
 
   handleLeftPress = () => {
     const { back, navigation } = this.props;
-    if (this.context.butttonLeftWarning) {
-      this.setState({
-        showAlert: true
-      });
-      return
-    }
     return back ? navigation.goBack() : navigation.openDrawer();
   };
   renderRight = () => {
@@ -111,7 +92,6 @@ class Header extends React.Component {
       ...props
     } = this.props;
 
-    const {showAlert} = this.state;
     const noShadow = ['Carrito'].includes(title);
     const headerStyles = [
       !noShadow ? styles.shadow : null,
@@ -143,27 +123,6 @@ class Header extends React.Component {
           {...props}
         />
         {this.renderHeader()}
-        <AwesomeAlert
-          show={showAlert}
-          showProgress={false}
-          title="Advertencia"
-          message={this.context.butttonLeftWarning}
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={true}
-          showConfirmButton={true}
-          cancelText="No, continuar"
-          confirmText="Si, descartar"
-          confirmButtonColor="#DD6B55"
-          onCancelPressed={() => {
-            this.hideAlert();
-          }}
-          onConfirmPressed={() => {
-            this.context.setButttonLeftWarning('');
-            this.hideAlert();
-            navigation.goBack();
-          }}
-        />
       </Block>
     );
   }

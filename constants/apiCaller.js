@@ -1,7 +1,8 @@
 import * as cheerio from 'cheerio';
 
 
-const fetchData = async (upc, supermarket) => {  
+const fetchData = async (barcode, supermarket) => {  
+  upc = barcode;
   switch (supermarket) {
     case 'Bodega Aurrera':{
       if(upc.length==12)
@@ -163,7 +164,7 @@ const fetchData = async (upc, supermarket) => {
   }
   if(data.body){
     data.body.url = url
-    data.body.barCode = upc
+    data.body.barCode = barcode
   }
   //console.log(data);
   return data;
