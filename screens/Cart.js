@@ -11,11 +11,8 @@ import { Images } from "../constants";
 import { RightButtonContext } from '../context/RightButtonContext';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import fetchData from '../constants/apiCaller';
-<<<<<<< HEAD
 import { userEmail } from "../constants/api";
-=======
-import { Product } from '../Class/Product';
->>>>>>> 2fdfe26b462070da83d034bf0e8451b06c8d9258
+import { Product } from '../Class/Product'
 
 const { width, height } = Dimensions.get("window");
 const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
@@ -191,12 +188,7 @@ function Cart(props) {
       <Block style={{...styles.mainSection, marginBottom: selectMode?24:((user.carts[0].receipt.budget?89:68)+theme.SIZES.BASE*2)}} middle>
         {products.length ?
           <ScrollView style={{ width: '100%' }}>
-<<<<<<< HEAD
             {dectectIsFocused && refreshItems ? products.map((product, i) => <Card key={i} remove={() => { user.carts[0].removeProduct(i); setRefreshItems(false); }} updateScreen={() => setRefreshPrice(false)} onClick={() => { user.carts[0].setTemporalProduct(product); props.navigation.navigate('Product'); }} index={i} />)
-=======
-
-            {dectectIsFocused && refreshItems ? products.map((product, i) => <Card key={i} remove={() => { user.carts[0].setRemoveTemporalProduct(i); setRemovePress(1); setShowWarningAlert(true); }} select={selectMode?()=>{if(!selected.get(i)){selected.set(i, true);}else{selected.delete(i)} setRefreshPrice(false);}:null} isChecked={selected.get(i)} updateScreen={() => setRefreshPrice(false)} onClick={() => { user.carts[0].setTemporalProduct(product); user.carts[0].setRemoveTemporalProduct(i); props.navigation.navigate('Product'); }} index={i} />)
->>>>>>> 2fdfe26b462070da83d034bf0e8451b06c8d9258
               : <></>}
 
             <Block height={theme.SIZES.BASE + 40} />
