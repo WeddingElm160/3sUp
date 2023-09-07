@@ -50,7 +50,7 @@ function Home(props) {
 
         <Block center style={{...styles.group, paddingHorizontal: 0, width: '100%'}}>
           <GaButton
-            onPress={() => props.navigation.navigate('Carrito')}
+            onPress={() => props.navigation.navigate('Login')}
             style={styles.button}
             color={nowTheme.COLORS.PRIMARY}
           >
