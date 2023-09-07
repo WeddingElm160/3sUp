@@ -42,7 +42,7 @@ export default function Login(props) {
             style={styles.input}
             onChangeText={onChangeEmail}
             value={email}
-            placeholder="email"
+            placeholder="Email"
           />
 
           <Text size={25} style={styles.font}>

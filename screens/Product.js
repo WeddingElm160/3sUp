@@ -17,6 +17,7 @@ import { useIsFocused, CommonActions } from '@react-navigation/native';
 import { RightButtonContext } from '../context/RightButtonContext';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import stores from '../constants/stores';
 import Carousel from "react-native-reanimated-carousel";
 import Animated, {
   Extrapolate,
@@ -24,6 +25,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
+
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
@@ -42,14 +44,15 @@ function Product(props) {
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const [goBack, setGoBack] = useState('');
   const [removePress, setRemovePress] = useState(false);
-  
+
 
   const progressValue = useSharedValue(0);
 
   useEffect(
     () =>
-    props.navigation.addListener('beforeRemove', (e) => {
-        if ((product.added&&resetPrice)&&!goBack){
+      props.navigation.addListener('beforeRemove', (e) => {
+
+        if ((product.added && resetPrice) && !goBack) {
           e.preventDefault();
           setShowWarningAlert(true)
         }
@@ -58,15 +61,15 @@ function Product(props) {
   );
 
   useEffect(() => {
-    if(goBack) {
-      if(goBack!='Back')
-        props.navigation.navigate(goBack); 
+    if (goBack) {
+      if (goBack != 'Back')
+        props.navigation.navigate(goBack);
       else {
         props.navigation.goBack()
-      
+
       }
     }
-  },[goBack]);
+  }, [goBack]);
 
   const optionsPress = () => {
     showOptions.current = !showOptions.current;
@@ -149,7 +152,7 @@ function Product(props) {
   }, [quantity]);
 
   const addPress = () => {
-    
+
 
     if (!product.added) {
       if(user.carts[0].receipt.budget && ((user.carts[0].receipt.change-(price*quantity))<0) && !user.carts[0].warning){
@@ -181,45 +184,45 @@ function Product(props) {
           anchor={<></>}
         >
           {
-            product.added && <MenuItem onPress={() => { setRemovePress(true); setShowWarningAlert(true); optionsPress(); }}>Eliminar Artículo</MenuItem> 
+            product.added && <MenuItem onPress={() => { setRemovePress(true); setShowWarningAlert(true); optionsPress(); }}>Eliminar Artículo</MenuItem>
           }
           <MenuItem disabled={true}>Compartir...</MenuItem>
           {
             !product.barcode && <>
-            <MenuDivider />
-            <MenuItem onPress={() => { optionsPress(); props.navigation.navigate("AddProduct")}}>Editar Artículo</MenuItem>
+              <MenuDivider />
+              <MenuItem onPress={() => { optionsPress(); props.navigation.navigate("AddProduct") }}>Editar Artículo</MenuItem>
             </>
           }
         </Menu>
       </Block>
       {/* Sección superior */}
       <Block style={styles.topSection}>
-        {product.image[0]?
-        <Carousel
-          {...{
-            width: width
-          }}
-          loop
-          autoPlay={false}
-          data={product.image}
-          pagingEnabled={true}
-          onProgressChange={(_, absoluteProgress) =>
-            (progressValue.value = absoluteProgress)
-          }
-          renderItem={({ index }) => <Image
-            source={{ uri: product.image[index]}}
-            style={styles.image}
-            resizeMode="contain"
-          />}
-        />:
-        <Image
+        {product.image[0] ?
+          <Carousel
+            {...{
+              width: width
+            }}
+            loop
+            autoPlay={false}
+            data={product.image}
+            pagingEnabled={true}
+            onProgressChange={(_, absoluteProgress) =>
+              (progressValue.value = absoluteProgress)
+            }
+            renderItem={({ index }) => <Image
+              source={{ uri: product.image[index] }}
+              style={styles.image}
+              resizeMode="contain"
+            />}
+          /> :
+          <Image
             source={Images.productNotFound}
             style={styles.image}
             resizeMode="contain"
           />
         }
-        
-        <Block style={{...styles.PaginationItem, justifyContent: product.image.length==1 ? 'center':"space-between"}}>
+
+        <Block style={{ ...styles.PaginationItem, justifyContent: product.image.length == 1 ? 'center' : "space-between" }}>
           {product.image.map((_, index) => {
             return (
               <PaginationItem
@@ -236,95 +239,162 @@ function Product(props) {
       {/*<Block key={index} style={{backgroundColor: 'red'}}>
           <Text>Hola mundo</Text>
         </Block> */}
-
-      {/* Sección central */}
-      <Block style={styles.middleSection}>
-        <Text style={styles.productName} numberOfLines={2}>
-          {product.name}
-        </Text>
-        <Block style={styles.productInfo}>
-          <Block row>
-            <Text style={styles.priceLabel}>Precio unitario</Text>
-            <Button
-              style={styles.infoButton}
-              onPress={() => setShowAlertInfo(true)}
-            >
-              <Ionicons name="information-circle-outline" size={14} color={nowTheme.COLORS.BLACK} />
-            </Button>
-          </Block>
-          <Block row space='between' middle>
-            <Block style={styles.priceInputContainer} left flex={1}>
-              <Input
-                style={styles.priceInput}
-                shadowless
-                color={nowTheme.COLORS.BLACK}
-                value={price}
-                placeholderTextColor="#747474"
-                placeholder="Gratis"
-                iconContent={
-                  <Ionicons
-                    name="logo-usd"
-                    size={15}
-                    color="#747474"
-                    style={{ marginEnd: 5 }}
-                  />
-                }
-                keyboardType="numeric"
-                onChangeText={(value) => { formatCurrency(value); setResetPrice(true); }}
-              />
+      <ScrollView>
+        {/* Sección central */}
+        <Block style={styles.middleSection}>
+          <Text style={styles.productName} numberOfLines={2}>
+            {product.name}
+          </Text>
+          <Block style={styles.productInfo}>
+            <Block row>
+              <Text style={styles.priceLabel}>Precio unitario</Text>
+              <Button
+                style={styles.infoButton}
+                onPress={() => setShowAlertInfo(true)}
+              >
+                <Ionicons name="information-circle-outline" size={14} color={nowTheme.COLORS.BLACK} />
+              </Button>
             </Block>
-            {
-              resetPrice &&
+            <Block row space='between' middle>
+              <Block style={styles.priceInputContainer} left flex={1}>
+                <Input
+                  style={styles.priceInput}
+                  shadowless
+                  color={nowTheme.COLORS.BLACK}
+                  value={price}
+                  placeholderTextColor="#747474"
+                  placeholder="Gratis"
+                  iconContent={
+                    <Ionicons
+                      name="logo-usd"
+                      size={15}
+                      color="#747474"
+                      style={{ marginEnd: 5 }}
+                    />
+                  }
+                  keyboardType="numeric"
+                  onChangeText={(value) => { formatCurrency(value); setResetPrice(true); }}
+                />
+              </Block>
+              {
+                resetPrice &&
                 <Button
                   style={styles.resetButton}
                   onPress={() => resetPricePress()}
                 >
                   <Ionicons name="refresh-outline" size={16} color={nowTheme.COLORS.BLACK} />
                 </Button>
-            }
+              }
 
-            <Block style={styles.counter} row middle>
-              <TouchableOpacity
-                style={styles.counterButton}
-                onPress={decrementQuantity}
-              >
-                <Block style={{ ...styles.counterIcon, opacity: quantity > 1 ? 1 : 0.5 }}>
-                  <FontAwesome
-                    name="minus"
-                    size={10}
-                    color={nowTheme.COLORS.PRIMARY}
-                  />
-                </Block>
-              </TouchableOpacity>
-              <Text style={styles.counterText}>{quantity}</Text>
-              <TouchableOpacity
-                style={styles.counterButton}
-                onPress={incrementQuantity}
-              >
-                <Block style={styles.counterIcon}>
-                  <FontAwesome
-                    name="plus"
-                    size={10}
-                    color={nowTheme.COLORS.PRIMARY}
-                  />
-                </Block>
-              </TouchableOpacity>
+              <Block style={styles.counter} row middle>
+                <TouchableOpacity
+                  style={styles.counterButton}
+                  onPress={decrementQuantity}
+                >
+                  <Block style={{ ...styles.counterIcon, opacity: quantity > 1 ? 1 : 0.5 }}>
+                    <FontAwesome
+                      name="minus"
+                      size={10}
+                      color={nowTheme.COLORS.PRIMARY}
+                    />
+                  </Block>
+                </TouchableOpacity>
+                <Text style={styles.counterText}>{quantity}</Text>
+                <TouchableOpacity
+                  style={styles.counterButton}
+                  onPress={incrementQuantity}
+                >
+                  <Block style={styles.counterIcon}>
+                    <FontAwesome
+                      name="plus"
+                      size={10}
+                      color={nowTheme.COLORS.PRIMARY}
+                    />
+                  </Block>
+                </TouchableOpacity>
+              </Block>
+            </Block>
+
+
+          </Block>
+          {
+            product.description &&
+            <ScrollView style={{ ...styles.description, maxHeight: product.barcode ? 101 : 'auto', }}>
+              <Text style={styles.loremText}>
+                {product.description}
+              </Text>
+            </ScrollView>
+          }
+        </Block>
+        {/* Parte del código o viión a futuro */}
+        <Block flex style={styles.table}>
+          <Block row style={styles.row}>
+            <Block flex style={[styles.cell, styles.header]}>
+              <Text style={styles.headerText}>Tienda</Text>
+            </Block>
+            <Block center flex style={[styles.cell, styles.header]}>
+              <Text style={styles.headerText}>Precio</Text>
+            </Block>
+            <Block center flex style={[styles.cell, styles.header]}>
+              <Text style={styles.headerText}>Ahorras</Text>
             </Block>
           </Block>
 
+          <Block row style={styles.row}>
+            <Block flex style={styles.cell}>
+            <Image source={stores[4].image} style={{ width: 64, height: 64 }} />
+            </Block>
+            <Block flex center style={styles.cell}>
+              <Text>{"$"+(product.price - 4).toFixed(2)}</Text>
+            </Block>
+            <Block center flex style={styles.cell}>
+            <Text>{"$"+
+            (product.price-(product.price - 4)).toFixed(2) }</Text>
+            </Block>
+          </Block>
 
+          <Block row style={styles.row}>
+            <Block flex style={styles.cell}>
+            <Image source={stores[3].image} style={{ width: 64, height: 64 }} />
+            </Block>
+            <Block flex center style={styles.cell}>
+              <Text>{"$"+(product.price - 3).toFixed(2)}</Text>
+            </Block>
+            <Block center flex style={styles.cell}>
+            <Text>{"$"+
+            (product.price-(product.price - 3)).toFixed(2) }</Text>
+            </Block>
+          </Block>
+
+          <Block row style={styles.row}>
+            <Block flex style={styles.cell}>
+            <Image source={stores[2].image} style={{ width: 64, height: 64 }} />
+            </Block>
+            <Block flex center style={styles.cell}>
+              <Text>{"$"+(product.price - 2).toFixed(2)}</Text>
+            </Block>
+            <Block center flex style={styles.cell}>
+            <Text>{"$"+
+            (product.price-(product.price - 2)).toFixed(2) }</Text>
+            </Block>
+          </Block>
+
+          <Block row style={styles.row}>
+            <Block flex style={styles.cell}>
+            <Image source={stores[5].image} style={{ width: 64, height: 64 }} />
+            </Block>
+            <Block flex center style={styles.cell}>
+              <Text>{"$"+(product.price - 1).toFixed(2)}</Text>
+            </Block>
+            <Block center flex style={styles.cell}>
+            <Text>{"$"+
+            (product.price-(product.price - 1)).toFixed(2) }</Text>
+            </Block>
+          </Block>
         </Block>
-        {
-          product.description&&
-          <ScrollView style={{...styles.description, maxHeight: product.barcode ? 101 : 'auto',}}>
-            <Text style={styles.loremText}>
-              {product.description}
-            </Text>
-          </ScrollView>
-        }
-        
-      </Block>
 
+        {/* Parte del código o viión a futuro */}
+      </ScrollView>
       {/* Sección inferior */}
       <Block style={styles.bottomSection}>
         <Block style={styles.priceContainer} flex={1} left>
@@ -345,6 +415,7 @@ function Product(props) {
           </Button>
         </Block>
       </Block>
+
       <AwesomeAlert
         show={showAlertInfo}
         showProgress={false}
@@ -364,11 +435,11 @@ function Product(props) {
         }}
       />
 
-    <AwesomeAlert
+      <AwesomeAlert
         show={showWarningAlert}
         showProgress={false}
         title="Advertencia"
-        message={!removePress?'¿Estás seguro de salir sin guardar cambios?':'¿Estás seguro de eliminar este producto?'}
+        message={!removePress ? '¿Estás seguro de salir sin guardar cambios?' : '¿Estás seguro de eliminar este producto?'}
         closeOnTouchOutside={false}
         closeOnHardwareBackPress={false}
         showCancelButton={true}
@@ -382,11 +453,11 @@ function Product(props) {
         }}
         onConfirmPressed={() => {
           setShowWarningAlert(false);
-          if(removePress){
+          if (removePress) {
             user.carts[0].removeTemporalProduct();
             setGoBack('Cart')
-          }else
-          setGoBack('Back')
+          } else
+            setGoBack('Back')
         }}
       />
     </Block>
@@ -533,7 +604,28 @@ const styles = StyleSheet.create({
   description: {
     backgroundColor: nowTheme.COLORS.WHITE,
     borderRadius: 15,
-  }
+  },
+  table: {
+    borderWidth: 1,
+    borderColor: 'black',
+    marginVertical: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderColor: 'gray',
+    padding: 10,
+  },
+  header: {
+    backgroundColor: 'lightgray',
+  },
+  headerText: {
+    fontWeight: 'bold',
+  },
+  cell: {
+    flex: 1,
+  },
 });
 
 const PaginationItem = (props) => {
