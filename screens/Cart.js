@@ -157,6 +157,7 @@ function Cart(props) {
               }
             </> : <>
               <MenuItem onPress={() => { optionsPress(); products.forEach((_,i)=>selected.set(i, true))}}>Seleccionar todo</MenuItem>
+              <MenuItem onPress={() => { optionsPress(); selected.clear()}}>Deseleccionar todo</MenuItem>
             </>
           }
 
@@ -188,7 +189,7 @@ function Cart(props) {
       <Block style={{...styles.mainSection, marginBottom: selectMode?24:((user.carts[0].receipt.budget?89:68)+theme.SIZES.BASE*2)}} middle>
         {products.length ?
           <ScrollView style={{ width: '100%' }}>
-            {dectectIsFocused && refreshItems ? products.map((product, i) => <Card key={i} remove={() => { user.carts[0].removeProduct(i); setRefreshItems(false); }} updateScreen={() => setRefreshPrice(false)} onClick={() => { user.carts[0].setTemporalProduct(product); props.navigation.navigate('Product'); }} index={i} />)
+            {dectectIsFocused && refreshItems ? products.map((product, i) => <Card key={i} remove={() => { user.carts[0].setRemoveTemporalProduct(i); setRemovePress(1); setShowWarningAlert(true); }} select={selectMode?()=>{if(!selected.get(i)){selected.set(i, true);}else{selected.delete(i)} setRefreshPrice(false);}:null} isChecked={selected.get(i)} updateScreen={() => setRefreshPrice(false)} onClick={() => { user.carts[0].setTemporalProduct(product); user.carts[0].setRemoveTemporalProduct(i); props.navigation.navigate('Product'); }} index={i} />)
               : <></>}
 
             <Block height={theme.SIZES.BASE + 40} />

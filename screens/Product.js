@@ -29,7 +29,7 @@ const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" 
 const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
 function Product(props) {
-  const { user } = useContext(UserContext);
+  const { user, setShowAlert } = useContext(UserContext);
   const [product] = useState(user.carts[0].temporalProduct);
   const [quantity, setQuantity] = useState(product.quantity);
   const [price, setPrice] = useState("");
@@ -49,12 +49,10 @@ function Product(props) {
   useEffect(
     () =>
     props.navigation.addListener('beforeRemove', (e) => {
-
         if ((product.added&&resetPrice)&&!goBack){
           e.preventDefault();
           setShowWarningAlert(true)
         }
-          
       }),
     [props.navigation, resetPrice, goBack]
   );
@@ -122,9 +120,19 @@ function Product(props) {
 
   const incrementQuantity = () => {
     if (quantity < 99) {
-      setQuantity(quantity + 1);
-      if (product.added)
-        user.carts[0].updateSubtotal(product.price)
+      if(user.carts[0].receipt.budget && ((user.carts[0].receipt.change-(price*(quantity+1)))<0) && !user.carts[0].warning){
+        setShowAlert([()=>{
+          setQuantity(quantity + 1);
+          if (product.added)
+            user.carts[0].updateSubtotal(product.price)
+          setShowAlert(null);
+        }])
+      }else{
+        setQuantity(quantity + 1);
+        if (product.added)
+          user.carts[0].updateSubtotal(product.price)
+      }
+      
     }
   };
 
@@ -144,14 +152,25 @@ function Product(props) {
     
 
     if (!product.added) {
-      product.setPrice(price);
-      user.carts[0].addProduct(product);
+      if(user.carts[0].receipt.budget && ((user.carts[0].receipt.change-(price*quantity))<0) && !user.carts[0].warning){
+        setShowAlert([()=>{
+          product.setPrice(price);
+          user.carts[0].addProduct(product);
+          props.navigation.navigate('Cart');
+          setShowAlert(null);
+        }])
+      }else{
+        product.setPrice(price);
+        user.carts[0].addProduct(product);
+        setGoBack("Cart");
+      }
     } else {
       user.carts[0].updateSubtotal(-product.price * quantity)
       user.carts[0].updateSubtotal(price * quantity)
       product.setPrice(price);
+      setGoBack("Cart");
     }
-    setGoBack("Cart");
+    
   };
   return (
     <Block contentContainerStyle={styles.container} flex>

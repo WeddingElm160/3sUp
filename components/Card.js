@@ -10,19 +10,14 @@ import Checkbox from 'expo-checkbox';
 const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN'});
 
 function Card(props) {
-  const { user } = useContext(UserContext);
-  const [product, setProduct] = useState(props.remove? user.carts[0].products[props.index] :user.carts[0].temporalProduct);
+  const { user, setShowAlert  } = useContext(UserContext);
+  const [product] = useState(props.remove? user.carts[0].products[props.index] :user.carts[0].temporalProduct);
   const [quantity, setQuantity] = useState(product.quantity);
   const [refresh, setRefresh] = useState(true);
-  const [isChecked, setChecked] = useState(false);
 
   useEffect(() => {
     setRefresh(true);
   }, [refresh]);
-  
-  useEffect(() => {
-    //console.log(product.name);
-  }, []);
 
   useEffect(() => {
     product.setQuantity(quantity)
@@ -30,12 +25,25 @@ function Card(props) {
   
   const incrementQuantity = () => {
     if (quantity < 99) {
-      setQuantity(quantity + 1);
-      if(product.added){
-        user.carts[0].updateSubtotal(product.price)
-        props.updateScreen();
-        setRefresh(true)
+      if(user.carts[0].receipt.budget && ((user.carts[0].receipt.change-(product.price*(quantity+1)))<0) && !user.carts[0].warning){
+        setShowAlert([()=>{
+          setQuantity(quantity + 1);
+          if(product.added){
+            user.carts[0].updateSubtotal(product.price)
+            props.updateScreen();
+            setRefresh(true);
+          }
+          setShowAlert(null);
+        }])
+      }else{
+        setQuantity(quantity + 1);
+        if(product.added){
+          user.carts[0].updateSubtotal(product.price)
+          props.updateScreen();
+          setRefresh(true);
+        }
       }
+      
     }
   };
 

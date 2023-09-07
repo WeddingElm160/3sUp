@@ -45,4 +45,8 @@ export class Product {
     setImage(newImage) {
         this.image = newImage;
     }
+
+    getSubtotal() {
+        return this.price * this.quantity;
+    }
 }

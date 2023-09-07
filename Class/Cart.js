@@ -1,6 +1,6 @@
 import Product from './Product'
 export class Cart {
-  receipt; products; storeName; temporalProduct; removeTemporalProduct
+  receipt; products; storeName; temporalProduct; removeTemporalProduct; warning;
   constructor(cart) {
     if (typeof cart !== 'string') {
       this.receipt = {
@@ -10,6 +10,7 @@ export class Cart {
       } 
       this.products = cart.products.map(product => new Product(product))
       this.storeName = cart.storeName
+      this.warning = cart.warning
     } else {
       this.storeName = cart
       this.products = []
@@ -18,6 +19,7 @@ export class Cart {
         subtotal: 0,
         change: 0
       }
+      this.warning = false
     }
     this.temporalProduct = {}
   }
@@ -30,17 +32,22 @@ export class Cart {
     this.temporalProduct = temporalProduct;
   }
 
+  setWarning(value){
+    this.warning = value;
+  }
+
   setBudget(budget) {
     budget=parseFloat(budget)
     this.receipt.budget = budget;
     this.receipt.change = budget - this.receipt.subtotal;
+    this.setWarning(budget&&this.receipt.change<0);
   }
 
   updateSubtotal(amount) {
     const amountFloat=parseFloat(amount);
     this.receipt.subtotal+=amountFloat;
     this.receipt.change-=amountFloat;
-
+    this.setWarning(this.receipt.budget&&this.receipt.change<0);
   }
 
   removeAllProducts(){
@@ -48,6 +55,7 @@ export class Cart {
     this.products = []
     this.receipt.subtotal = 0;
     this.receipt.change = this.receipt.budget;
+    this.setWarning(false);
   }
 
   addProduct(product) {
@@ -55,6 +63,7 @@ export class Cart {
     this.products.push(product);
     this.receipt.subtotal += product.price*product.quantity;
     this.receipt.change = this.receipt.budget ? (this.receipt.budget - this.receipt.subtotal) : 0
+    this.setWarning(this.receipt.budget&&this.receipt.change<0);
   }
 
   removeProductList(list){
@@ -64,12 +73,14 @@ export class Cart {
       this.receipt.subtotal -= product.price*product.quantity;
       this.receipt.change = this.receipt.budget ? (this.receipt.budget + this.receipt.subtotal) : 0
     }
+    this.setWarning(this.receipt.budget&&this.receipt.change<0);
   }
 
   removeProduct(key) {
     const product = this.products.splice(key, 1)[0]
     this.receipt.subtotal -= product.price*product.quantity;
     this.receipt.change = this.receipt.budget ? (this.receipt.budget + this.receipt.subtotal) : 0
+    this.setWarning(this.receipt.budget&&this.receipt.change<0);
   }
 
   productIsAdded(barcode){

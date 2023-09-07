@@ -1,4 +1,6 @@
+import { useContext } from 'react';
 import { Dimensions, Platform } from 'react-native';
+import Warning from '../components/Warning';
 // header for screens
 import { Header } from '../components';
 import { nowTheme } from '../constants';
@@ -25,6 +27,7 @@ import Supermarket from '../screens/Supermarket';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { RightButtonContextProvider } from '../context/RightButtonContext';
+import { UserContext } from "../context/UserContext";
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
@@ -240,7 +243,8 @@ function InfoStack() {
   );
 }
 
-function AppStack() {
+function AppStack(props) {
+  const { user,showAlert, setShowAlert } = useContext(UserContext)
   return (
     <RightButtonContextProvider>
       <Drawer.Navigator initialRouteName="Inicio" useLegacyImplementation
@@ -306,6 +310,11 @@ function AppStack() {
           }}
         />
       </Drawer.Navigator>
+      <Warning 
+      show={Boolean(showAlert)} 
+      confirm={()=>showAlert[0]()}
+      cancel={()=>setShowAlert(null)}      
+      />
     </RightButtonContextProvider>
 
   );

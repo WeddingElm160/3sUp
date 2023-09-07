@@ -14,11 +14,12 @@ import fetchData from '../constants/apiCaller';
 import { UserContext } from '../context/UserContext';
 import { Product } from '../Class/Product';
 import Card from "../components/Card";
+import Warning from '../components/Warning';
 
 const { height, width } = Dimensions.get(Platform.constants.Brand === "Windows" ? "window" : "screen");
 
 export default function BarcodeScanner(props) {
-  const { user } = useContext(UserContext);
+  const { user, setShowAlert } = useContext(UserContext);
   const { setButttonRight } = useContext(RightButtonContext)
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -137,10 +138,18 @@ export default function BarcodeScanner(props) {
           console.error(error);
         });
     }else if (statusCode == 1) 
-      props.navigation.navigate('Product');
+        props.navigation.navigate('Product');
       else{
-        user.carts[0].addProduct(user.carts[0].temporalProduct);
-        props.navigation.navigate('Cart')
+        if(user.carts[0].receipt.budget && ((user.carts[0].receipt.change-user.carts[0].temporalProduct.getSubtotal())<0) && !user.carts[0].warning){
+          setShowAlert([()=>{
+            user.carts[0].addProduct(user.carts[0].temporalProduct);
+            props.navigation.navigate('Cart');
+            setShowAlert(null);
+          }])
+        }else{
+          user.carts[0].addProduct(user.carts[0].temporalProduct);
+          props.navigation.navigate('Cart');
+        }
       }
   }
 

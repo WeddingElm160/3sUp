@@ -10,6 +10,7 @@ export const UserContext = createContext();
 
 export function UserContextProvider(props) {
   const [user, setUser] = useState(null);
+  const [showAlert, setShowAlert] = useState(null);
 
   const getData = async () => {
     try {
@@ -53,7 +54,7 @@ export function UserContextProvider(props) {
   }, []);
 
   return (
-    <UserContext.Provider value={{user}}>
+    <UserContext.Provider value={{user, showAlert, setShowAlert}}>
       {props.children}
     </UserContext.Provider>
   )

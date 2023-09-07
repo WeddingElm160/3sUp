@@ -1,44 +1,21 @@
-import React, { useState, useEffect } from 'react'
-
 import AwesomeAlert from 'react-native-awesome-alerts';
 
-function Warning({navigation, text}) {
-  const [showAlert, setShowAlert] = useState(false);
-
-  useEffect(
-    () =>
-    navigation.addListener('beforeRemove', (e) => {
-        e.preventDefault();
-
-        // Prompt the user before leaving the screen
-        if (text) 
-          setShowAlert(true)
-        else
-          navigation.dispatch(e.data.action);
-      }),
-    [navigation]
-  );
+function Warning({show, confirm, cancel}) {
 
   return (<AwesomeAlert
-    show={showAlert}
+    show={show}
     showProgress={false}
-    title="Advertencia"
-    message={text}
-    closeOnTouchOutside={true}
+    title="¿Estás seguro de añadir este producto?"
+    message='Añadir este producto revasará tu presupuesto asignado'
+    closeOnTouchOutside={false}
     closeOnHardwareBackPress={false}
     showCancelButton={true}
     showConfirmButton={true}
-    cancelText="No, continuar"
-    confirmText="Si, descartar"
+    cancelText="No, descartar"
+    confirmText="Si, añadir"
     confirmButtonColor="#DD6B55"
-    onCancelPressed={() => {
-      setShowAlert(false);
-    }}
-    onConfirmPressed={() => {
-      navigation.goBack()
-      setShowAlert(false);
-      
-    }}
+    onCancelPressed={cancel}
+    onConfirmPressed={confirm}
   />)
 }
 
