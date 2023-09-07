@@ -1,7 +1,7 @@
 // This file is for make request on the database
 let userEmail = ""
 let element = ""
-const userIP = '192.168.100.80'
+const userIP = '192.168.100.35'
 // Add User -> Only add an email, password and name user
 const addUser = async (usuario, email, contraseña) => {
   try {
@@ -15,7 +15,8 @@ const addUser = async (usuario, email, contraseña) => {
       },
       body: JSON.stringify(newUser),
     });
-    if (response.ok) {
+    console.log(response.status)
+    if (response.status == 201) {
       console.log("Usuario agregado exitosamente");
       return true;
     } else {

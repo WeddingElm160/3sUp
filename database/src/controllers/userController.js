@@ -1,10 +1,14 @@
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 // Controller to create a new user
 exports.createUser = async (req, res) => {
   try {
     const newUser = new User(req.body);
+    const contraseña = await bcrypt.hash(newUser.contraseña, 10)
+    newUser.contraseña = contraseña;
+    // console.log(newUser)
     await newUser.save();
     res.status(201).json(newUser);
   } catch (error) {
@@ -21,8 +25,8 @@ exports.loginUser = async (req, res) => {
       // console.log('Wrong User')
       res.status(404).json({ error: 'Credenciales: User inválidas'});
     }
-    else if (user.contraseña === contraseña){
-      // console.log('Login')
+    else if (bcrypt.compareSync(contraseña, user.contraseña)){
+      // console.log('Login'+contraseña+"="+user.contraseña)
       const token = jwt.sign({ userId: user._id }, 'secreto', { expiresIn: '1h' });
       res.json({ token });
     }else{
@@ -31,7 +35,7 @@ exports.loginUser = async (req, res) => {
     }
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(404).json({ error: error.message });
   }
 };
 
