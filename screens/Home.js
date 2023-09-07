@@ -1,62 +1,84 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { ScrollView, StyleSheet, Dimensions, Image } from 'react-native';
 import { Block, Text, Button as GaButton, theme } from 'galio-framework';
 import { nowTheme } from '../constants';
+import LottieView from 'lottie-react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 const { width } = Dimensions.get("window");
-
-class Home extends React.Component {
-  render() {
-    return (
-      <Block flex center>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 30, width }}
-        >
-          <Block style={styles.imageContainer}>
-            <Image
-              source={require("../assets/imgs/home.jpg")}
-              style={styles.gradient}
-            />
-            <Image
-              source={require("../assets/imgs/Logo-Leters.png")}
-              style={styles.image}
-            />
-          </Block>
-          <Block flex style={styles.group}>
-            <Text size={24} style={styles.title}>
-              Tu aliado para ahorrar mientras compras en el supermercado.
-            </Text>
-          </Block>
-
-          <Block flex style={styles.group}>
-            <Text size={16} style={styles.body}>
-              Con 3S UP!, escanea el código de barras de cada producto y lleva la cuenta de tu carrito físico.
-              Nuestra aplicación registrará automáticamente la cantidad acumulada en tu carrito virtual,
-              para que siempre sepas cuánto llevas gastado.
-              {"\n\n"}
-              Toma el control de tus finanzas y evita sorpresas desagradables en la caja registradora.
-              Con 3S UP!, puedes establecer un presupuesto personalizado y monitorear el monto total acumulado
-              en tu carrito virtual. Ahorra y toma decisiones financieras inteligentes.
-            </Text>
-          </Block>
-
-          <Block center style={{...styles.group, paddingHorizontal: 0, width: '100%'}}>
-            <GaButton
-              onPress={() => this.props.navigation.navigate('Carrito')}
-              style={styles.button}
-              color={nowTheme.COLORS.PRIMARY}
-            >
-              ¡Empieza a ahorrar ahora!
-            </GaButton>
-          </Block>
+function Home(props) {
+  const dectectIsFocused = useIsFocused();
+  useEffect(
+    () =>
+      props.navigation.addListener('beforeRemove', (e) => {
+        e.preventDefault();
+      }),
+    [props.navigation]
+  );
+  
+  return (
+    <Block flex center>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{  width }}
+        style={{marginBottom: 0}}
+      >
+        <Block style={styles.imageContainer}>
+          <Image
+            source={require("../assets/imgs/home.jpg")}
+            style={styles.gradient}
+          />
+          {
+            dectectIsFocused&&
+            <LottieView source={require('../assets/Anim/logo.json')} autoPlay loop={false} style={{/*backgroundColor:'red',*/ height: 'auto',}}/>
+          }
           
-            
+        </Block>
+        <Block flex style={styles.group}>
+          <Text size={24} style={styles.title}>
+            Tu aliado para ahorrar mientras compras en el supermercado.
+          </Text>
+        </Block>
 
-        </ScrollView>
-      </Block>
-    );
-  }
+        <Block flex style={styles.group}>
+          <Text size={16} style={styles.body}>
+            Con 3S UP!, escanea el código de barras de cada producto y lleva la cuenta de tu carrito físico.
+            Nuestra aplicación registrará automáticamente la cantidad acumulada en tu carrito virtual,
+            para que siempre sepas cuánto llevas gastado.
+          </Text>
+        </Block>
+
+        <Block center style={{...styles.group, paddingHorizontal: 0, width: '100%'}}>
+          <GaButton
+            onPress={() => props.navigation.navigate('Carrito')}
+            style={styles.button}
+            color={nowTheme.COLORS.PRIMARY}
+          >
+            ¡Empieza a ahorrar ahora!
+          </GaButton>
+        </Block>
+        
+          
+
+      </ScrollView>
+      <LottieView source={require('../assets/Anim/wave.json')} autoPlay loop colorFilters={[
+        {
+          keypath: 'Shape Layer 1',
+          color: nowTheme.COLORS.PRIMARY,
+        },
+        {
+          keypath: 'Shape Layer 2',
+          color: nowTheme.COLORS.PRIMARY,
+        },
+        {
+          keypath: 'Shape Layer 3',
+          color: nowTheme.COLORS.PRIMARY,
+        },
+      ]}
+      style={{/*backgroundColor:'red',*/ height: 'auto',}}/>
+      
+    </Block>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -114,7 +136,11 @@ const styles = StyleSheet.create({
     marginBottom: theme.SIZES.BASE,
     padding: 0,
     paddingHorizontal: theme.SIZES.BASE * 2,
-    width: 'auto'
+    width: 'auto',
+    borderBottomRightRadius:25,
+    borderBottomLeftRadius:25,
+    borderTopLeftRadius:25,
+    borderTopRightRadius:25,
   },
   image: {
     width: (width - theme.SIZES.BASE * 6) / 2,

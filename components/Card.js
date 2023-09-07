@@ -25,14 +25,12 @@ function Card(props) {
   
   const incrementQuantity = () => {
     if (quantity < 99) {
-      if(user.carts[0].receipt.budget && ((user.carts[0].receipt.change-(product.price*(quantity+1)))<0) && !user.carts[0].warning){
+      if(product.added && user.carts[0].receipt.budget && ((user.carts[0].receipt.change-(product.price*(quantity+1)))<0) && !user.carts[0].warning){
         setShowAlert([()=>{
           setQuantity(quantity + 1);
-          if(product.added){
-            user.carts[0].updateSubtotal(product.price)
-            props.updateScreen();
-            setRefresh(true);
-          }
+          user.carts[0].updateSubtotal(product.price)
+          props.updateScreen();
+          setRefresh(true);
           setShowAlert(null);
         }])
       }else{

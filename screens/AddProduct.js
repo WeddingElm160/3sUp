@@ -24,7 +24,7 @@ const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 
 
 
 function AddProduct(props) {
-  const { user } = useContext(UserContext);
+  const { user, setShowAlert } = useContext(UserContext);
   const [product] = useState(user.carts[0].temporalProduct);
   const [quantity, setQuantity] = useState(product.quantity);
   const [price, setPrice] = useState(product.price);
@@ -224,7 +224,17 @@ function AddProduct(props) {
 
   const Addpress = () => {
     if (!product.added) {
-      user.carts[0].addProduct(new Product(productName, productDescription, price, quantity, images.slice(0, -1)));
+      if(user.carts[0].receipt.budget && ((user.carts[0].receipt.change-(price*quantity))<0) && !user.carts[0].warning){
+        setShowAlert([()=>{
+          user.carts[0].addProduct(new Product(productName, productDescription, price, quantity, images.slice(0, -1)));
+          props.navigation.navigate('Cart');
+          setShowAlert(null);
+        }])
+      }else{
+        user.carts[0].addProduct(new Product(productName, productDescription, price, quantity, images.slice(0, -1)));
+        setGoBack("Cart");
+      }
+      
     } else {
       user.carts[0].updateSubtotal(-product.price * quantity);
       user.carts[0].updateSubtotal(price * quantity);
@@ -233,8 +243,9 @@ function AddProduct(props) {
       product.setDescription(productDescription);
       product.setQuantity(quantity);
       product.setImage(images.slice(0, -1));
+      setGoBack("Cart");
     }
-    setGoBack("Cart");
+    
   };
   return (
     <Block contentContainerStyle={styles.container} flex>

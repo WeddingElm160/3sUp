@@ -234,7 +234,7 @@ function InfoStack() {
         component={Info}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="Components" navigation={navigation} scene={scene} />
+            <Header title="Información" navigation={navigation} scene={scene} />
           ),
           cardStyle: { backgroundColor: '#FFFFFF' },
         }}

@@ -71,15 +71,15 @@ export class Cart {
     for (let i = 0; i < list.length; i++) {
       const product = this.products.splice(list[i], 1)[0];
       this.receipt.subtotal -= product.price*product.quantity;
-      this.receipt.change = this.receipt.budget ? (this.receipt.budget + this.receipt.subtotal) : 0
     }
+    this.receipt.change = this.receipt.budget ? (this.receipt.budget - this.receipt.subtotal) : 0
     this.setWarning(this.receipt.budget&&this.receipt.change<0);
   }
 
   removeProduct(key) {
     const product = this.products.splice(key, 1)[0]
     this.receipt.subtotal -= product.price*product.quantity;
-    this.receipt.change = this.receipt.budget ? (this.receipt.budget + this.receipt.subtotal) : 0
+    this.receipt.change = this.receipt.budget ? (this.receipt.budget - this.receipt.subtotal) : 0
     this.setWarning(this.receipt.budget&&this.receipt.change<0);
   }
 

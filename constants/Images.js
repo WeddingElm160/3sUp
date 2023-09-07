@@ -1,6 +1,7 @@
 // local imgs 
 const Onboarding = require('../assets/imgs/background.png');
 const Logo = require('../assets/imgs/Logo-App.png')
+const LogoLarge = require('../assets/imgs/Logo-large.png')
 const searchSuperMarket = require('../assets/imgs/searchSuperMarket.png');
 const cart = require('../assets/imgs/cart.png');
 const emptyCart = require('../assets/imgs/emptyCart.png');
@@ -23,5 +24,6 @@ export default {
   history3,
   history4,
   history5,
-  productNotFound
+  productNotFound,
+  LogoLarge
 };

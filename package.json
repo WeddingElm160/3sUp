@@ -30,6 +30,7 @@
     "galio-framework": "^0.8.0",
     "google-it": "^1.6.4",
     "jsonwebtoken": "^9.0.1",
+    "lottie-react-native": "^5.1.4",
     "native-base": "^3.4.28",
     "npm": "^9.8.1",
     "react": "18.2.0",

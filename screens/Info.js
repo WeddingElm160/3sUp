@@ -2,14 +2,41 @@ import React from "react";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, Dimensions, ScrollView, Image } from "react-native";
 import { Block, theme, Text } from "galio-framework";
+import { nowTheme } from '../constants';
 
 const { width, height } = Dimensions.get("window");
 
 function Info() {
+
   return (
-    <Block flex center style={styles.home}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+  <Block flex center>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 30, width }}
+      >
         <Block style={styles.imageContainer}>
+          <Image
+            source={require("../assets/imgs/home.jpg")}
+            style={styles.gradient}
+          />
+          <Image
+            source={require("../assets/imgs/Logo-Leters.png")}
+            style={styles.image}
+          />
+        </Block>
+
+        <Block flex style={styles.group}>
+          <Text size={16} style={styles.body}>
+            Con 3S UP!, escanea el código de barras de cada producto y lleva la cuenta de tu carrito físico.
+            Nuestra aplicación registrará automáticamente la cantidad acumulada en tu carrito virtual,
+            para que siempre sepas cuánto llevas gastado.
+            {"\n\n"}
+            Toma el control de tus finanzas y evita sorpresas desagradables en la caja registradora.
+            Con 3S UP!, puedes establecer un presupuesto personalizado y monitorear el monto total acumulado
+            en tu carrito virtual. Ahorra y toma decisiones financieras inteligentes.
+          </Text>
+        </Block>
+        <Block style={{...styles.imageContainer, height: 150, marginBottom: 0}}>
           <Image
             source={require("../assets/imgs/Escudo.png")}
             style={styles.image}
@@ -27,16 +54,7 @@ function Info() {
             José Manuel Balderas Estrada
           </Text>
           <Text size={16} style={{ textAlign: "center" }}>
-            Antonio Maximiliano López Aguilar
-          </Text>
-
-          
-
-          <Text size={16} style={[styles.title, { textAlign: "center" }]}>
-            Materia:
-          </Text>
-          <Text size={16} style={{ textAlign: "center" }}>
-            Desarrollo de Aplicaciones Móviles
+            Victor Hugo Arista Tecpa
           </Text>
 
           <Text size={16} style={[styles.title, { textAlign: "center" }]}>
@@ -54,33 +72,66 @@ function Info() {
 }
 
 const styles = StyleSheet.create({
-  home: {
-    width: width,
-    justifyContent: "center",
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: "center",
+  title: {
+    fontFamily: 'DMSans-Bold',
+    textAlign: 'center',
+    paddingHorizontal: theme.SIZES.BASE * 2,
+    marginTop: theme.SIZES.BASE,
+    color: nowTheme.COLORS.HEADER
   },
   body: {
-    width: width - theme.SIZES.BASE * 2,
-    paddingVertical: theme.SIZES.BASE,
-    paddingHorizontal: 2,
-    fontFamily: "lato-bold",
-  },
-  title: {
-    fontFamily: "lato-bold",
-    marginTop: theme.SIZES.BASE,
+    fontFamily: 'DMSans-Medium',
+    paddingBottom: theme.SIZES.BASE,
+    paddingHorizontal: theme.SIZES.BASE * 2,
+    marginTop: 1,
+    color: nowTheme.COLORS.HEADER,
+    textAlign: 'justify',
+    color: '#737373'
   },
   imageContainer: {
     alignItems: "center",
+    justifyContent: "center",
     marginVertical: theme.SIZES.BASE,
     marginHorizontal: theme.SIZES.BASE * 2,
+    height: width/2,
+    position: 'relative',
+  },
+  gradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'stretch',
+    opacity: 0.6,
+    borderRadius: 15
+  },
+  buttonText: {
+    fontFamily: 'DMSans-Bold',
+    marginBottom: theme.SIZES.BASE,
+    paddingHorizontal: theme.SIZES.BASE * 2,
+    textAlign: 'center',
+  },
+  buttonTextIn: {
+    fontFamily: 'inter-bold',
+    marginBottom: theme.SIZES.BASE,
+    paddingHorizontal: theme.SIZES.BASE * 2,
+    textAlign: 'center',
+  },
+  group: {
+    paddingTop: theme.SIZES.BASE/2
+  },
+  button: {
+    marginBottom: theme.SIZES.BASE,
+    padding: 0,
+    paddingHorizontal: theme.SIZES.BASE * 2,
+    width: 'auto'
   },
   image: {
-    width: (width - theme.SIZES.BASE * 6) / 3,
-    height: (width - theme.SIZES.BASE * 6) / 3,
+    width: (width - theme.SIZES.BASE * 6) / 2,
+    height: '100%',
     resizeMode: "contain",
+    zIndex: 1,
   },
 });
 

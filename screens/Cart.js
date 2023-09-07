@@ -265,7 +265,7 @@ function Cart(props) {
                       <Text size={16} family="lato-semibold" >Cambio      </Text>
                     </Block>
                     <Block flex>
-                      <Text size={16} family="inter-bold" color="#55BCAE" bold>{formatter.format(user.carts[0].receipt.change)}</Text>
+                      <Text size={16} family="inter-bold" color={user.carts[0].receipt.change>0?"#55BCAE":nowTheme.COLORS.YOUTUBE} bold>{formatter.format(user.carts[0].receipt.change)}</Text>
                     </Block>
                   </Block>
                   : <></>

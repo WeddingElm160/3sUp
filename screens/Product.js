@@ -325,23 +325,22 @@ function Product(props) {
               </Text>
             </ScrollView>
           }
-        </Block>
-        {/* Parte del código o viión a futuro */}
+          {/* Parte del código o visión a futuro */}
         <Block flex style={styles.table}>
-          <Block row style={styles.row}>
-            <Block flex style={[styles.cell, styles.header]}>
+          <Block row style={{...styles.row, backgroundColor: "rgba(85, 188, 174, 0.5)"}}>
+            <Block center flex >
               <Text style={styles.headerText}>Tienda</Text>
             </Block>
-            <Block center flex style={[styles.cell, styles.header]}>
+            <Block center flex>
               <Text style={styles.headerText}>Precio</Text>
             </Block>
-            <Block center flex style={[styles.cell, styles.header]}>
+            <Block center flex>
               <Text style={styles.headerText}>Ahorras</Text>
             </Block>
           </Block>
 
           <Block row style={styles.row}>
-            <Block flex style={styles.cell}>
+            <Block center flex style={styles.cell}>
             <Image source={stores[4].image} style={{ width: 64, height: 64 }} />
             </Block>
             <Block flex center style={styles.cell}>
@@ -354,7 +353,7 @@ function Product(props) {
           </Block>
 
           <Block row style={styles.row}>
-            <Block flex style={styles.cell}>
+            <Block center flex style={styles.cell}>
             <Image source={stores[3].image} style={{ width: 64, height: 64 }} />
             </Block>
             <Block flex center style={styles.cell}>
@@ -367,7 +366,7 @@ function Product(props) {
           </Block>
 
           <Block row style={styles.row}>
-            <Block flex style={styles.cell}>
+            <Block center flex style={styles.cell}>
             <Image source={stores[2].image} style={{ width: 64, height: 64 }} />
             </Block>
             <Block flex center style={styles.cell}>
@@ -380,7 +379,7 @@ function Product(props) {
           </Block>
 
           <Block row style={styles.row}>
-            <Block flex style={styles.cell}>
+            <Block center flex style={styles.cell}>
             <Image source={stores[5].image} style={{ width: 64, height: 64 }} />
             </Block>
             <Block flex center style={styles.cell}>
@@ -392,8 +391,10 @@ function Product(props) {
             </Block>
           </Block>
         </Block>
+        </Block>
+        
 
-        {/* Parte del código o viión a futuro */}
+        {/* Parte del código o visión a futuro */}
       </ScrollView>
       {/* Sección inferior */}
       <Block style={styles.bottomSection}>
@@ -606,15 +607,16 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   table: {
-    borderWidth: 1,
-    borderColor: 'black',
-    marginVertical: 10,
+    marginVertical: theme.SIZES.BASE,
+    borderRadius: 15,
+    overflow: 'hidden'
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderColor: 'gray',
+    borderTopWidth: 1,
+    borderTopColor:'lightgray',
+    backgroundColor: 'white',
     padding: 10,
   },
   header: {
@@ -622,6 +624,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontWeight: 'bold',
+    color: 'white'
   },
   cell: {
     flex: 1,
