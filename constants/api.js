@@ -1,7 +1,7 @@
 // This file is for make request on the database
 let userEmail = ""
 let element = ""
-const userIP = '192.168.100.35'
+const userIP = '192.168.100.50'
 // Add User -> Only add an email, password and name user
 const addUser = async (usuario, email, contraseña) => {
   try {

@@ -21,12 +21,13 @@ exports.loginUser = async (req, res) => {
   try {
     const { email, contraseña} = req.body;
     const user = await User.findOne({ email: email });
+    compare = bcrypt.compareSync(contraseña, user.contraseña)
+    console.log('Login'+contraseña+"="+user.contraseña)
     if (user == null){
       // console.log('Wrong User')
       res.status(404).json({ error: 'Credenciales: User inválidas'});
     }
-    else if (bcrypt.compareSync(contraseña, user.contraseña)){
-      // console.log('Login'+contraseña+"="+user.contraseña)
+    else if (compare){
       const token = jwt.sign({ userId: user._id }, 'secreto', { expiresIn: '1h' });
       res.json({ token });
     }else{

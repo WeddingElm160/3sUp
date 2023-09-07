@@ -43,7 +43,7 @@ class Home extends React.Component {
 
           <Block center style={{...styles.group, paddingHorizontal: 0, width: '100%'}}>
             <GaButton
-              onPress={() => this.props.navigation.navigate('Carrito')}
+              onPress={() => this.props.navigation.navigate('Login')}
               style={styles.button}
               color={nowTheme.COLORS.PRIMARY}
             >
