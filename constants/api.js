@@ -15,7 +15,7 @@ const addUser = async (usuario, email, contraseña) => {
       },
       body: JSON.stringify(newUser),
     });
-    console.log(response.status)
+    // console.log(response.status)
     if (response.status == 201) {
       console.log("Usuario agregado exitosamente");
       return true;
@@ -119,7 +119,7 @@ const addCart = async (cart, email, navigation) => {
 
 const getEveryCarts = async (email) => {
   try {
-    const response = await fetch(`http://"+userIP+":3000/users/get?email=${email}`, {
+    const response = await fetch(`http://${userIP}:3000/users/get?email=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -131,7 +131,7 @@ const getEveryCarts = async (email) => {
     }
     userEmail = email;
     const data = await response.json();
-    //console.log(data.carts.shoppingLists[0]);
+    // console.log(data.carts.shoppingLists[0]);
     return data
     
     // console.log(data.carts.shoppingLists); // To extract the info
